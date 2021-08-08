@@ -1,11 +1,19 @@
 package it.unipi.iot.irrigationsystem;
 
+import it.unipi.iot.irrigationsystem.registration.RegistrationServer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 
 public class Collector {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SocketException {
+        // Init
+        RegistrationServer rs = new RegistrationServer();
+        rs.start();
+
+        // CLI
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = "";
         String[] chunks;
