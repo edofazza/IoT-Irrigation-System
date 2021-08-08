@@ -83,6 +83,8 @@ void client_chunk_handler(coap_message_t *resource)
 //*************************** THREAD *****************************//
 PROCESS_THREAD(temperature_server, ev, data)
 {
+    PROCESS_BEGIN();
+    
     static coap_endpoint_t server_ep;
     static coap_message_t request[1]; // This way the packet can be treated as pointer as usual
     
@@ -109,7 +111,9 @@ PROCESS_THREAD(temperature_server, ev, data)
     }
     LOG_INFO("REGISTERED\nStarting temperature server");
     
+    // RESOURCES ACTIVATION
     coap_activate_resource(&temperature_sensor, "temperature_sensor");
+    
     
     // SIMULATION
     etimer_set(&simulation, CLOCK_SECOND * SIMULATION_INTERVAL);
