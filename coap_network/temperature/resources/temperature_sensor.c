@@ -23,7 +23,7 @@ EVENT_RESOURCE(temperature_sensor,
 
 static void get_temperature_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-    LOG_INFO("Handling get request...\n");
+    LOG_INFO("Handling temperature get request...\n");
    
     // TODO: IF TOO HOT OR TOO COLD SEND A WARNING
     
@@ -42,7 +42,12 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
 
 static void put_temperature_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
+    LOG_INFO("Handling temperature put request...\n");
     
+    // TODO: DECIDERE IL FORMATO DELLA RICHIESTA
+    // AGGIORNARE:
+        //LOWER_BOUND_TEMP = new_lower_bound_value;
+        //UPPER_BOUND_TEMP = new_upper_bound_value;
 }
 
 static void temperature_event_handler(void)
