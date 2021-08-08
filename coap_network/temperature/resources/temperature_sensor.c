@@ -59,7 +59,7 @@ static void temperature_event_handler(void)
     if (random == 0) // 25% of changing the value
         if (random < 2) // decrease
             temperature -= VARIATION;
-        else
+        else // increase
             temperature += VARIATION;
 
     // if not equal
