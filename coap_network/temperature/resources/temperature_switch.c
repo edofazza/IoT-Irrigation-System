@@ -11,7 +11,7 @@
 /*          HANDLERS          */
 static void put_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-EVENT_RESOURCE(temperature_act_sensor,
+EVENT_RESOURCE(temperature_switch,
                "title=\"Temperature switch\";rf=\"switch\"",
                NULL,
                NULL,
@@ -34,7 +34,6 @@ static void put_switch_handler(coap_message_t *request, coap_message_t *response
       snprintf(char_on_off, max_char_len + 1, "%s", rcvd_msg);  // +1 = end string
 
       if (strcmp(char_on_off, "ON") == 0) {
-        // correct ON request, notify new status
         isActive = true;
         LOG_INFO("Switch on\n");
 
@@ -53,7 +52,6 @@ static void put_switch_handler(coap_message_t *request, coap_message_t *response
       }
 
       if (strcmp(char_on_off, "OFF") == 0) {
-        // correct OFF request, notify new status
         isActive = false;
         LOG_INFO("Switch off\n");
 
