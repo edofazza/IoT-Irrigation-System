@@ -84,7 +84,7 @@ void client_chunk_handler(coap_message_t *resource)
 PROCESS_THREAD(temperature_server, ev, data)
 {
     static coap_endpoint_t server_ep;
-    static coap_message_t request[1];
+    static coap_message_t request[1]; // This way the packet can be treated as pointer as usual
     
     etimer_set(&wait_connectivity, CLOCK_SECOND * CONN_TRY_INTERVAL);
     
