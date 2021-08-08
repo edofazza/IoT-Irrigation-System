@@ -42,6 +42,7 @@ static struct etimer wait_registration;
 static struct etimer simulation;
 
 extern coap_resource_t temperature_sensor;
+extern coap_resource_t temperature_switch;
 
 //*************************** UTILITY FUNCTIONS *****************************//
 static void check_connection()
@@ -113,7 +114,7 @@ PROCESS_THREAD(temperature_server, ev, data)
     
     // RESOURCES ACTIVATION
     coap_activate_resource(&temperature_sensor, "temperature_sensor");
-    
+    coap_activate_resource(&temperature_switch, "temperature_switch");
     
     // SIMULATION
     etimer_set(&simulation, CLOCK_SECOND * SIMULATION_INTERVAL);
