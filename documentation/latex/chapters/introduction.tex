@@ -3,11 +3,20 @@ Agriculture is one of the most fundamental resource of food production and also 
 
 
 
-\subsection{Deployment Schema}
+\subsection{Deployment Structure}
 The objective of this project is to adopt a smart irrigation system to water cultivated fields making use of the local water resources, such as aquifers and water catchment areas (i.e., basins), in the way of using the water resources as more eco-friendly as possible (e.g., without disrupting aquifers). Thus, we can consider two different locations to takes care: the \textbf{field} and the \textbf{water provisioning site},
 
 For what concern the \textit{water provisioning site}, it is composed of sensors which have the mean of monitoring the water level both of the aquifers and water catchment areas. In this way, the system and the user can know where to take water (by default the basin). Although, a single device for source may be enough, we decided to deploy multiple water level sensors in the same source in order to avoid errors in the monitoring (e.g., in the case of a single device if it is detected that the basin is empty, but it is not, the irrigation system will use the water from the aquifer pointlessly).
 All water level sensors will make use of \textit{MQTT} as explained in the "MQTT Network" chapter.
 
 
-The \textit{field site} is more articulated and will exploit multiple types of sensors.
+The \textit{field site} is more articulated and will exploit multiple types of sensors and a single type of actuator. The actuator needed is the one capable of providing the water to the plants, which we called "tap actuator". This we be used in conjunction with the other sensors presents in the fields that will monitor the environment, specifically there will be temperature sensors, soil moisture sensors and a rain sensor. 
+All these sensors and the tap actuator will exploit \textit{CoAP} as explained in the "CoAP Network" chapter.
+
+
+\begin{figure}[H]
+	\begin{subfigure}{\textwidth}
+	\centering
+		\includegraphics[width=0.66\linewidth]{img/deployment.png} 
+	\end{subfigure}
+\end{figure}

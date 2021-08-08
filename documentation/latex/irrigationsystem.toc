@@ -1,6 +1,6 @@
 \babel@toc {english}{}
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Deployment Schema}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.1}Deployment Structure}{2}{subsection.1.1}%
 \contentsline {section}{\numberline {2}CoAP Network}{3}{section.2}%
 \contentsline {section}{\numberline {3}MQTT Network}{4}{section.3}%
 \contentsline {section}{\numberline {4}Collector}{5}{section.4}%

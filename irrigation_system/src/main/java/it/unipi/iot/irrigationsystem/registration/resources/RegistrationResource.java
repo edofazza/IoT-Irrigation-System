@@ -11,7 +11,7 @@ public class RegistrationResource extends CoapResource {
     private static CoapNetworkHandler coapHandler;
 
     public RegistrationResource(CoapNetworkHandler cnh) {
-        super("regitration");
+        super("registration");
         coapHandler = cnh;
     }
 
