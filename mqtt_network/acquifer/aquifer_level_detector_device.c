@@ -33,8 +33,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
-#define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
-long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
+
 
 // We assume that the broker does not require authentication
 
@@ -240,11 +239,12 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  } else if(state == STATE_SUBSCRIBED){
 
 		    sensed_level = simulate_level();
-		    /*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
-		    available = sensed_level*SECTION*WATER_SPEED;
-		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3/s\"}", node_id, available);
+		    sprintf(pub_topic, "aquifer_level");
+		    //Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+		    available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
+		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		    printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3/s\n", sensed_level, available);
+		    printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\n", sensed_level, available);
 
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");

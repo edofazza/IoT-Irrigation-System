@@ -8,7 +8,7 @@
 On the contrary during rainy seasons the water level will probably be enough to cover the needs*/
 
 /* DEFAULT VALUES*/
-/*needed water is expressed in terms of cm^3/s, those are default values*/
+/*needed water is expressed in terms of cm^3 accumulated between 2 successive dispensings, those are default values*/
 #define NOT_NEEDED 0
 #define LOW_NEED 2
 #define MEDIUM_NEED 4
@@ -24,14 +24,14 @@ static double simulate_level(){
     if (month >5 && month<8)  //between June and August
         summer = true;
     srand(time(NULL));
-    double availability;  //   cm^3/s
+    double availability;  //   cm^3
     if (summer)
         availability = rand()%MEDIUM_NEED;
     else
         availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
 
-    /*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
-    double level = (availability/WATER_SPEED)/SECTION;   //cm
+    //Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED * INETRVAL
+    double level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }
 
