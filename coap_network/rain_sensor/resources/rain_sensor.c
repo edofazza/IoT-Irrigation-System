@@ -46,13 +46,12 @@ static void rain_event_handler(void)
 {
     // check if raining
     srand(time(NULL));
-    int new_temp;
     int random = rand() % 10; // generate 0, 1, ..., 9
     
     if (random == 0) // 10% of changing the value
-        isRaining = !isRaining;
+        new_isRaining = !isRaining;
 
     // if not equal, notify
-    if (isRaining != isRaining)
+    if (new_isRaining != isRaining)
         coap_notify_observers(&temperature_sensor);
 }
