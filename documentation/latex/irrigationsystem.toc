@@ -5,10 +5,10 @@
 \contentsline {subsection}{\numberline {2.1}Temperature Sensor}{3}{subsection.2.1}%
 \contentsline {subsubsection}{\numberline {2.1.1}Resources}{3}{subsubsection.2.1.1}%
 \contentsline {subsubsection}{\numberline {2.1.2}Data Generation}{3}{subsubsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.2}Soil Moisture Sensor}{3}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Rain Sensor}{3}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Resource}{3}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Data Generation}{3}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.2}Soil Moisture Sensor}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Rain Sensor}{4}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Resource}{4}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Data Generation}{4}{subsubsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.4}Tap Actuator}{4}{subsection.2.4}%
 \contentsline {section}{\numberline {3}MQTT Network}{5}{section.3}%
 \contentsline {section}{\numberline {4}Collector}{6}{section.4}%
