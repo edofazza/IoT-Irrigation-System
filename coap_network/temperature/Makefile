@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = hydromassage
+CONTIKI_PROJECT = Irrigation_System
 all: $(CONTIKI_PROJECT)
 
 # Do not try to build on Sky because of code size limitation
