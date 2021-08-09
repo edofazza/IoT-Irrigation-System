@@ -1,37 +1,21 @@
 #include "random.h"
-#include "aquifer_parameters.h"
+#include "reservoir_parameters.h"
 #include "time.h"
 
-/*   The following code is just a simulation of the output of a level sensor   */
+/*   The following code is just a simulation of the output of a level sensor and the corresponding actuator that
+     puts or fetches the water from the reservoir*/
 
-/* IDEA : during summer, the sensed level with be probably lower than needed, thus water will be scarse.
-On the contrary during rainy seasons the water level will probably be enough to cover the needs*/
-
-/* DEFAULT VALUES*/
-/*needed water is expressed in terms of cm^3/s, those are default values*/
-#define NOT_NEEDED 0
-#define LOW_NEED 2
-#define MEDIUM_NEED 4
-#define HIGH_NEED 6
-#define VERY_HIGH_NEED 7
-
+double sensed_level=MAX_LEVEL;
 
 static double simulate_level(){
-    boolean summer = false;
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    int month = tm.tm_mon;
-    if (month >5 && month<8)  //between June and August
-        summer = true;
-    srand(time(NULL));
-    double availability;  //   cm^3/s
-    if (summer)
-        availability = rand()%MEDIUM_NEED;
-    else
-        availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
+    return sensed_level;
+}
 
-    /*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
-    double level = (availability/WATER_SPEED)/SECTION;   //cm
-    return level<MAX_LEVEL ? level : MAX_LEVEL;
+static void put_get_water(double quantity){
+    sensed_level += quantity;
+    if (sensed_level>MAX_LEVEL)
+        sensed_level = MAX_LEVEL;
+    else if (sensed_level<0)
+        sensed_level = 0;
 }
 
