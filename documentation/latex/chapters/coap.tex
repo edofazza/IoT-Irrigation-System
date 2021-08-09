@@ -2,8 +2,29 @@
 AAa
 
 \subsection{Temperature Sensor}
+The temperature sensor measures the local temperature in Celsius (at the Collector level will be given the possibility to display the results in Fahrenheit, see the Collector chapter for further details). The goal of this sensors is for quantifying and scheduling the water provisioning.
+
+\subsubsection{Resources}
+The temperature sensor exposes two resources: the \textit{temperature\_sensor} resource and the \textit{temperature\_switch} resource.
+
+
+
+\subsubsection{Data Generation}
+
+
+
+
 
 \subsection{Soil Moisture Sensor}
+
+
+
+
+
+
+
+
+
 
 \subsection{Rain Sensor}
 Rain sensor or rain switch is a switching device activated by rainfall. It is used for water conservation since it is connected to the automatic irrigation system, which will cause the system to shut down in the event of rainfall in order to do not waste water and to reduce energy consumption.
@@ -32,5 +53,12 @@ static void rain_event_handler(void)
 \end{lstlisting}
 
 In case the value changes, this is notified to all the subscribers.
+
+
+
+
+
+
+
 
 \subsection{Tap Actuator}

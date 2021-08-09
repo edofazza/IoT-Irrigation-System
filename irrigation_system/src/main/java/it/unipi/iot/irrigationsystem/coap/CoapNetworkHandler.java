@@ -16,4 +16,7 @@ public class CoapNetworkHandler {
 
     public void deleteTemperatureSensor(String ip) {
     }
+
+    public void addRainSensor(String ip) {
+    }
 }

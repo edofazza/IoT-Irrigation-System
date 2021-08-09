@@ -25,12 +25,25 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
 {
     LOG_INFO("Handling temperature get request...\n");
    
-    // TODO: IF TOO HOT OR TOO COLD SEND A WARNING
-    
-    // SEND TEMPERATURE VALUE
     static const size_t max_char_len = 4; //-dd\0
-    char msg[max_char_len];
-    snprintf(msg, max_char_len, "%d", temperature); // TODO: d for decimal?
+    char* msg;
+    
+    // IF TOO HOT OR TOO COLD SEND A WARNING
+    if (temperature < LOWER_BOUND_TEMP)
+    {
+        msg = "WARN: hot";
+    }
+    else if (temperature > UPPER_BOUND_TEMP)
+    {
+        msg = "WARN: cold";
+    }
+    else
+    {
+        msg = new char[max_char_len];
+        snprintf(msg, max_char_len, "%d", temperature);
+    }
+    
+    // prepare buffer
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, len);
     

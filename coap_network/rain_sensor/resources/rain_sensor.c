@@ -52,6 +52,8 @@ static void rain_event_handler(void)
         new_isRaining = !isRaining;
 
     // if not equal, notify
-    if (new_isRaining != isRaining)
+    if (new_isRaining != isRaining) {
+        isRaining = new_isRaining;
         coap_notify_observers(&rain_sensor);
+    }
 }
