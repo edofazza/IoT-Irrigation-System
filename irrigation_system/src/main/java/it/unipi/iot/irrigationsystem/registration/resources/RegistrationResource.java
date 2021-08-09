@@ -24,6 +24,8 @@ public class RegistrationResource extends CoapResource {
 
         if (deviceType.equals("temperature_sensor"))
             coapHandler.addTemperatureSensor(ipAddress); // TODO
+        else if (deviceType.equals("rain_sensor"))
+            coapHandler.addRainSensor(ipAddress);
         else
             success = false;
 

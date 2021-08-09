@@ -11,7 +11,7 @@ public class RegistrationServer extends CoapServer {
 
 
     public RegistrationServer() throws SocketException {
-        add(new RegistrationResource(coapHandeler));
+        add(new RegistrationResource(coapHandler));
     }
 
 }
