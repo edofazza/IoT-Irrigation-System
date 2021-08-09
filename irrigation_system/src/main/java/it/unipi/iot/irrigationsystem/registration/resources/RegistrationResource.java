@@ -22,12 +22,23 @@ public class RegistrationResource extends CoapResource {
         boolean success = true;
 
 
-        if (deviceType.equals("temperature_sensor"))
-            coapHandler.addTemperatureSensor(ipAddress); // TODO
-        else if (deviceType.equals("rain_sensor"))
-            coapHandler.addRainSensor(ipAddress);
-        else
-            success = false;
+        switch (deviceType) {
+            case "temperature_sensor":
+                coapHandler.addTemperatureSensor(ipAddress);
+                break;
+            case "rain_sensor":
+                coapHandler.addRainSensor(ipAddress);
+                break;
+            case "soilMoisture_sensor":
+                coapHandler.addSoilMoisture(ipAddress);
+                break;
+            case "tap_actuator":
+                coapHandler.addTapActuator(ipAddress);
+                break;
+            default:
+                success = false;
+                break;
+        }
 
         if (success)
             exchange.respond(CoAP.ResponseCode.CREATED, "Success".getBytes(StandardCharsets.UTF_8));
@@ -43,12 +54,23 @@ public class RegistrationResource extends CoapResource {
         boolean success = true;
 
 
-        if (deviceType.equals("temperature_sensor"))
-            coapHandler.deleteTemperatureSensor(ipAddress);
-        else if (deviceType.equals("rain_sensor"))
-            coapHandler.deleteRainSensor(ipAddress);
-        else
-            success = false;
+        switch (deviceType) {
+            case "temperature_sensor":
+                coapHandler.deleteTemperatureSensor(ipAddress);
+                break;
+            case "rain_sensor":
+                coapHandler.deleteRainSensor(ipAddress);
+                break;
+            case "soilMoisture_sensor":
+                coapHandler.deleteSoilMoisture(ipAddress);
+                break;
+            case "tap_actuator":
+                coapHandler.deleteTapActuator(ipAddress);
+                break;
+            default:
+                success = false;
+                break;
+        }
 
         if (success)
             exchange.respond(CoAP.ResponseCode.DELETED, "Cancellation Completed!".getBytes(StandardCharsets.UTF_8));

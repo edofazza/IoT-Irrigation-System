@@ -25,4 +25,16 @@ public class CoapNetworkHandler {
     public void deleteRainSensor(String ip) {
 
     }
+
+    public void addSoilMoisture(String ip) {
+    }
+
+    public void deleteSoilMoisture(String ip) {
+    }
+
+    public void addTapActuator(String ip) {
+    }
+
+    public void deleteTapActuator(String ip) {
+    }
 }
