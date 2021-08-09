@@ -8,4 +8,28 @@ AAa
 \subsection{Rain Sensor}
 Rain sensor or rain switch is a switching device activated by rainfall. It is used for water conservation since it is connected to the automatic irrigation system, which will cause the system to shut down in the event of rainfall in order to do not waste water and to reduce energy consumption.
 
+\subsubsection{Resource}
+The only resource provided by the rain sensor is a value indicating if it is raining or not, named \textbf{isRaining} and stored as a boolean.
+
+\subsubsection{Data Generation}
+Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value of \textbf{isRaining} flips (i.e., if it was indicating raining it turns to not raining, and vice versa) with a probability of 10\%. This is done in the textiti{rain\_event\_handler} function in the following way:
+
+\begin{lstlisting}
+static void rain_event_handler(void)
+{
+    // check if raining
+    srand(time(NULL));
+    int random = rand() % 10; // generate 0, 1, ..., 9
+    
+    if (random == 0) // 10% probability of changing the value
+        new_isRaining = !isRaining;
+
+    // if not equal, notify
+    if (new_isRaining != isRaining)
+        coap_notify_observers(&rain_sensor);
+}
+\end{lstlisting}
+
+In case the value changes, this is notified to all the subscribers.
+
 \subsection{Tap Actuator}
