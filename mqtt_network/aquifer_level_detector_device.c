@@ -69,18 +69,9 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
-
-/*************************************************************************************************************/
 /***********************************************SIMULATION PARAMETERS*****************************************/
-
-
-/*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
-#define WATER_SPEED 0.0005    /* 0.0005cm/s   https://www.arpa.vda.it/it/acqua/acque-sotterranee/cosa-sono-le-acque-sotterranee*/
-#define SECTION 200             //2m
-#define MAX_LEVEL 60           //60cm
 static double sensed_level = 50;
 static double available = 5;
-/*************************************************************************************************************/
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
