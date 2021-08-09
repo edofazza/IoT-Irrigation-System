@@ -56,7 +56,15 @@ public class Collector {
     private static void printCommands() {
         System.out.println("Commands list:" +
                 "\n\t!getSensorsList: show list of all available sensors" +
-                "\n!setTemp <lower temperature> <upper temperature> <unit[C or F]>: set desired temperature bounds" +
+                "\n!getTemp: get the temperature" +
+                "\n!setTemp <lower temperature> <upper temperature>: set desired temperature bounds" +
+                "\n!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +
+                "\n!getIsRaining: get if the rain sensor feels rain or not" +
+                "\n!getSoilTension: get the soil tension" +
+                "\n!setSoilTension <lower tension> <upper tension>: set desired tension bounds" +
+                "\n!setTapInterval <seconds>: set interval which the tap operates" +
+                "\n!setTapIntensity <value>: set intensity which the tap operates" +
+                "\n!getWaterLevels: print the water levels of aquifer and reservoir" +
                 "\n!start: start the simulation" +
                 "\n!stop: stop the simulation" +
                 "\n\t!help: print commands list" +
