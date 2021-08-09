@@ -13,6 +13,7 @@
 #include <sys/node-id.h>
 #include "mqtt-client.h"
 #include "aquifer_sensor.c"
+#include "aquifer_parameters.h"
 
 #include <string.h>
 #include <strings.h>
@@ -68,8 +69,18 @@ static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
-static int sensed_level = 2000;
-static bool summer = true;
+
+/*************************************************************************************************************/
+/***********************************************SIMULATION PARAMETERS*****************************************/
+
+
+/*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
+#define WATER_SPEED 0.0005    /* 0.0005cm/s   https://www.arpa.vda.it/it/acqua/acque-sotterranee/cosa-sono-le-acque-sotterranee*/
+#define SECTION 200             //2m
+#define MAX_LEVEL 60           //60cm
+static double sensed_level = 50;
+static double available = 5;
+/*************************************************************************************************************/
 
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
@@ -236,24 +247,14 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  }
 			  state = STATE_SUBSCRIBED;
 		  } else if(state == STATE_SUBSCRIBED){
-		  /*
-			  if((rand()%10) < 7) {    // 70% chance that the chlorine level changes
-				  sprintf(pub_topic, "%s", "chlorine");
 
-				  if(increase) {
-					  sensed_chlorine_level = sensed_chlorine_level + (rand()%7 + 1) * 100;
-				  } else {
-					  sensed_chlorine_level = sensed_chlorine_level - (rand()%7 + 1) * 100;
-				  }
+		    sensed_level = simulate_level();
+		    /*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
+		    available = sensed_level*SECTION*WATER_SPEED;
+		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3/s\"}", node_id, available);
+		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+		    printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3/s\n", sensed_level, available);
 
-				  sprintf(app_buffer, "{\"node\": %d, \"chlorine\": %d, \"unit\": \"ppb\"}", node_id, sensed_chlorine_level);
-
-				  mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-					 strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-
-				  printf("Chlorine level changed: %d ppb\n", sensed_chlorine_level);
-			  }
-        */
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");
 		   // Recover from error
