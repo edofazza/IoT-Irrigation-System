@@ -1,2 +1,4 @@
 /dev/ttyACM18
+/dev/ttyACM29
 /dev/ttyACM70
+/dev/ttyACM81
