@@ -12,7 +12,7 @@
 static void get_rain_status_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 static void rain_event_handler(void);
 
-EVENT_RESOURCE(temperature_sensor,
+EVENT_RESOURCE(rain_sensor,
                "title=\"Rain sensor\";obs",
                get_rain_status_handler,
                NULL,
@@ -22,11 +22,11 @@ EVENT_RESOURCE(temperature_sensor,
 
 static void get_rain_status_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-    LOG_INFO("Handling temperature get request...\n");
+    LOG_INFO("Handling rain get request...\n");
    
     // TODO: IF TOO HOT OR TOO COLD SEND A WARNING
     
-    // SEND TEMPERATURE VALUE
+    // SEND RAIN VALUE
     char* msg;
     if (isRaining)
         msg = "raining";
@@ -53,5 +53,5 @@ static void rain_event_handler(void)
 
     // if not equal, notify
     if (new_isRaining != isRaining)
-        coap_notify_observers(&temperature_sensor);
+        coap_notify_observers(&rain_sensor);
 }
