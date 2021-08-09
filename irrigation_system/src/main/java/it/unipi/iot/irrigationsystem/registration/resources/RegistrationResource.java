@@ -45,6 +45,8 @@ public class RegistrationResource extends CoapResource {
 
         if (deviceType.equals("temperature_sensor"))
             coapHandler.deleteTemperatureSensor(ipAddress);
+        else if (deviceType.equals("rain_sensor"))
+            coapHandler.deleteRainSensor(ipAddress);
         else
             success = false;
 
