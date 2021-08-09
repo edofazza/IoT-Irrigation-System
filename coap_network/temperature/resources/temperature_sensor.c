@@ -31,11 +31,13 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
     // IF TOO HOT OR TOO COLD SEND A WARNING
     if (temperature < LOWER_BOUND_TEMP)
     {
-        msg = "WARN: hot";
+        LOG_INFO("Temperature lower than normal\n");
+        msg = "WARN hot";
     }
     else if (temperature > UPPER_BOUND_TEMP)
     {
-        msg = "WARN: cold";
+        LOG_INFO("Temperature greater than normal\n");
+        msg = "WARN cold";
     }
     else
     {
