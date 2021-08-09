@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `iot_irrigation_system`.`tap` (
   `idtap` INT NOT NULL AUTO_INCREMENT,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `intensity` DOUBLE NOT NULL,
+  `interval` INT NOT NULL,
   PRIMARY KEY (`idtap`))
 ENGINE = InnoDB;
 
@@ -85,11 +86,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `iot_irrigation_system`.`waterLevelResevoir`
+-- Table `iot_irrigation_system`.`waterLevelReservoir`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `iot_irrigation_system`.`waterLevelResevoir` ;
+DROP TABLE IF EXISTS `iot_irrigation_system`.`waterLevelReservoir` ;
 
-CREATE TABLE IF NOT EXISTS `iot_irrigation_system`.`waterLevelResevoir` (
+CREATE TABLE IF NOT EXISTS `iot_irrigation_system`.`waterLevelReservoir` (
   `idwaterLevel` INT NOT NULL AUTO_INCREMENT,
   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `nodeId` VARCHAR(10) NOT NULL,

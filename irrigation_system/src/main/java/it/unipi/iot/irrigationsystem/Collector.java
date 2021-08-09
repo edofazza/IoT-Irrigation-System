@@ -38,6 +38,12 @@ public class Collector {
                 else if(chunks[0].equals("setTemp"))
                     System.out.println("PASS"); //TODO: dedicated function
 
+                else if(chunks[0].equals("start")) // TODO: simulation thread
+                    System.out.println("PASS"); //TODO: dedicated function
+
+                else if(chunks[0].equals("stop"))
+                    System.out.println("PASS"); //TODO: dedicated function
+
                 else
                     System.out.println("Invalid command");
 
@@ -51,6 +57,8 @@ public class Collector {
         System.out.println("Commands list:" +
                 "\n\t!getSensorsList: show list of all available sensors" +
                 "\n!setTemp <lower temperature> <upper temperature> <unit[C or F]>: set desired temperature bounds" +
+                "\n!start: start the simulation" +
+                "\n!stop: stop the simulation" +
                 "\n\t!help: print commands list" +
                 "\n\t!quit: quit the program");
     }
