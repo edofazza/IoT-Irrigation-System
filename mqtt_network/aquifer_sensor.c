@@ -24,12 +24,14 @@ static double simulate_level(){
     if (month >5 && month<8)  //between June and August
         summer = true;
     srand(time(NULL));
-    double availability;
+    double availability;  //   cm^3/s
     if (summer)
         availability = rand()%MEDIUM_NEED;
     else
         availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
-    double level = (availability/WATER_SPEED)/SECTION;
+
+    /*Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED*/
+    double level = (availability/WATER_SPEED)/SECTION;   //cm
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }
 
