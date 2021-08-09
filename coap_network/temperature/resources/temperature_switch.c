@@ -5,7 +5,7 @@
 #include "sys/log.h"
 
 /*          RESOURCES            */
-#include "gloabal_variables.h"
+#include "global_variables.h"
 
 
 /*          HANDLERS          */
