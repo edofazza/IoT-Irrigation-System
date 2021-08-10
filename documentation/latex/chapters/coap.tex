@@ -133,7 +133,7 @@ The tap actuator is the device aim at irrigating the fields.
 \subsubsection{Resources}
 The tap actuator exposes four resources: the \textit{tap\_intensity}, the \textit{tap\_interval}, \textit{tap\_where\_water} and the \textit{tap\_switch}.
 
-The \textbf{tap\_intensity} resource is related to the \textit{intensity} variable, which indicates the volume of water to provide at each simulation. Since we want to pull water form the aquifer or the reservoir, we made this resource observable in the way of better controlling the \textit{water level sensors} in the simulation. The method implemented for this resource are the \textit{GET} and \textit{PUT} methods. The \textit{GET} method respond to the user with a string containing the value of the intensity and, separated by a space, a character value indicating if the water is taken from the aquifer ('A') or the reservoir('R'). On the other hand, the \textit{PUT} method gives to the user the possibility to set up the intensity value updating the current one.
+The \textbf{tap\_intensity} resource is related to the \textit{intensity} variable, which indicates the volume of water to provide at each simulation. Since we want to pull water from the aquifer or the reservoir, we made this resource observable in the way of better controlling the \textit{water level sensors} in the simulation. The method implemented for this resource are the \textit{GET} and \textit{PUT} methods. The \textit{GET} method respond to the user with a string containing the value of the intensity and, separated by a space, a character value indicating if the water is taken from the aquifer ('A') or the reservoir('R'). On the other hand, the \textit{PUT} method gives to the user the possibility to set up the intensity value updating the current one.
 
 The \textbf{tap\_interval} resource indicates the period of time (expressed in \textit{CLOCK\_SECOND}) between two activations of the tap. This resource can be retrieved using the \textit{GET} method associated to it, and it can be updated using the \textit{PUT} method. The \textit{PUT} method does not only update the value, but it updates also the intensity based on the following formula.
 
@@ -143,6 +143,6 @@ The \textbf{tap\_interval} resource indicates the period of time (expressed in \
   \end{gathered}
 \end{equation}
 
-The \textbf{tap\_where\_water} resource is used by the device in order to decide where to takes the water for every irrigation activity. Thus, the resource provide a \textit{PUT} method for changing this value and, for sake of control, we implemented the possibility to retrieve the value through a \textit{GET} method.
+The \textbf{tap\_where\_water} resource is used by the device in order to decide where to take the water for every irrigation activity. Thus, the resource provide a \textit{PUT} method for changing this value and, for sake of control, we implemented the possibility to retrieve the value through a \textit{GET} method.
 
 The \textbf{tap\_switch} resource works in the same way of the \textbf{temperature\_switch} and \textbf{soil\_moisture\_switch} resources. The meaning of use this type of resource is for not irrigating when raining since it would be a waste.
