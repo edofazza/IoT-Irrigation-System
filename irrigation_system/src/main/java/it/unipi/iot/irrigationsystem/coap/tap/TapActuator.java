@@ -45,6 +45,7 @@ public class TapActuator {
     }
 
     public void printDevice() {
-        System.out.println("Tap Actuator:\n\t" + clientTapActuator.getURI() + "\n");
+        if (clientTapActuator != null)
+            System.out.println("Tap Actuator:\n\t" + clientTapActuator.getURI() + "\n");
     }
 }

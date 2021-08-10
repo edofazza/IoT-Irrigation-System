@@ -41,6 +41,7 @@ public class RainSensor {
     }
 
     public void printDevice() {
-        System.out.println("Rain Sensor:\n\t" + clientRainSensor.getURI() + "\n");
+        if (clientRainSensor != null)
+            System.out.println("Rain Sensor:\n\t" + clientRainSensor.getURI() + "\n");
     }
 }

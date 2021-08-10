@@ -1,11 +1,23 @@
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include "coap-engine.h"
 #include "dev/leds.h"
 #include "sys/log.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+
 /**************** RESOURCES **********************/
-#include "gloabal_variables.h"
+#include "global_variables.h"
+
+#define VARIATION 1
+
+static int LOWER_BOUND_TEMP = 20;
+static int UPPER_BOUND_TEMP = 30;
+
+static int temperature = 24;
 
 
 /**************** REST: Temperature **********************/
@@ -30,21 +42,21 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
     if (temperature < LOWER_BOUND_TEMP)
     {
         LOG_INFO("Temperature lower than normal\n");
-        static const int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN hot") + 1;
-        msg = new char[length];
+        int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN hot") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN hot %d", temperature);
     }
     else if (temperature > UPPER_BOUND_TEMP)
     {
         LOG_INFO("Temperature greater than normal\n");
-        static const int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN cold") + 1;
-        msg = new char[length];
+        int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN cold") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN cold %d", temperature);
     }
     else
     {
         static const size_t max_char_len = 4; //-dd\0
-        msg = new char[max_char_len];
+        msg = (char*)malloc((max_char_len)*sizeof(char));
         snprintf(msg, max_char_len, "%d", temperature);
     }
     
@@ -68,22 +80,24 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
     
     if((len = coap_get_payload(request, &payload)))
     {
-        char* chunks = strtok((char*)payload, " ");
+        char* chunk = strtok((char*)payload, " ");
+        char* type = chunk;
         
-        int new_value = atoi(chunks[1]);
-        if (strncmp(chunks[0], "u", strlen("u")))
+        chunk = strtok(NULL, " ");
+        int new_value = atoi(chunk);
+        if (strncmp(type, "u", strlen("u")))
         {
             if (new_value < LOWER_BOUND_TEMP)
                 success = false;
             else
-                UPPER_BOUND_TEMP = atoi(chunks[1]);
+                UPPER_BOUND_TEMP = new_value;
         }
         else // update the lower bound
         {
             if (new_value > UPPER_BOUND_TEMP)
                 success = false;
             else
-                LOWER_BOUND_TEMP = atoi(chunks[1]);
+                LOWER_BOUND_TEMP = new_value;
         }
     }
 
@@ -102,11 +116,12 @@ static void temperature_event_handler(void)
     int new_temp = temperature;
     int random = rand() % 4; // generate 0, 1, 2, 3
     
-    if (random == 0) // 25% of changing the value
+    if (random == 0) {// 25% of changing the value
         if (random < 2) // decrease
             new_temp -= VARIATION;
         else // increase
             new_temp += VARIATION;
+    }
 
     // if not equal
     if (new_temp != temperature)
