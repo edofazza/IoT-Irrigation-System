@@ -67,4 +67,11 @@ public class TemperatureSensorNetwork {
             }
         }
     }
+
+    public void printDevices() {
+        for(CoapClient cc: clientTemperatureSensorList) {
+            System.out.println("Temperature sensors:");
+            System.out.println("\t" + cc.getURI() + "\n");
+        }
+    }
 }

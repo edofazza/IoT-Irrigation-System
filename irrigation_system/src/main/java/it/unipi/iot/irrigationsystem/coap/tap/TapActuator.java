@@ -43,4 +43,8 @@ public class TapActuator {
             observeTapIntensity = null;
         }
     }
+
+    public void printDevice() {
+        System.out.println("Tap Actuator:\n\t" + clientTapActuator.getURI() + "\n");
+    }
 }

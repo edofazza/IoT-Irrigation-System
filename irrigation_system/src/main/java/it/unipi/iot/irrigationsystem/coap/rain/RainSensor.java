@@ -39,4 +39,8 @@ public class RainSensor {
             observeRain = null;
         }
     }
+
+    public void printDevice() {
+        System.out.println("Rain Sensor:\n\t" + clientRainSensor.getURI() + "\n");
+    }
 }

@@ -51,4 +51,11 @@ public class CoapNetworkHandler {
     public void deleteTapActuator(String ip) {
         tapActuator.deleteTapActuator(ip);
     }
+
+    public void printAllDevices() {
+        temperatureSensorNetwork.printDevices();
+        rainSensor.printDevice();
+        soilMoistureNetwork.printDevices();
+        tapActuator.printDevice();
+    }
 }
