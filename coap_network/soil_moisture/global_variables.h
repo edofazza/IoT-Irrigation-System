@@ -1,7 +1,7 @@
-#define VARIATION 1
+#define VARIATION 0.02
 
-static int LOWER_BOUND_TEMP = 20;
-static int UPPER_BOUND_TEMP = 30;
+static double LOWER_BOUND_SOIL_TENSION = -0.6; // bar
+static double UPPER_BOUND_SOIL_TENSION = -0.4; // bar
 
-static int temperature = 24;
+static double soilTension = -0.5;
 static bool isActive = true;

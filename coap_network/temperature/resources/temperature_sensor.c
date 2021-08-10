@@ -99,14 +99,14 @@ static void temperature_event_handler(void)
     
     // extimate new temperature
     srand(time(NULL));
-    int new_temp;
+    int new_temp = temperature;
     int random = rand() % 4; // generate 0, 1, 2, 3
     
     if (random == 0) // 25% of changing the value
         if (random < 2) // decrease
-            temperature -= VARIATION;
+            new_temp -= VARIATION;
         else // increase
-            temperature += VARIATION;
+            new_temp += VARIATION;
 
     // if not equal
     if (new_temp != temperature)

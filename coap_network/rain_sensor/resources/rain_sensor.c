@@ -48,6 +48,7 @@ static void rain_event_handler(void)
     srand(time(NULL));
     int random = rand() % 10; // generate 0, 1, ..., 9
     
+    bool new_isRaining = isRaining;
     if (random == 0) // 10% of changing the value
         new_isRaining = !isRaining;
 
