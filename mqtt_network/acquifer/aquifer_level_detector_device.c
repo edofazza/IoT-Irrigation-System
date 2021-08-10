@@ -98,7 +98,7 @@ static void
 pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
             uint16_t chunk_len)
 {
-  if(strcmp(topic, "aquifer_level_detection_interval") == 0) {
+  if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
 
 	long interval = atol(const char*)chunk;
@@ -226,7 +226,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  if(state==STATE_CONNECTED){
 
 			  // Subscribe to a topic
-			  strcpy(sub_topic,"aquifer_level_detection_interval");
+			  strcpy(sub_topic,"interval");
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
