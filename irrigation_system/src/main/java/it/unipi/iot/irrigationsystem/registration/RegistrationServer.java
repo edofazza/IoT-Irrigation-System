@@ -14,4 +14,7 @@ public class RegistrationServer extends CoapServer {
         add(new RegistrationResource(coapHandler));
     }
 
+    public void printDevices() {
+        coapHandler.printAllDevices();
+    }
 }

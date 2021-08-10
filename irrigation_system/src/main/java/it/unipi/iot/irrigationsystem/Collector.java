@@ -32,8 +32,8 @@ public class Collector {
                 else if(chunks[0].equals("help"))
                     printCommands();
 
-                else if(chunks[0].equals("getSensorsList"))
-                    System.out.println("PASS"); //TODO: dedicated function
+                else if(chunks[0].equals("getDevicesList"))
+                    rs.printDevices();
 
                 else if(chunks[0].equals("setTemp"))
                     System.out.println("PASS"); //TODO: dedicated function
@@ -55,7 +55,7 @@ public class Collector {
 
     private static void printCommands() {
         System.out.println("Commands list:" +
-                "\n\t!getSensorsList: show list of all available sensors" +
+                "\n\t!getDevicesList: show list of all available sensors" +
                 "\n!getTemp: get the temperature" +
                 "\n!setTemp <lower temperature> <upper temperature>: set desired temperature bounds" +
                 "\n!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +
