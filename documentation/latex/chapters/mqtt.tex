@@ -5,16 +5,11 @@ The MQTT Network will be deployed in the water provisioning site and it is forme
 
 
 \subsection{Aquifer Level Detector}
-The temperature sensor measures the local temperature in Celsius (at the Collector level will be given the possibility to display the results in Fahrenheit, see the Collector chapter for further details). The goal of this sensors is to quantify and schedule the water provisioning.
+The Aquifer Level Detector senses the level of water in the Aquifer, in order to estimate the availability. This device senses the height of the water flow in cm and based on that computes the volume of water that is available at each iteration, known the dimensions of the aquifer and the speed of the flow. The user can retrieve at any time the last measurement (the system will do it automatically) and the sensing interval is the same of the \textbf{tap\_interval}.
 
 \subsubsection{Topics}
-The temperature sensor exposes two resources: the \textit{temperature\_sensor} and the \textit{temperature\_switch} resources.
-
-The \textbf{temperature\_sensor} resource is an observable resource that provides to the clients the temperature acquired by the sensor. The resource not only provides the mere temperature to the clients, but it informs if the temperature is lower or greater than a certain threshold. Hence, the sensor exposes a  \textit{PUT} method, in order to set up the lower or the upper bound for the temperature.
-
-The change of the bounds is done at step, the user will specify the threshold that he/she wants to change through the CLI: upper or lower. At the server side the request will be processed checking if the value arrived is consistent (e.g., the new value for the lower bound is not greater than the upper bound actual value), after those controls the parameter is updated.
-
-The \textbf{temperature\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
+This device is subscribed to the \textbf{interval} topic used to change the sensing interval to adapt it to the tap\_interval and publishes measurements on the \textbf{aquifer\_level} mqtt topic.
+The device acts as a MQTT client and handles its connection with the broker.
 
 \subsubsection{Data Generation}
 Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the temperature is updated using the following algorithm:
