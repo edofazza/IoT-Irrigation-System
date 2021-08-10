@@ -19,18 +19,17 @@
 #define SERVER_EP "coap://[fd00::1]:5683"
 #define CONN_TRY_INTERVAL 1
 #define REG_TRY_INTERVAL 1
-#define SENSOR_TYPE "tap_actuator"
+#define SIMULATION_INTERVAL 1
+#define SENSOR_TYPE "soil_moisture_sensor"
 
 /* Log configuration */
 #include "sys/log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_APP
 
-/* Global resources: used for interval variable */
-#include "gloabal_variables.h"
 
-PROCESS(tap_server, "Server for the tap actuator");
-AUTOSTART_PROCESSES(&tap_actuator);
+PROCESS(soil_moisture_server, "Server for the soil moisture sensor");
+AUTOSTART_PROCESSES(&soil_moisture_server);
 
 //*************************** GLOBAL VARIABLES *****************************//
 char* service_url = "/registration";
@@ -42,10 +41,8 @@ static struct etimer wait_connectivity;
 static struct etimer wait_registration;
 static struct etimer simulation;
 
-extern coap_resource_t tap_intensity;
-extern coap_resource_t tap_interval;
-extern coap_resource_t tap_where_water;
-extern coap_resource_t tap_switch;
+extern coap_resource_t soil_moisture_sensor;
+extern coap_resource_t soil_moisture_switch;
 
 //*************************** UTILITY FUNCTIONS *****************************//
 static void check_connection()
@@ -85,7 +82,7 @@ void client_chunk_handler(coap_message_t *resource)
 
 
 //*************************** THREAD *****************************//
-PROCESS_THREAD(tap_server, ev, data)
+PROCESS_THREAD(soil_moisture_server, ev, data)
 {
     PROCESS_BEGIN();
     
@@ -113,24 +110,22 @@ PROCESS_THREAD(tap_server, ev, data)
         // wait for the timer to expire
         PROCESS_WAIT_UNTIL(etimer_expired(&wait_registration));
     }
-    LOG_INFO("REGISTERED\nStarting tap server");
+    LOG_INFO("REGISTERED\nStarting soil moisture server");
     
     // RESOURCES ACTIVATION
-    coap_activate_resource(&tap_intensity, "tap_intensity");
-    coap_activate_resource(&tap_interval, "tap_interval");
-    coap_activate_resource(&tap_where_water, "tap_where_water");
-    coap_activate_resource(&tap_switch, "tap_switch");
+    coap_activate_resource(&soil_moisture_sensor, "soil_moisture_sensor");
+    coap_activate_resource(&tsoil_moisture_switch, "soil_moisture_switch");
     
     // SIMULATION
-    etimer_set(&simulation, CLOCK_SECOND * interval);
+    etimer_set(&simulation, CLOCK_SECOND * SIMULATION_INTERVAL);
     LOG_INFO("Simulation\n");
     
     while (1) {
         PROCESS_WAIT_EVENT();
         
         if (ev == PROCESS_EVENT_TIMER && data == &simulation) {
-            tap_intensity.trigger();
-            etimer_set(&simulation, CLOCK_SECOND * interval);
+            soil_moisture_sensor.trigger();
+            etimer_set(&simulation, CLOCK_SECOND * SIMULATION_INTERVAL);
         }
     }
     

@@ -72,5 +72,6 @@ static void intensity_event_handler(void)
 {
     // tells to the client that "intensity" amount of water
     // has been used. This is done for simulation purposes
-    coap_notify_observers(&tap_intensity);
+    if (isActive)
+        coap_notify_observers(&tap_intensity);
 }

@@ -29,7 +29,7 @@ public class RegistrationResource extends CoapResource {
             case "rain_sensor":
                 coapHandler.addRainSensor(ipAddress);
                 break;
-            case "soilMoisture_sensor":
+            case "soil_moisture_sensor":
                 coapHandler.addSoilMoisture(ipAddress);
                 break;
             case "tap_actuator":
