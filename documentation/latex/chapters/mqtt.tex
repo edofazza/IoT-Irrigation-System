@@ -1,2 +1,94 @@
 \section{MQTT Network}
 
+\subsection{Devices}
+The MQTT Network will be deployed in the water provisioning site and it is formed by 4 nodes (2 Aquifer Level Detectors and 2 Reservoirs Level Detectors and Actuators). The role of those devices is to monitor the water level in the two sources, in order to always have it enough for the irrigation needs but without the spoil of the natural resources. Each pair of devices communicates the sensed levels  to the Collector, which will compute the mean of the values to more precisely estimate the actual aquifer and reservoir level.
+
+
+\subsection{Aquifer Level Detector}
+The temperature sensor measures the local temperature in Celsius (at the Collector level will be given the possibility to display the results in Fahrenheit, see the Collector chapter for further details). The goal of this sensors is to quantify and schedule the water provisioning.
+
+\subsubsection{Topics}
+The temperature sensor exposes two resources: the \textit{temperature\_sensor} and the \textit{temperature\_switch} resources.
+
+The \textbf{temperature\_sensor} resource is an observable resource that provides to the clients the temperature acquired by the sensor. The resource not only provides the mere temperature to the clients, but it informs if the temperature is lower or greater than a certain threshold. Hence, the sensor exposes a  \textit{PUT} method, in order to set up the lower or the upper bound for the temperature.
+
+The change of the bounds is done at step, the user will specify the threshold that he/she wants to change through the CLI: upper or lower. At the server side the request will be processed checking if the value arrived is consistent (e.g., the new value for the lower bound is not greater than the upper bound actual value), after those controls the parameter is updated.
+
+The \textbf{temperature\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
+
+\subsubsection{Data Generation}
+Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the temperature is updated using the following algorithm:
+
+\begin{lstlisting}
+static void temperature_event_handler(void)
+{
+    if (!isActive) {
+        return; // DOES NOTHING SINCE IT IS TURNED OFF
+    }
+    
+    // extimate new temperature
+    srand(time(NULL));
+    int new_temp;
+    int random = rand() % 4; // generate 0, 1, 2, 3
+    
+    if (random == 0) // 25% of changing the value
+        if (random < 2) // decrease
+            new_temp -= VARIATION;
+        else // increase
+            new_temp += VARIATION;
+
+    // if not equal
+    if (new_temp != temperature)
+    {
+        temperature = new_temp;
+        coap_notify_observers(&temperature_sensor);
+    }
+}
+\end{lstlisting}
+
+
+
+\subsection{Reservoir Level Detector and Actuator}
+Soil moisture sensors measure the water content in the soil and can be used to estimate the amount of stored water in the soil horizon. Soil moisture sensors do not measure water in the soil directly. Instead, they measure changes in some other soil property that is related to water content in a predictable way. Checking the different technologies used for measure soil moisture content, we decide to exploit the \textit{soil water potential}\footnote{\textit{Soil water potential} or \textit{soil moisture tension} is a measurement of how tightly water clings to the soil and is expressed in units of pressure called bars. Generally, the drier the soil, the greater the soil water potential and the harder a plant must work to draw water from the soil.}.
+
+\subsubsection{Topics}
+The soil moisture sensor exposes two resources: the \textit{soil\_moisture\_sensor} and the \textit{soil\_moisture\_switch} resources.
+
+The \textbf{soil\_moisture\_sensor} resource is an observable resource that provides to the clients the soil moisture tension acquired by the sensor. The resource not only provides the mere tension to the clients, but it informs if the value is lower or greater than a certain threshold. Hence, the sensor exposes a  \textit{PUT} method, in order to set up the lower or the upper bound for the tension\footnote{For the default range value we used the ones indicated here: https://www.metergroup.com/environment/articles/defining-water-potential/ }.
+
+The change of the bounds is done at step, the user will specify the threshold that he/she wants to change through the CLI: upper or lower. At the server side the request will be processed checking if the value arrived is consistent (e.g., the new value for the lower bound is not greater than the upper bound actual value), after those controls the parameter is updated.
+
+The \textbf{soil\_moisture\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
+
+\subsubsection{Data Generation}
+Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the tension is updated using the following algorithm (the same of to the one used for the temperature):
+
+\begin{lstlisting}
+static void soil_moisture_event_handler(void)
+{
+    if (!isActive) {
+        return; // DOES NOTHING SINCE IT IS TURNED OFF
+    }
+    
+    // extimate new tension
+    srand(time(NULL));
+    int new_soilTension = soilTension;
+    int random = rand() % 4; // generate 0, 1, 2, 3
+    
+    if (random == 0) // 25% of changing the value
+        if (random < 2) // decrease
+            new_soilTension -= VARIATION;
+        else // increase
+            new_soilTension += VARIATION;
+
+    // if not equal
+    if (new_soilTension != soilTension)
+    {
+        soilTension = new_soilTension;
+        coap_notify_observers(&soil_moisture_sensor);
+    }
+}
+\end{lstlisting}
+
+
+
