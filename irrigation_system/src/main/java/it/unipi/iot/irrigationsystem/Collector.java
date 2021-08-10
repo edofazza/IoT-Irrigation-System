@@ -33,7 +33,7 @@ public class Collector {
                     printCommands();
 
                 else if(chunks[0].equals("getDevicesList"))
-                    System.out.println("PASS"); //TODO: dedicated function
+                    rs.printDevices();
 
                 else if(chunks[0].equals("setTemp"))
                     System.out.println("PASS"); //TODO: dedicated function
