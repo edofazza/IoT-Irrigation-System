@@ -25,9 +25,19 @@ static void get_intensity_handler(coap_message_t *request, coap_message_t *respo
     LOG_INFO("Handling tap intensity get request...\n");
     char* msg;
     
-    static const int length = snprintf(NULL, 0,"%lf", intensity) + 1;
-    msg = new char[length];
-    snprintf(msg, length, "%lf", intensity);
+    if (takesWaterFromAquifer)
+    {
+        static const int length = snprintf(NULL, 0,"%lf A", intensity) + 1;
+        msg = new char[length];
+        snprintf(msg, length, "%lf A", intensity);
+    }
+    else
+    {
+        static const int length = snprintf(NULL, 0,"%lf R", intensity) + 1;
+        msg = new char[length];
+        snprintf(msg, length, "%lf R
+                 ", intensity);
+    }
     
     // prepare buffer
     size_t len = strlen(msg);

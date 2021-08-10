@@ -9,8 +9,9 @@
 \BOOKMARK [3][-]{subsubsection.2.3.1}{Resource}{subsection.2.3}% 9
 \BOOKMARK [3][-]{subsubsection.2.3.2}{Data Generation}{subsection.2.3}% 10
 \BOOKMARK [2][-]{subsection.2.4}{Tap Actuator}{section.2}% 11
-\BOOKMARK [1][-]{section.3}{MQTT Network}{}% 12
-\BOOKMARK [1][-]{section.4}{Collector}{}% 13
-\BOOKMARK [2][-]{subsection.4.1}{MQTT Side}{section.4}% 14
-\BOOKMARK [2][-]{subsection.4.2}{CoAP Side}{section.4}% 15
-\BOOKMARK [2][-]{subsection.4.3}{Database And Data Visualization}{section.4}% 16
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Resources}{subsection.2.4}% 12
+\BOOKMARK [1][-]{section.3}{MQTT Network}{}% 13
+\BOOKMARK [1][-]{section.4}{Collector}{}% 14
+\BOOKMARK [2][-]{subsection.4.1}{MQTT Side}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.2}{CoAP Side}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.3}{Database And Data Visualization}{section.4}% 17

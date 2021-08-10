@@ -10,8 +10,9 @@
 \contentsline {subsubsection}{\numberline {2.3.1}Resource}{4}{subsubsection.2.3.1}%
 \contentsline {subsubsection}{\numberline {2.3.2}Data Generation}{4}{subsubsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.4}Tap Actuator}{4}{subsection.2.4}%
-\contentsline {section}{\numberline {3}MQTT Network}{5}{section.3}%
-\contentsline {section}{\numberline {4}Collector}{6}{section.4}%
-\contentsline {subsection}{\numberline {4.1}MQTT Side}{6}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}CoAP Side}{6}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Database And Data Visualization}{6}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.1}Resources}{4}{subsubsection.2.4.1}%
+\contentsline {section}{\numberline {3}MQTT Network}{6}{section.3}%
+\contentsline {section}{\numberline {4}Collector}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}MQTT Side}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}CoAP Side}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Database And Data Visualization}{7}{subsection.4.3}%
