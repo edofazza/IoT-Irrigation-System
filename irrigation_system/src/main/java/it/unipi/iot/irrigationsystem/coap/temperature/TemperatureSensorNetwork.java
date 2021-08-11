@@ -1,10 +1,13 @@
 package it.unipi.iot.irrigationsystem.coap.temperature;
 
+import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
+import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +71,84 @@ public class TemperatureSensorNetwork {
         }
     }
 
-    public void printDevices() {
-        for(CoapClient cc: clientTemperatureSensorList) {
-            System.out.println("Temperature sensors:");
-            System.out.println("\t" + cc.getURI() + "\n");
+    public boolean changeBounds(Bound bound, int newValue) {
+        if (clientTemperatureSensorList.isEmpty())
+            return false;
+
+        String msg;
+        switch (bound) {
+            case LOWER:
+                msg = "l " + newValue;
+                break;
+            case UPPER:
+                msg = "u " + newValue;
+                break;
+            default:
+                return false;
         }
+
+        for (CoapClient coapClient: clientTemperatureSensorList) {
+            coapClient.put(new CoapHandler() {
+
+                public void onLoad(CoapResponse response) {
+                    if (response != null) {
+                        if(!response.isSuccess())
+                            System.out.println("Something went wrong with temperature sensor");
+                    }
+                }
+
+                public void onError() {
+                    System.err.println("[ERROR: TemperatureSensor " + coapClient.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+        }
+
+        return true;
+    }
+
+    public boolean turnSwitch(SwitchStatus switchStatus) {
+        if (clientTemperatureSwitchList.isEmpty())
+            return false;
+
+        String msg;
+        switch (switchStatus) {
+            case ON:
+                msg = "ON";
+                break;
+            case OFF:
+                msg = "OFF";
+                break;
+            default:
+                return false;
+        }
+
+        for (CoapClient coapClient: clientTemperatureSensorList) {
+            coapClient.put(new CoapHandler() {
+
+                public void onLoad(CoapResponse response) {
+                    if (response != null) {
+                        if(!response.isSuccess())
+                            System.out.println("Something went wrong with temperature switch");
+                    }
+                }
+
+                public void onError() {
+                    System.err.println("[ERROR: TemperatureSwitch " + coapClient.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+        }
+        return true;
+    }
+
+    public void printDevices() {
+        System.out.println("Temperature sensors:");
+        for(CoapClient cc: clientTemperatureSensorList)
+            System.out.println("\t" + cc.getURI());
+    }
+
+    public int getTemperatureDetected() {
+        return temperatureDetected;
     }
 }
