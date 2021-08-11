@@ -47,6 +47,9 @@ public class Collector {
                 else if(chunks[0].equals("setUnit"))
                     setUnit(chunks);
 
+                else if(chunks[0].equals("getWeather"))
+                    getWeather(rs);
+
                 else if(chunks[0].equals("start")) // TODO: simulation thread
                     System.out.println("PASS"); //TODO: dedicated function
 
@@ -68,7 +71,7 @@ public class Collector {
                 "\n\t!getTemp: get the temperature" + // DONE
                 "\n\t!setTemp <l/u> <value>: set desired temperature for specified bound" + // DONE
                 "\n\t!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +  // DONE
-                "\n\t!getIsRaining: get if the rain sensor feels rain or not" +
+                "\n\t!getWeather: get if the rain sensor feels rain or not" + // DONE
                 "\n\t!getSoilTension: get the soil tension" +
                 "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" +
                 "\n\t!setTapInterval <seconds>: set interval which the tap operates" +
@@ -127,5 +130,12 @@ public class Collector {
             default:
                 System.out.println("Passed unit is not valid");
         }
+    }
+
+    private static void getWeather(RegistrationServer rs) {
+        if (rs.getWeather())
+            System.out.println("The weather is SUNNY");
+        else
+            System.out.println("The weather is RAINING");
     }
 }

@@ -68,8 +68,10 @@ public class CoapNetworkHandler {
         return temperatureSensorNetwork.getTemperatureDetected();
     }
 
-    //
-
+    // Rain Actions
+    public boolean getWeather() {
+        return rainSensor.isRaining();
+    }
 
     // General functions
     public void printAllDevices() {

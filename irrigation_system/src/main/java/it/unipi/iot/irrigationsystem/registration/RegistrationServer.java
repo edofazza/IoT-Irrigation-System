@@ -29,6 +29,11 @@ public class RegistrationServer extends CoapServer {
         return coapHandler.getTemperature();
     }
 
+    // Rain utility functions
+    public boolean getWeather() {
+        return coapHandler.getWeather();
+    }
+
     // General functions
     public void printDevices() {
         coapHandler.printAllDevices();
