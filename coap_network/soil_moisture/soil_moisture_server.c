@@ -50,7 +50,7 @@ static void check_connection()
     if (!NETSTACK_ROUTING.node_is_reachable())
     {
         LOG_INFO("BR not reachable\n");
-        etimer_reset(%wait_connectivity)
+        etimer_reset(&wait_connectivity);
     }
     else
     {
@@ -61,9 +61,9 @@ static void check_connection()
     }
 }
 
-void client_chunk_handler(coap_message_t *resource)
+void client_chunk_handler(coap_message_t *response)
 {
-    const uint8_t* chunk:
+    const uint8_t* chunk;
     
     if (response == NULL)
     {
@@ -77,7 +77,7 @@ void client_chunk_handler(coap_message_t *resource)
     if(strncmp((char*)chunk, "Success", len) == 0)
         registered = true;
     else
-        etimer_set(&wait_registration, CLOCK_SECOND * REG_TRY_INTERVAL)
+        etimer_set(&wait_registration, CLOCK_SECOND * REG_TRY_INTERVAL);
 }
 
 
@@ -114,7 +114,7 @@ PROCESS_THREAD(soil_moisture_server, ev, data)
     
     // RESOURCES ACTIVATION
     coap_activate_resource(&soil_moisture_sensor, "soil_moisture_sensor");
-    coap_activate_resource(&tsoil_moisture_switch, "soil_moisture_switch");
+    coap_activate_resource(&soil_moisture_switch, "soil_moisture_switch");
     
     // SIMULATION
     etimer_set(&simulation, CLOCK_SECOND * SIMULATION_INTERVAL);

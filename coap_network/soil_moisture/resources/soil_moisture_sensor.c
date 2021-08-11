@@ -1,12 +1,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 #include "coap-engine.h"
 #include "dev/leds.h"
 #include "sys/log.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+
 /**************** RESOURCES **********************/
-#include "gloabal_variables.h"
+#include "global_variables.h"
+
+#define VARIATION 0.02
+
+static double LOWER_BOUND_SOIL_TENSION = -0.6; // bar
+static double UPPER_BOUND_SOIL_TENSION = -0.4; // bar
+
+static double soilTension = -0.5;
+
 
 
 static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
@@ -30,21 +43,21 @@ static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     if (soilTension < LOWER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension lower than normal\n");
-        static const int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN low") + 1;
-        msg = new char[length];
+        int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN low") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN low %lf", soilTension);
     }
     else if (soilTension > UPPER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension greater than normal\n");
-        static const int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN high") + 1;
-        msg = new char[length];
+        int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN high") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN high %lf", soilTension);
     }
     else
     {
-        static const int max_char_len = snprintf(NULL, 0,"%lf", soilTension) + 1;
-        msg = new char[max_char_len];
+        int max_char_len = snprintf(NULL, 0,"%lf", soilTension) + 1;
+        msg = (char*)malloc((max_char_len)*sizeof(char));
         snprintf(msg, max_char_len, "%lf", soilTension);
     }
     
@@ -68,11 +81,13 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     
     if((len = coap_get_payload(request, &payload)))
     {
-        char* chunks = strtok((char*)payload, " ");
+        char* chunk = strtok((char*)payload, " ");
+        char* type = chunk;
         
+        chunk = strtok(NULL, " ");
         double new_value;
-        sscanf(chunks[1], "%lf", new_value);
-        if (strncmp(chunks[0], "u", strlen("u")))
+        sscanf(chunk, "%lf", &new_value);
+        if (strncmp(type, "u", strlen("u")))
         {
             if (new_value < LOWER_BOUND_SOIL_TENSION)
                 success = false;
@@ -103,12 +118,13 @@ static void soil_moisture_event_handler(void)
     int new_soilTension = soilTension;
     int random = rand() % 4; // generate 0, 1, 2, 3
     
-    if (random == 0) // 25% of changing the value
+    if (random == 0) {// 25% of changing the value
         if (random < 2) // decrease
             new_soilTension -= VARIATION;
         else // increase
             new_soilTension += VARIATION;
-
+    }
+    
     // if not equal
     if (new_soilTension != soilTension)
     {
