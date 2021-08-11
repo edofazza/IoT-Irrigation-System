@@ -1,4 +1,4 @@
-package main.java.it.unipi.iot.irrigationsystem.mqtt;
+package it.unipi.iot.irrigationsystem.mqtt;
 
 import java.util.Map;
 import java.util.HashMap;
