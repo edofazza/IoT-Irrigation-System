@@ -1,18 +1,13 @@
 package it.unipi.iot.irrigationsystem.mqtt;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.eclipse.paho.client.mqttv3.*;
+import org.json.simple.*;
 import org.json.simple.parser.ParseException;
 
-public class CollectorMqttClient implements MqttCallback{
+import java.util.HashMap;
+import java.util.Map;
+
+public class MQTTNetworkHandler implements MqttCallback{
 
     private final String brokerIpAddr = "127.0.0.1";
     private final int brokerPort = 1883;
@@ -99,70 +94,24 @@ public class CollectorMqttClient implements MqttCallback{
 
                     String unit = sensorMessage.get("unit").toString();
 
-                    recentTempSamples.put(nodeId, numericValue);
-                    SmartPoolDbManager.logTemperatureSample(nodeId, numericValue);
+                    receivedReservoirSamples.put(nodeId, numericValue);
+                    // TODO add to db
 
-                    double averageTemp = getAverageTemperature();
-                    if (averageTemp < desiredLowerTemp) {
-                        if(!tempActOn) {
-                            System.out.println("Water temperature is too low! Switch on actuator");
-                            publish(this.tempPubTopic, "ON");
-                            tempActOn = true;
-                            SmartPoolDbManager.logTemperatureActuator(tempActOn);
-                        } else {
-                            System.out.println("Water temperature is too low but the Actuator is already on: it will increase!\n");
-                        }
-                    } else if(averageTemp > (desiredLowerTemp + desiredUpperTemp) / 2) {
-                        if(tempActOn) {
-                            System.out.println("Water temperature is good! Switch off actuator");
-                            publish(this.tempPubTopic, "OFF");
-                            tempActOn = false;
-                            SmartPoolDbManager.logTemperatureActuator(tempActOn);
-                        } else {
-                            if(averageTemp < desiredUpperTemp) {
-                                System.out.println("Water temperature is safe!\n");
-                            } else {
-                                System.out.println("Water temperature is too high but decreasing!\n");
-                            }
-                        }
-                    }
+
                 } else {
                     System.out.println("Garbage data from sensor");
                 }
-            } else if (topic.equals(this.clSubTopic)) {
+            } else if (topic.equals(this.aquiferSubTopic)) {
                 if (sensorMessage.containsKey("node")
-                        && sensorMessage.containsKey("chlorine")
+                        && sensorMessage.containsKey("aquifer_availability")
+                        && sensorMessage.containsKey("unit")
                 ) {
-                    Double numericValue = Double.parseDouble(sensorMessage.get("chlorine").toString());
+                    Double numericValue = Double.parseDouble(sensorMessage.get("aquifer_availability").toString());
                     String nodeId = sensorMessage.get("node").toString();
 
-                    recentClSamples.put(nodeId, numericValue);
-                    SmartPoolDbManager.logChlorineSample(nodeId, numericValue);
+                    receivedAquiferSamples.put(nodeId, numericValue);
+                    // TODO add to db
 
-                    double averageCl = getAverageChlorine();
-                    if (averageCl < desiredLowerCl) {
-                        if(!clActOn) {
-                            System.out.println("Chlorine level is too low! Switch on actuator");
-                            publish(this.clPubTopic, "ON");
-                            clActOn = true;
-                            SmartPoolDbManager.logChlorineActuator(clActOn);
-                        } else {
-                            System.out.println("Chlorine level is too low but the Actuator is already on: it will increase!\n");
-                        }
-                    } else if(averageCl > (desiredLowerCl + desiredUpperCl) / 2) {
-                        if(clActOn) {
-                            System.out.println("Chlorine level is good! Switch off actuator");
-                            publish(this.clPubTopic, "OFF");
-                            clActOn = false;
-                            SmartPoolDbManager.logChlorineActuator(clActOn);
-                        } else {
-                            if(averageCl < desiredUpperCl) {
-                                System.out.println("Chlorine level is safe!\n");
-                            } else {
-                                System.out.println("Chlorine level is too high but decreasing!\n");
-                            }
-                        }
-                    }
                 } else {
                     System.out.println("Garbage data from sensor");
                 }
@@ -181,9 +130,6 @@ public class CollectorMqttClient implements MqttCallback{
 
     }
 
-    private double convertFToC(final double fahrenheit) {
-        return (fahrenheit - 32) * 5 / 9;
-    }
 
     private double averageSampleValue(final Map<String, Double> samples) {
         int sum = 0;
@@ -195,56 +141,24 @@ public class CollectorMqttClient implements MqttCallback{
         return (double) sum / num;
     }
 
-    public double getAverageTemperature() {
-        return averageSampleValue(this.recentTempSamples);
+
+    public int getNumberOfAquiferSensors() {
+        return receivedAquiferSamples.size();
     }
 
-    public double getAverageChlorine() {
-        return averageSampleValue(this.recentClSamples);
+    public int getNumberOfReservoirSensors() {
+        return receivedReservoirSamples.size();
     }
 
-    public void setChlorineBounds(double desiredLower, double desiredUpper) {
-        if (desiredLower < lowerCl || desiredUpper > upperCl) {
-            System.out.format("The chlorine level must stay between %d and %d ppb", lowerCl, upperCl);
-        } else {
-            this.desiredLowerCl = desiredLower;
-            this.desiredUpperCl = desiredUpper;
-            System.out.println("New chlorine bounds are ["+this.desiredLowerCl+";"+this.desiredUpperCl+"]");
-        }
+    public void printAquiferSensors() {
+        stampSensors(receivedAquiferSamples);
     }
 
-    public void setTemperatureBounds(double desiredLower, double desiredUpper, final String unit) {
-        if (unit.equals("F")) {
-            desiredLower = convertFToC(desiredLower);
-            desiredUpper = convertFToC(desiredUpper);
-        }
-
-        if (desiredLower < lowerTemp || desiredUpper > upperTemp) {
-            System.out.format("The temperature must stay between %d and %d °C", lowerTemp, upperTemp);
-        } else {
-            this.desiredLowerTemp = desiredLower;
-            this.desiredUpperTemp = desiredUpper;
-            System.out.println("New temperature bounds are ["+this.desiredLowerTemp+";"+this.desiredUpperTemp+"]");
-        }
+    public void printReservoirSensors() {
+        stampSensors(receivedReservoirSamples);
     }
 
-    public int getNumberOfTemperatureSensors() {
-        return recentTempSamples.size();
-    }
-
-    public int getNumberOfChlorineSensors() {
-        return recentClSamples.size();
-    }
-
-    public void stampTemperatureSensors() {
-        stampSensors(recentTempSamples);
-    }
-
-    public void stampChlorineSensors() {
-        stampSensors(recentClSamples);
-    }
-
-    private void stampSensors(final Map<String, Double> samples) {
+    private void printSensors(final Map<String, Double> samples) {
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
             System.out.println("> " + sample.getKey() + "\n");
         }
