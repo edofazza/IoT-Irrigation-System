@@ -4,6 +4,8 @@ import it.unipi.iot.irrigationsystem.coap.rain.RainSensor;
 import it.unipi.iot.irrigationsystem.coap.soilmoisture.SoilMoistureNetwork;
 import it.unipi.iot.irrigationsystem.coap.tap.TapActuator;
 import it.unipi.iot.irrigationsystem.coap.temperature.TemperatureSensorNetwork;
+import it.unipi.iot.irrigationsystem.enumerate.Bound;
+import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 
 public class CoapNetworkHandler {
     private TemperatureSensorNetwork temperatureSensorNetwork = new TemperatureSensorNetwork();
@@ -20,6 +22,7 @@ public class CoapNetworkHandler {
         return instance;
     }
 
+    // Add and remove functions
     public void addTemperatureSensor(String ip) {
         temperatureSensorNetwork.addTemperatureSensor(ip);
     }
@@ -52,6 +55,23 @@ public class CoapNetworkHandler {
         tapActuator.deleteTapActuator(ip);
     }
 
+    // Temperature Actions
+    public boolean changeTemperatureBounds(Bound bound, int newValue) {
+        return temperatureSensorNetwork.changeBounds(bound, newValue);
+    }
+
+    public boolean changeTemperatureSwitchStatus(SwitchStatus switchStatus) {
+        return temperatureSensorNetwork.turnSwitch(switchStatus);
+    }
+
+    public int getTemperature() {
+        return temperatureSensorNetwork.getTemperatureDetected();
+    }
+
+    //
+
+
+    // General functions
     public void printAllDevices() {
         temperatureSensorNetwork.printDevices();
         rainSensor.printDevice();
