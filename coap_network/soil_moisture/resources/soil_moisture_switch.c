@@ -4,6 +4,10 @@
 #include "dev/leds.h"
 #include "sys/log.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+
 /*          RESOURCES            */
 #include "global_variables.h"
 
@@ -16,6 +20,7 @@ EVENT_RESOURCE(soil_moisture_switch,
                NULL,
                NULL,
                put_switch_handler,
+               NULL,
                NULL);
 
 static void put_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
@@ -28,12 +33,12 @@ static void put_switch_handler(coap_message_t *request, coap_message_t *response
     
     if((len = coap_get_payload(request, &payload)))
     {
-        if (strncmp((char*)payload, "ON") == 0)
+        if (strncmp((char*)payload, "ON", strlen("ON")) == 0)
         {
             isActive = true;
             LOG_INFO("Switch on\n");
         }
-        if (strncmp((char*)payload, "OFF") == 0)
+        if (strncmp((char*)payload, "OFF", strlen("OFF")) == 0)
         {
             isActive = false;
             LOG_INFO("Switch off\n");
