@@ -1,20 +1,28 @@
 \babel@toc {english}{}
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Deployment Structure}{2}{subsection.1.1}%
-\contentsline {section}{\numberline {2}CoAP Network}{3}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Temperature Sensor}{3}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Resources}{3}{subsubsection.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.1.2}Data Generation}{3}{subsubsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.2}Soil Moisture Sensor}{4}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Resources}{4}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Data Generation}{4}{subsubsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.3}Rain Sensor}{5}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Resource}{5}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Data Generation}{5}{subsubsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.4}Tap Actuator}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {1.1}Proposed Solution}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Deployment Structure}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}CoAP Network}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Temperature Sensor}{4}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Resources}{4}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Data Generation}{4}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Soil Moisture Sensor}{5}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Resources}{5}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Data Generation}{5}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}Rain Sensor}{6}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Resource}{6}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Data Generation}{6}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.4}Tap Actuator}{6}{subsection.2.4}%
 \contentsline {subsubsection}{\numberline {2.4.1}Resources}{6}{subsubsection.2.4.1}%
-\contentsline {section}{\numberline {3}MQTT Network}{7}{section.3}%
-\contentsline {section}{\numberline {4}Collector}{8}{section.4}%
-\contentsline {subsection}{\numberline {4.1}MQTT Side}{8}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}CoAP Side}{8}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Database And Data Visualization}{8}{subsection.4.3}%
+\contentsline {section}{\numberline {3}MQTT Network}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Devices}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Aquifer Level Detector}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Topics}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Data Generation}{8}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Reservoir Level Detector and Actuator}{9}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Topics}{9}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Data Generation and Actuation Mechanism}{9}{subsubsection.3.3.2}%
+\contentsline {section}{\numberline {4}Collector}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}MQTT Side}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}CoAP Side}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Database And Data Visualization}{11}{subsection.4.3}%
