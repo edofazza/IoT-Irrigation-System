@@ -1,16 +1,11 @@
-package main.java.it.unipi.iot.irrigationsystem.mqtt;
+package it.unipi.iot.irrigationsystem.mqtt;
 
-import java.util.Map;
-import java.util.HashMap;
-
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.eclipse.paho.client.mqttv3.*;
+import org.json.simple.*;
 import org.json.simple.parser.ParseException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MQTTNetworkHandler implements MqttCallback{
 
