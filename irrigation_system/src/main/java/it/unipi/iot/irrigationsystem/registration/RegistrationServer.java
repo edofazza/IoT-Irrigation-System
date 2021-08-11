@@ -34,8 +34,22 @@ public class RegistrationServer extends CoapServer {
         return coapHandler.getWeather();
     }
 
+    // Soil Moisture utility function
+    public double getSoilTension() {
+        return coapHandler.getSoilTension();
+    }
+
+    public boolean changeSoilTensionBound(Bound bound, double newTension) {
+        return coapHandler.changeSoilTensionBounds(bound, newTension);
+    }
+
+    public boolean changeSoilMoistureSwitchStatus(SwitchStatus switchStatus) {
+        return coapHandler.changeSoilMoistureSwitch(switchStatus);
+    }
+
     // General functions
     public void printDevices() {
         coapHandler.printAllDevices();
     }
+
 }

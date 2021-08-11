@@ -1,10 +1,13 @@
 package it.unipi.iot.irrigationsystem.coap.soilmoisture;
 
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
+import it.unipi.iot.irrigationsystem.enumerate.Bound;
+import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +69,81 @@ public class SoilMoistureNetwork {
                 observeSoilTensionList.remove(i);
             }
         }
+    }
+
+    public double getSoilTensionDetected() {
+        return soilTensionDetected;
+    }
+
+    public boolean changeBounds(Bound bound, double newValue) {
+        if (clientSoilMoistureSensorList.isEmpty())
+            return false;
+
+        String msg;
+        switch (bound) {
+            case LOWER:
+                msg = "l " + newValue;
+                break;
+            case UPPER:
+                msg = "u " + newValue;
+                break;
+            default:
+                return false;
+        }
+
+        for (CoapClient coapClient: clientSoilMoistureSensorList) {
+            coapClient.put(new CoapHandler() {
+
+                public void onLoad(CoapResponse response) {
+                    if (response != null) {
+                        if(!response.isSuccess())
+                            System.out.println("Something went wrong with soil moisture sensor");
+                    }
+                }
+
+                public void onError() {
+                    System.err.println("[ERROR: SoilMoistureSensor " + coapClient.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+        }
+
+        return true;
+    }
+
+    public boolean turnSwitch(SwitchStatus switchStatus) {
+        if (clientSoilMoistureSwitchList.isEmpty())
+            return false;
+
+        String msg;
+        switch (switchStatus) {
+            case ON:
+                msg = "ON";
+                break;
+            case OFF:
+                msg = "OFF";
+                break;
+            default:
+                return false;
+        }
+
+        for (CoapClient coapClient: clientSoilMoistureSwitchList) {
+            coapClient.put(new CoapHandler() {
+
+                public void onLoad(CoapResponse response) {
+                    if (response != null) {
+                        if(!response.isSuccess())
+                            System.out.println("Something went wrong with soil moisture switch");
+                    }
+                }
+
+                public void onError() {
+                    System.err.println("[ERROR: SoilMoistureSwitch " + coapClient.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+        }
+        return true;
     }
 
     public void printDevices() {

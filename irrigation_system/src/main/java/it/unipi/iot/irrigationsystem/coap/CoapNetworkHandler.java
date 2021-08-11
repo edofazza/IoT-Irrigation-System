@@ -73,6 +73,19 @@ public class CoapNetworkHandler {
         return rainSensor.isRaining();
     }
 
+    // Soil Moisture Actions
+    public double getSoilTension() {
+        return soilMoistureNetwork.getSoilTensionDetected();
+    }
+
+    public boolean changeSoilTensionBounds(Bound bound, double newValue) {
+        return soilMoistureNetwork.changeBounds(bound, newValue);
+    }
+
+    public boolean changeSoilMoistureSwitch(SwitchStatus switchStatus) {
+        return soilMoistureNetwork.turnSwitch(switchStatus);
+    }
+
     // General functions
     public void printAllDevices() {
         temperatureSensorNetwork.printDevices();

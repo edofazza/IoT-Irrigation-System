@@ -23,41 +23,50 @@ public class Collector {
 
         printCommands();
 
+        label:
         while(true) {
             System.out.print(">!");
             try {
                 command = br.readLine();
                 chunks = command.split(" ");
 
-                if(chunks[0].equals("quit"))
-                    break;
-
-                else if(chunks[0].equals("help"))
-                    printCommands();
-
-                else if(chunks[0].equals("getDevicesList"))
-                    rs.printDevices();
-
-                else if(chunks[0].equals("getTemp"))
-                    getTemperatureAction(rs.getTemperature());
-
-                else if(chunks[0].equals("setTemp"))
-                    setTemperatureBound(chunks, rs);
-
-                else if(chunks[0].equals("setUnit"))
-                    setUnit(chunks);
-
-                else if(chunks[0].equals("getWeather"))
-                    getWeather(rs);
-
-                else if(chunks[0].equals("start")) // TODO: simulation thread
-                    System.out.println("PASS"); //TODO: dedicated function
-
-                else if(chunks[0].equals("stop"))
-                    System.out.println("PASS"); //TODO: dedicated function
-
-                else
-                    System.out.println("Invalid command");
+                switch (chunks[0]) {
+                    case "quit":
+                        break label;
+                    case "help":
+                        printCommands();
+                        break;
+                    case "getDevicesList":
+                        rs.printDevices();
+                        break;
+                    case "getTemp":
+                        getTemperatureAction(rs.getTemperature());
+                        break;
+                    case "setTemp":
+                        setTemperatureBound(chunks, rs);
+                        break;
+                    case "setUnit":
+                        setUnit(chunks);
+                        break;
+                    case "getWeather":
+                        getWeather(rs);
+                        break;
+                    case "getSoilTension":
+                        getSoilTensionAction(rs.getSoilTension());
+                        break;
+                    case "setSoilTension":
+                        setSoilTensionAction(chunks, rs);
+                        break;
+                    case "start": // TODO: simulation thread
+                        System.out.println("PASS"); //TODO: dedicated function
+                        break;
+                    case "stop":
+                        System.out.println("PASS"); //TODO: dedicated function
+                        break;
+                    default:
+                        System.out.println("Invalid command");
+                        break;
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -72,7 +81,7 @@ public class Collector {
                 "\n\t!setTemp <l/u> <value>: set desired temperature for specified bound" + // DONE
                 "\n\t!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +  // DONE
                 "\n\t!getWeather: get if the rain sensor feels rain or not" + // DONE
-                "\n\t!getSoilTension: get the soil tension" +
+                "\n\t!getSoilTension: get the soil tension" + // DONE
                 "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" +
                 "\n\t!setTapInterval <seconds>: set interval which the tap operates" +
                 "\n\t!setTapIntensity <value>: set intensity which the tap operates" +
@@ -118,6 +127,9 @@ public class Collector {
     }
 
     private static void setUnit(String[] tokens) {
+        if (tokens.length < 2)
+            System.out.println("Too few parameters");
+
         switch (tokens[1]) {
             case "F":
                 celciusUnit = false;
@@ -137,5 +149,31 @@ public class Collector {
             System.out.println("The weather is SUNNY");
         else
             System.out.println("The weather is RAINING");
+    }
+
+    private static void getSoilTensionAction(double soilTension) {
+        System.out.println("The soil moisture tension is " + soilTension + "bar");
+    }
+
+    private static void setSoilTensionAction(String[] tokens, RegistrationServer rs) {
+        double newTension = 0;
+        try {
+            newTension = Double.parseDouble(tokens[2]);
+        } catch (Exception e) {
+            System.out.println("Not correct value inserted, insert an integer");
+        }
+
+        switch (tokens[1]) {
+            case "l":
+                rs.changeSoilTensionBound(Bound.LOWER, newTension);
+                System.out.println("Lower bound changed");
+                break;
+            case "u":
+                rs.changeSoilTensionBound(Bound.UPPER, newTension);
+                System.out.println("Upper bound changed");
+                break;
+            default:
+                System.out.println("Bound inserted is not valid");
+        }
     }
 }
