@@ -21,7 +21,7 @@ static double simulate_level(){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     int month = tm.tm_mon;
-    if (month >5 && month<8)  //between June and August
+    if (month >=5 && month<8)  //between June and August
         summer = true;
     srand(time(NULL));
     double availability;  //   cm^3
@@ -30,7 +30,7 @@ static double simulate_level(){
     else
         availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
 
-    //Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED * INETRVAL
+    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
     double level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }

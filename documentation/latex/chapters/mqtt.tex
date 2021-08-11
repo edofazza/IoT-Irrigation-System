@@ -8,37 +8,43 @@ The MQTT Network will be deployed in the water provisioning site and it is forme
 The Aquifer Level Detector senses the level of water in the Aquifer, in order to estimate the availability. This device senses the height of the water flow in cm and based on that computes the volume of water that is available at each iteration, known the dimensions of the aquifer and the speed of the flow. The user can retrieve at any time the last measurement (the system will do it automatically) and the sensing interval is the same of the \textbf{tap\_interval}.
 
 \subsubsection{Topics}
-This device is subscribed to the \textbf{interval} topic used to change the sensing interval to adapt it to the tap\_interval and publishes measurements on the \textbf{aquifer\_level} mqtt topic.
+This device is subscribed to the \textbf{interval} topic used to change the sensing interval to adapt it to the tap\_interval and publishes measurements on the \textbf{aquifer\_level} MQTT topic.
 The device acts as a MQTT client and handles its connection with the broker.
 
 \subsubsection{Data Generation}
-Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the temperature is updated using the following algorithm:
+Data is generated every \textit{interval}, every time the system must decide from where to fetch water. The value for the aquifer sensor is updated according to the following idea: during rainy seasons, the level will be enough to cover the average water need, on the contrary during summer there can be risk of insufficient water coverage. The simulated value is then published as a MQTT message on the \textbf{aquifer\_level} topic.
 
 \begin{lstlisting}
-static void temperature_event_handler(void)
-{
-    if (!isActive) {
-        return; // DOES NOTHING SINCE IT IS TURNED OFF
-    }
-    
-    // extimate new temperature
-    srand(time(NULL));
-    int new_temp;
-    int random = rand() % 4; // generate 0, 1, 2, 3
-    
-    if (random == 0) // 25% of changing the value
-        if (random < 2) // decrease
-            new_temp -= VARIATION;
-        else // increase
-            new_temp += VARIATION;
+#define WATER_SPEED 0.0005    /* 0.0005cm/s   https://www.arpa.vda.it/it/acqua/acque-sotterranee/cosa-sono-le-acque-sotterranee */
+#define SECTION 200             //2m
+#define MAX_LEVEL 60           //60cm
 
-    // if not equal
-    if (new_temp != temperature)
-    {
-        temperature = new_temp;
-        coap_notify_observers(&temperature_sensor);
-    }
-}
+static double simulate_level(){
+    boolean summer = false;
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    int month = tm.tm_mon;
+    if (month >=5 && month<8)  //between June and August
+        summer = true;
+    srand(time(NULL));
+    double availability;  //   cm^3
+    if (summer)
+        availability = rand()%MEDIUM_NEED;
+    else
+        availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
+
+    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+    double level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
+    return level<MAX_LEVEL ? level : MAX_LEVEL;
+}    
+    
+sensed_level = simulate_level();
+sprintf(pub_topic, "aquifer_level");
+//Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
+sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
+mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\n", sensed_level, available);
 \end{lstlisting}
 
 

@@ -240,7 +240,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
 		    sensed_level = simulate_level();
 		    sprintf(pub_topic, "aquifer_level");
-		    //Assuming rectangular aquifer, available water for each second is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+		    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
 		    available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
 		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
