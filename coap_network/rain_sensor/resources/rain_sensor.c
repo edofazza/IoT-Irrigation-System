@@ -1,8 +1,12 @@
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "coap-engine.h"
 #include "dev/leds.h"
 #include "sys/log.h"
+
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
 
 /**************** RESOURCES **********************/
 #include "global_variables.h"
@@ -29,9 +33,17 @@ static void get_rain_status_handler(coap_message_t *request, coap_message_t *res
     // SEND RAIN VALUE
     char* msg;
     if (isRaining)
-        msg = "raining";
+    {
+        int length = sizeof("raining") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
+        snprintf(msg, length, "raining");
+    }
     else
-        msg = "not raining";
+    {
+        int length = sizeof("not raining") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
+        snprintf(msg, length, "raining");
+    }
     
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, len);
