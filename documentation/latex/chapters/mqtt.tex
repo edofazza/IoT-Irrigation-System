@@ -8,7 +8,7 @@ The MQTT Network will be deployed in the water provisioning site and it is forme
 The Aquifer Level Detector senses the level of water in the Aquifer, in order to estimate the availability. This device senses the height of the water flow in cm and based on that computes the volume of water that is available at each iteration, known the dimensions of the aquifer and the speed of the flow. The user can retrieve at any time the last measurement (the system will do it automatically) and the sensing interval is the same of the \textbf{tap\_interval}.
 
 \subsubsection{Topics}
-This device is subscribed to the \textbf{interval} topic used to change the sensing interval to adapt it to the tap\_interval and publishes measurements on the \textbf{aquifer\_level} MQTT topic.
+This device is subscribed to the \textbf{interval} topic used to change the sensing interval (to adapt it to the tap\_interval) and publishes measurements on the \textbf{aquifer\_level} MQTT topic.
 The device acts as a MQTT client and handles its connection with the broker.
 
 \subsubsection{Data Generation}
@@ -50,45 +50,77 @@ printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\
 
 
 \subsection{Reservoir Level Detector and Actuator}
-Soil moisture sensors measure the water content in the soil and can be used to estimate the amount of stored water in the soil horizon. Soil moisture sensors do not measure water in the soil directly. Instead, they measure changes in some other soil property that is related to water content in a predictable way. Checking the different technologies used for measure soil moisture content, we decide to exploit the \textit{soil water potential}\footnote{\textit{Soil water potential} or \textit{soil moisture tension} is a measurement of how tightly water clings to the soil and is expressed in units of pressure called bars. Generally, the drier the soil, the greater the soil water potential and the harder a plant must work to draw water from the soil.}.
+The Reservoir Level Detector senses the level of water in the Reservoir, in order to estimate the availability. This device senses the height of the water storage in cm and based on that computes the volume of water that is available at each iteration, known the dimensions of the reservoir. The user can retrieve at any time the last measurement (the system will do it automatically) and the sensing interval is the same of the \textbf{tap\_interval}. The Reservoir Actuator instead puts or fetches water according to the decisions taken by the controller: if there is water abundance the actuator is asked to store the excess, when water lacks it is asked to fetch from the reservoir.
 
 \subsubsection{Topics}
-The soil moisture sensor exposes two resources: the \textit{soil\_moisture\_sensor} and the \textit{soil\_moisture\_switch} resources.
+This device is subscribed to the \textbf{interval} topic used to change the sensing interval (to adapt it to the tap\_interval) and publishes measurements on the \textbf{reservoir\_level} MQTT topic.
+The device acts as a MQTT client and handles its connection with the broker.
 
-The \textbf{soil\_moisture\_sensor} resource is an observable resource that provides to the clients the soil moisture tension acquired by the sensor. The resource not only provides the mere tension to the clients, but it informs if the value is lower or greater than a certain threshold. Hence, the sensor exposes a  \textit{PUT} method, in order to set up the lower or the upper bound for the tension\footnote{For the default range value we used the ones indicated here: https://www.metergroup.com/environment/articles/defining-water-potential/ }.
-
-The change of the bounds is done at step, the user will specify the threshold that he/she wants to change through the CLI: upper or lower. At the server side the request will be processed checking if the value arrived is consistent (e.g., the new value for the lower bound is not greater than the upper bound actual value), after those controls the parameter is updated.
-
-The \textbf{soil\_moisture\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
-
-\subsubsection{Data Generation}
-Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the tension is updated using the following algorithm (the same of to the one used for the temperature):
+\subsubsection{Data Generation and Actuation Mechanism}
+Data is generated every \textit{interval}, every time the system must decide from where to fetch water. The value for the reservoir level could be determined mathematically, but the deployment of a sensor allows to deal with possible phenomena like evaporation or breaks. The simulated value however is generated leaving out those phenomena, so it is always equal to the level that was present during the last actuation. The value is then published as a MQTT message on the \textbf{aquifer\_level} topic. The actuator instead receives commands from the controller through MQTT subscription and adds/removes the quantity of water indicated by the controller. 
 
 \begin{lstlisting}
-static void soil_moisture_event_handler(void)
-{
-    if (!isActive) {
-        return; // DOES NOTHING SINCE IT IS TURNED OFF
-    }
-    
-    // extimate new tension
-    srand(time(NULL));
-    int new_soilTension = soilTension;
-    int random = rand() % 4; // generate 0, 1, 2, 3
-    
-    if (random == 0) // 25% of changing the value
-        if (random < 2) // decrease
-            new_soilTension -= VARIATION;
-        else // increase
-            new_soilTension += VARIATION;
+//assuming rectangular reservoirs of capacity 1000 litres
+#define WIDTH 200             //2m = 200cm
+#define DEPTH 100               //1m = 100cm
+#define MAX_LEVEL 50           //50 cm
+//Total capacity is 200*100*50 = 1e6 cm^3 = 1000 l
 
-    // if not equal
-    if (new_soilTension != soilTension)
-    {
-        soilTension = new_soilTension;
-        coap_notify_observers(&soil_moisture_sensor);
-    }
+static double sensed_level=MAX_LEVEL;
+
+static double simulate_level(){
+    return sensed_level;
 }
+
+static void put_get_water(double quantity){
+//assuming rectangular reservoir
+    sensed_level += (quantity/WIDTH)/DEPTH;
+    if (sensed_level>MAX_LEVEL)
+        sensed_level = MAX_LEVEL;
+    else if (sensed_level<0)
+        sensed_level = 0;
+}
+
+int level = simulate_level();
+sprintf(pub_topic, "reservoir_level");
+//assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
+available = sensed_level*WIDTH*DEPTH;
+sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
+mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+printf("Sensed water level is: %.2f cm, reservoir water availability is %.2f cm^3\n", sensed_level, available);
+
+
+static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,  uint16_t chunk_len) {
+
+  if(strcmp(topic, "interval") == 0) {
+    printf("Changing detection interval to: ");
+
+	long interval = atol(const char*)chunk;
+    printf("%d\n", interval);
+    PUBLISH_INTERVAL = interval;
+  }
+  else if(strcmp(topic, "set_level") == 0){
+    char value[10];
+    char *eptr;
+    double quantity;
+    strcpy(value, (const char*)chunk);
+    quantity = strtod(value, &eptr);
+    if (result == 0){
+        /* If the value provided was out of range, display a warning message */
+        if (errno == ERANGE)
+            printf("The value provided was out of range\n");
+        return;
+    }
+    printf("Changing reservoir water level by: %f\n", quantity);
+    put_get_water(quantity);
+  }
+  else {
+	  printf("Topic not recognized!\n");
+  }
+  return;
+}
+
+
 \end{lstlisting}
 
 

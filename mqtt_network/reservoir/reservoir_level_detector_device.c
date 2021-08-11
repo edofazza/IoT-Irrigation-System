@@ -255,7 +255,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		    printf("Sensed water level is: %.2f cm, reservoir water availability is %.2f cm^3\n", sensed_level, available);
-            */
+
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");
 		   // Recover from error
