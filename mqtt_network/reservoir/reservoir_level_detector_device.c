@@ -104,7 +104,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     printf("%d\n", interval);
     PUBLISH_INTERVAL = interval;
   }
-  else if(strcmp(topic, "set_level") == 0){
+  else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];
     char *eptr;
     double quantity;
