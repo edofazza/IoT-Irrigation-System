@@ -98,10 +98,10 @@ public class Collector {
                 "\n\t!getWeather: get if the rain sensor feels rain or not" + // DONE
                 "\n\t!getSoilTension: get the soil tension" + // DONE
                 "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" + // DONE
-                "\n\t!getTapInterval: get interval which the tap operates" +
-                "\n\t!getTapIntensity: get intensity which the tap operates" +
-                "\n\t!setTapInterval <seconds>: set interval which the tap operates" +
-                "\n\t!setTapIntensity <value>: set intensity which the tap operates" +
+                "\n\t!getTapInterval: get interval which the tap operates" + // DONE
+                "\n\t!getTapIntensity: get intensity which the tap operates" + // DONE
+                "\n\t!setTapInterval <seconds>: set interval which the tap operates" + // DONE
+                "\n\t!setTapIntensity <value>: set intensity which the tap operates" + // DONE
                 "\n\t!getWaterLevels: print the water levels of aquifer and reservoir" +
                 "\n\t!start: start the simulation" +
                 "\n\t!stop: stop the simulation" +
@@ -203,10 +203,26 @@ public class Collector {
     }
 
     private static void setTapInterval(String[] chunks, RegistrationServer rs) {
+        int newInterval = 5;
+        try {
+            newInterval = Integer.parseInt(chunks[1]);
+        } catch (Exception e) {
+            System.out.println("Not correct value inserted, insert an integer");
+        }
 
+        rs.setTapInterval(newInterval);
+        System.out.println("Tap interval correctly updated");
     }
 
     private static void setTapIntensity(String[] chunks, RegistrationServer rs) {
-        
+        double newIntensity = 1;
+        try {
+            newIntensity = Double.parseDouble(chunks[1]);
+        } catch (Exception e) {
+            System.out.println("Not correct value inserted, insert an integer");
+        }
+
+        rs.setTapIntensity(newIntensity);
+        System.out.println("Tap intensity correctly updated");
     }
 }

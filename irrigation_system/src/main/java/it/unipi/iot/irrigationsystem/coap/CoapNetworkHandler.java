@@ -100,6 +100,18 @@ public class CoapNetworkHandler {
         return tapActuator.getWhereWater();
     }
 
+    public void setTapWhereWater(WhereWater whereWater) {
+        tapActuator.setWhereWater(whereWater);
+    }
+
+    public boolean setTapIntensity(double newValue) {
+        return tapActuator.setTapIntensity(newValue);
+    }
+
+    public boolean setTapInterval(int newValue) {
+        return tapActuator.setTapInterval(newValue);
+    }
+
     // General functions
     public void printAllDevices() {
         temperatureSensorNetwork.printDevices();

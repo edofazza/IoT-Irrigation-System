@@ -6,6 +6,7 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 public class TapActuator {
     private CoapClient clientTapActuator;
@@ -16,7 +17,7 @@ public class TapActuator {
 
     private int tapInterval = 2; // Default value
     private double tapIntensity = 1; // Default value
-    private WhereWater whereWater;
+    private WhereWater whereWater = WhereWater.AQUIFER; // Default value
 
 
     public void addTapActuator(String ip) {
@@ -59,11 +60,75 @@ public class TapActuator {
     }
 
     public int getTapInterval() {
+        tapInterval = Integer.parseInt(clientTapInterval.get().getResponseText());
+
         return tapInterval;
     }
 
     public WhereWater getWhereWater() {
         return whereWater;
+    }
+
+    public void setWhereWater(WhereWater whereWater) {
+        this.whereWater = whereWater;
+    }
+
+    public boolean setTapIntensity(double newValue) {
+        if (clientTapActuator == null)
+            return false;
+
+        String msg;
+        switch (whereWater) {
+            case AQUIFER:
+                msg = newValue + " A";
+                break;
+            case RESERVOIR:
+                msg = newValue + " R";
+                break;
+            default:
+                return false;
+        }
+
+        clientTapActuator.put(new CoapHandler() {
+            public void onLoad(CoapResponse response) {
+                if (response != null) {
+                    if(!response.isSuccess())
+                        System.out.println("Something went wrong with temperature sensor");
+                    }
+                }
+
+                public void onError() {
+                    System.err.println("[ERROR: TemperatureSensor " + clientTapActuator.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+
+        tapIntensity = newValue;
+        return true;
+    }
+
+    public boolean setTapInterval(int newValue) {
+        if (clientTapInterval == null)
+            return false;
+
+        String msg = Integer.toString(newValue);
+
+        clientTapInterval.put(new CoapHandler() {
+            public void onLoad(CoapResponse response) {
+                if (response != null) {
+                    if(!response.isSuccess())
+                        System.out.println("Something went wrong with temperature sensor");
+                }
+            }
+
+            public void onError() {
+                System.err.println("[ERROR: TemperatureSensor " + clientTapInterval.getURI() + "] ");
+            }
+
+        }, msg, MediaTypeRegistry.TEXT_PLAIN);
+
+        tapInterval = newValue;
+        return true;
     }
 
     public void printDevice() {
