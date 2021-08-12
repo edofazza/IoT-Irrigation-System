@@ -23,6 +23,8 @@ public class Collector {
         RegistrationServer rs = new RegistrationServer();
         rs.start();
 
+        AutomaticIrrigationSystem air = new AutomaticIrrigationSystem(rs, ac, rc);
+
         // CLI
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String command = "";
@@ -73,7 +75,7 @@ public class Collector {
                         getTapIntensityAction(rs);
                         break;
                     case "setTapInterval":
-                        setTapInterval(chunks, rs, ac);
+                        setTapInterval(chunks, rs, ac, air);
                         break;
                     case "setTapIntensity":
                         setTapIntensity(chunks, rs);
@@ -171,7 +173,7 @@ public class Collector {
     }
 
     private static void getWeather(RegistrationServer rs) {
-        if (rs.getWeather())
+        if (!rs.getWeather())
             System.out.println("The weather is SUNNY");
         else
             System.out.println("The weather is RAINING");
@@ -211,7 +213,7 @@ public class Collector {
         System.out.println("The tap interval is: " + rs.getTapInterval());
     }
 
-    private static void setTapInterval(String[] chunks, RegistrationServer rs, AquiferCollector ac) {
+    private static void setTapInterval(String[] chunks, RegistrationServer rs, AquiferCollector ac, AutomaticIrrigationSystem air) {
         int newInterval = 5;
         try {
             newInterval = Integer.parseInt(chunks[1]);
@@ -219,9 +221,11 @@ public class Collector {
             System.out.println("Not correct value inserted, insert an integer");
         }
 
-        rs.setTapInterval(newInterval);
-        ac.changeInterval((long)newInterval);
-
+        if (newInterval!= rs.getTapInterval()) {
+            rs.setTapInterval(newInterval);
+            ac.changeInterval((long) newInterval);
+            air.setNewInterval(newInterval);
+        }
         System.out.println("Tap interval correctly updated");
     }
 
