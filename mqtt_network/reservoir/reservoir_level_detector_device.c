@@ -102,7 +102,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
 
 	long interval = atol(const char*)chunk;
     printf("%d\n", interval);
-    PUBLISH_INTERVAL = interval;
+    PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   }
   else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];

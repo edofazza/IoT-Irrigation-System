@@ -103,7 +103,7 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
 
 	long interval = atol(const char*)chunk;
     printf("%d\n", interval);
-    PUBLISH_INTERVAL = interval;
+    PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   } else {
 	  printf("Topic not recognized!\n");
   }
