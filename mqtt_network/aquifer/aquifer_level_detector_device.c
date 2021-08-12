@@ -75,6 +75,7 @@ static double available = 5;
 // Periodic timer to check the state of the MQTT client
 #define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
+static long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -101,8 +102,8 @@ pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
   if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
 
-	long interval = atol(const char*)chunk;
-    printf("%d\n", interval);
+	long interval = atol((char*)chunk);
+    printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   } else {
 	  printf("Topic not recognized!\n");
