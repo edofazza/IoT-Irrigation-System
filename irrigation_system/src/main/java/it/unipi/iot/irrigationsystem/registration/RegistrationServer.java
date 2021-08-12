@@ -61,8 +61,8 @@ public class RegistrationServer extends CoapServer {
         return coapHandler.getTapWhereWater();
     }
 
-    public void setTapWhereWater(WhereWater whereWater) {
-        coapHandler.setTapWhereWater(whereWater);
+    public boolean setTapWhereWater(WhereWater whereWater) {
+        return coapHandler.setTapWhereWater(whereWater);
     }
 
     public boolean setTapIntensity(double newValue) {

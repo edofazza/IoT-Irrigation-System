@@ -100,8 +100,8 @@ public class CoapNetworkHandler {
         return tapActuator.getWhereWater();
     }
 
-    public void setTapWhereWater(WhereWater whereWater) {
-        tapActuator.setWhereWater(whereWater);
+    public boolean setTapWhereWater(WhereWater whereWater) {
+        return tapActuator.setWhereWater(whereWater);
     }
 
     public boolean setTapIntensity(double newValue) {
