@@ -26,11 +26,10 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_APP
 
-/* Global resources: used for interval variable */
-#include "gloabal_variables.h"
+#include "interval_variable.h"
 
 PROCESS(tap_server, "Server for the tap actuator");
-AUTOSTART_PROCESSES(&tap_actuator);
+AUTOSTART_PROCESSES(&tap_server);
 
 //*************************** GLOBAL VARIABLES *****************************//
 char* service_url = "/registration";

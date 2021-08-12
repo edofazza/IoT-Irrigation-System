@@ -4,6 +4,10 @@
 #include "dev/leds.h"
 #include "sys/log.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+
 /*          RESOURCES            */
 #include "global_variables.h"
 

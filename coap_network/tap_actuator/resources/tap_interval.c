@@ -4,9 +4,13 @@
 #include "dev/leds.h"
 #include "sys/log.h"
 
-/*          RESOURCES            */
-#include "global_variables.h"
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
 
+/*          RESOURCES            */
+#include "intensity_variable.h"
+#include "interval_variable.h"
 
 /*          HANDLERS          */
 static void get_interval_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
@@ -16,7 +20,7 @@ EVENT_RESOURCE(tap_interval,
                "title=\"Tap interval\";rf=\"interval\"",
                get_interval_handler,
                NULL,
-               put_switch_handler,
+               put_interval_handler,
                NULL,
                NULL);
 
@@ -25,8 +29,8 @@ static void get_interval_handler(coap_message_t *request, coap_message_t *respon
     LOG_INFO("Handling interval get request...\n");
     char* msg;
     
-    static const int length = snprintf(NULL, 0,"%d", interval) + 1;
-    msg = new char[length];
+    int length = snprintf(NULL, 0,"%d", interval) + 1;
+    msg = (char*)malloc((length)*sizeof(char));
     snprintf(msg, length, "%d", interval);
     
     // prepare buffer
@@ -39,7 +43,7 @@ static void get_interval_handler(coap_message_t *request, coap_message_t *respon
     coap_set_payload(response, buffer, len);
 }
 
-static void put_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+static void put_interval_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
     LOG_INFO("Handling intensity put request...\n");
     
