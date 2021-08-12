@@ -253,6 +253,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
                 PROCESS_EXIT();
               }
 			  state = STATE_SUBSCRIBED;
+			  PUBLISH_INTERVAL = 1*CLOCK_SECOND;
 		  } else if(state == STATE_SUBSCRIBED){
 
 		    int level = simulate_level();

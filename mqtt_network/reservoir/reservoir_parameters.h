@@ -4,5 +4,5 @@
 #define MAX_LEVEL 50           //50 cm
 //Total capacity is 200*100*50 = 1e6 cm^3 = 1000 l
 
-#define DEFAULT_PUBLISH_INTERVAL    (1 * CLOCK_SECOND)
+#define DEFAULT_PUBLISH_INTERVAL    (CLOCK_SECOND>>1)
 static long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
