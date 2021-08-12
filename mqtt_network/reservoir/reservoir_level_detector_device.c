@@ -13,7 +13,6 @@
 #include <sys/node-id.h>
 #include "mqtt-client.h"
 #include "reservoir_sensor.c"
-#include "reservoir_parameters.h"
 
 #include <strings.h>
 #include <stdio.h>
@@ -73,7 +72,6 @@ static char sub_topic_interval[BUFFER_SIZE];
 static char sub_topic_level[BUFFER_SIZE];
 
 static struct etimer periodic_timer;
-static long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
 
 /*---------------------------------------------------------------------------*/
 /*

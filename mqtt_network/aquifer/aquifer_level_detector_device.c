@@ -13,7 +13,6 @@
 #include <sys/node-id.h>
 #include "mqtt-client.h"
 #include "aquifer_sensor.c"
-#include "aquifer_parameters.h"
 
 #include <string.h>
 #include <strings.h>
