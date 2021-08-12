@@ -2,6 +2,7 @@ package it.unipi.iot.irrigationsystem.coap.soilmoisture;
 
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
+import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -17,6 +18,7 @@ public class SoilMoistureNetwork {
     private List<CoapObserveRelation> observeSoilTensionList = new ArrayList<>();
     private List<CoapClient> clientSoilMoistureSwitchList = new ArrayList<>();
     private double soilTensionDetected = 0;
+    private BoundStatus boundStatus = BoundStatus.NORMAL;
 
     public void addSoilMoisture(String ip) {
         System.out.println("The soil moisture sensor: [" + ip + "] + is now registered");
@@ -40,14 +42,17 @@ public class SoilMoistureNetwork {
                             switch (tokens[1]) {
                                 case "hot":
                                     System.out.println("Tension too low!!!");
+                                    boundStatus = BoundStatus.TOO_LOW;
                                     break;
                                 case "cold":
                                     System.out.println("Tension too high!!!");
+                                    boundStatus = BoundStatus.TOO_HIGH;
                                     break;
                             }
                             soilTensionDetected = Double.parseDouble(tokens[2]);
                         } else {
                             soilTensionDetected = Double.parseDouble(responseString);
+                            boundStatus = BoundStatus.NORMAL;
                         }
                         IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
                     }
@@ -151,5 +156,9 @@ public class SoilMoistureNetwork {
             System.out.println("Soil moisture sensors:");
             System.out.println("\t" + cc.getURI() + "\n");
         }
+    }
+
+    public BoundStatus getBoundStatus() {
+        return boundStatus;
     }
 }

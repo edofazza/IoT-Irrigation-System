@@ -2,6 +2,7 @@ package it.unipi.iot.irrigationsystem.registration;
 
 import it.unipi.iot.irrigationsystem.coap.CoapNetworkHandler;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
+import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 import it.unipi.iot.irrigationsystem.registration.resources.RegistrationResource;
@@ -26,6 +27,10 @@ public class RegistrationServer extends CoapServer {
         return coapHandler.changeTemperatureSwitchStatus(switchStatus);
     }
 
+    public BoundStatus getTempBoundStatus() {
+        return coapHandler.getTempBoundStatus();
+    }
+
     public int getTemperature() {
         return coapHandler.getTemperature();
     }
@@ -46,6 +51,10 @@ public class RegistrationServer extends CoapServer {
 
     public boolean changeSoilMoistureSwitchStatus(SwitchStatus switchStatus) {
         return coapHandler.changeSoilMoistureSwitch(switchStatus);
+    }
+
+    public BoundStatus getSoilTensionBoundStatus() {
+        return coapHandler.getSoilTensionBoundStatus();
     }
 
     // Tap utility functions

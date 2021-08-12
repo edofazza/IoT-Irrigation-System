@@ -2,6 +2,7 @@ package it.unipi.iot.irrigationsystem.coap.temperature;
 
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
+import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -17,6 +18,7 @@ public class TemperatureSensorNetwork {
     private List<CoapObserveRelation> observeTemperatureList = new ArrayList<>();
     private List<CoapClient> clientTemperatureSwitchList = new ArrayList<>();
     private int temperatureDetected = 0;
+    private BoundStatus boundStatus = BoundStatus.NORMAL;
 
     public void addTemperatureSensor(String ip) {
         System.out.println("The presence sensor: [" + ip + "] + is now registered");
@@ -40,9 +42,11 @@ public class TemperatureSensorNetwork {
                             switch (tokens[1]) {
                                 case "hot":
                                     System.out.println("Temperature too hot!!!");
+                                    boundStatus = BoundStatus.TOO_HIGH;
                                     break;
                                 case "cold":
                                     System.out.println("Temperature too cold!!!");
+                                    boundStatus = BoundStatus.TOO_LOW;
                                     break;
                             }
                             temperatureDetected = Integer.parseInt(tokens[2]);
@@ -50,6 +54,7 @@ public class TemperatureSensorNetwork {
                             temperatureDetected = Integer.parseInt(responseString);
                         }
                         IrrigationSystemDbManager.insertTemperature(temperatureDetected);
+                        boundStatus = BoundStatus.NORMAL;
                     }
 
                     public void onError() {
@@ -150,5 +155,9 @@ public class TemperatureSensorNetwork {
 
     public int getTemperatureDetected() {
         return temperatureDetected;
+    }
+
+    public BoundStatus getBoundStatus() {
+        return boundStatus;
     }
 }
