@@ -13,6 +13,10 @@ public class Collector {
 
     public static void main(String[] args) throws SocketException {
         // Init
+        MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
+        AquiferCollector ac = new AquiferCollector(mqttnh);
+        ReservoirCollector rc = new ReservoirCollector(mqttnh);
+
         RegistrationServer rs = new RegistrationServer();
         rs.start();
 
@@ -64,13 +68,13 @@ public class Collector {
                         getTapIntensityAction(rs);
                         break;
                     case "setTapInterval":
-                        setTapInterval(chunks, rs);
+                        setTapInterval(chunks, rs, ac);
                         break;
                     case "setTapIntensity":
                         setTapIntensity(chunks, rs);
                         break;
                     case "getWaterLevels":
-                        System.out.println("PASS"); //TODO: dedicated function
+                        getWaterLevels(ac, rc);
                         break;
                     case "start": // TODO: simulation thread
                         System.out.println("PASS"); //TODO: dedicated function
@@ -202,7 +206,7 @@ public class Collector {
         System.out.println("The tap interval is: " + rs.getTapInterval());
     }
 
-    private static void setTapInterval(String[] chunks, RegistrationServer rs) {
+    private static void setTapInterval(String[] chunks, RegistrationServer rs, AquiferCollector ac) {
         int newInterval = 5;
         try {
             newInterval = Integer.parseInt(chunks[1]);
@@ -211,6 +215,8 @@ public class Collector {
         }
 
         rs.setTapInterval(newInterval);
+        ac.changeInterval((long)newInterval);
+
         System.out.println("Tap interval correctly updated");
     }
 
@@ -224,5 +230,10 @@ public class Collector {
 
         rs.setTapIntensity(newIntensity);
         System.out.println("Tap intensity correctly updated");
+    }
+
+    private static void getWaterLevels(AquiferCollector ac, ReservoirCollector rc){
+        System.out.println("The aquifer water level is: "+ac.getLastAverageAquiferLevel());
+        System.out.println("The reservoir water level is: "+rc.getLastAverageReservoirLevel());
     }
 }
