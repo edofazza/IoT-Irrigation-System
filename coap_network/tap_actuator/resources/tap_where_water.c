@@ -4,8 +4,12 @@
 #include "dev/leds.h"
 #include "sys/log.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
+
 /*          RESOURCES            */
-#include "global_variables.h"
+#include "where_variable.h"
 
 
 /*          HANDLERS          */
@@ -26,9 +30,17 @@ static void get_where_water_handler(coap_message_t *request, coap_message_t *res
     char* msg;
     
     if (takesWaterFromAquifer)
-        msg = "aquifer";
+    {
+        int length = sizeof("aquifer") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
+        snprintf(msg, length, "aquifer");
+    }
     else
-        msg = "reservoir";
+    {
+        int length = sizeof("reservoir") + 1;
+        msg = (char*)malloc((length)*sizeof(char));
+        snprintf(msg, length, "reservoir");
+    }
     
     // prepare buffer
     size_t len = strlen(msg);
@@ -50,12 +62,12 @@ static void put_where_water_handler(coap_message_t *request, coap_message_t *res
     
     if((len = coap_get_payload(request, &payload)))
     {
-        if (strncmp((char*)chunk, "A", strlen("A")) == 0)
+        if (strncmp((char*)payload, "A", strlen("A")) == 0)
         {
             takesWaterFromAquifer = true;
             LOG_INFO("Where to take water updated to aquifer");
         }
-        else if (strncmp((char*)chunk, "R", strlen("R")) == 0)
+        else if (strncmp((char*)payload, "R", strlen("R")) == 0)
         {
             takesWaterFromAquifer = false;
             LOG_INFO("Where to take water updated to reservoir");

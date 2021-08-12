@@ -5,8 +5,13 @@
 #include "dev/leds.h"
 #include "sys/log.h"
 
-#include "gloabal_variables.h"
+#include "global_variables.h"
+#include "intensity_variable.h"
+#include "where_variable.h"
 
+/* Log configuration */
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_APP
 
 static void get_intensity_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 static void put_intensity_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
@@ -18,29 +23,25 @@ EVENT_RESOURCE(tap_intensity,
                NULL,
                put_intensity_handler,
                NULL,
-               intensity_event_handle);
+               intensity_event_handler);
 
 static void get_intensity_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
     LOG_INFO("Handling tap intensity get request...\n");
     char* msg;
     
+    int length = snprintf(NULL, 0,"%lf", intensity) + sizeof(" R") + 1;
+    msg = (char*)malloc((length)*sizeof(char));
+    
     if (takesWaterFromAquifer)
-    {
-        static const int length = snprintf(NULL, 0,"%lf", intensity) + 1;
-        msg = new char[length];
-        snprintf(msg, length, "%lf", intensity);
-    }
+        snprintf(msg, length, "%lf A", intensity);
     else
-    {
-        static const int length = snprintf(NULL, 0,"%lf", intensity) + 1;
-        msg = new char[length];
-        snprintf(msg, length, "%lf", intensity);
-    }
+        snprintf(msg, length, "%lf R", intensity);
+    
     
     // prepare buffer
     size_t len = strlen(msg);
-    memcpy(buffer, (const void *)msg, len);
+    memcpy(buffer, (const void *)msg, length);
     
     // COAP FUNCTIONS
     coap_set_header_content_format(response, TEXT_PLAIN);
@@ -58,7 +59,7 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
     
     if((len = coap_get_payload(request, &payload)))
     {
-        sscanf(payload, "%lf", intensity);
+        sscanf((char*)payload, "%lf", &intensity);
         printf("Tap intensity changed to %lf\n", intensity);
     } else
         success = !success;
