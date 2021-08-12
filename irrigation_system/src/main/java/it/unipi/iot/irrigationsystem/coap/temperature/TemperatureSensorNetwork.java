@@ -21,7 +21,7 @@ public class TemperatureSensorNetwork {
     private BoundStatus boundStatus = BoundStatus.NORMAL;
 
     public void addTemperatureSensor(String ip) {
-        System.out.println("The presence sensor: [" + ip + "] + is now registered");
+        System.out.println("The presence sensor: [" + ip + "] is now registered");
 
         // Add the temperature_switch resource
         CoapClient newTemperatureSwitch = new CoapClient("coap://[" + ip + "]/temperature_switch");
@@ -53,7 +53,7 @@ public class TemperatureSensorNetwork {
                         } else {
                             temperatureDetected = Integer.parseInt(responseString);
                         }
-                        IrrigationSystemDbManager.insertTemperature(temperatureDetected);
+                        //IrrigationSystemDbManager.insertTemperature(temperatureDetected);
                         boundStatus = BoundStatus.NORMAL;
                     }
 

@@ -42,8 +42,8 @@ public class IrrigationSystemDbManager {
     public static void insertTemperature(int temperature) {
         String insertQueryStatement = "INSERT INTO temperature (tempValue) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setInt(1, temperature);
             prepareStatement.executeUpdate();
@@ -55,8 +55,8 @@ public class IrrigationSystemDbManager {
     public static void insertRainStatus(boolean status) {
         String insertQueryStatement = "INSERT INTO rain (isRaining) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setBoolean(1, status);
             prepareStatement.executeUpdate();
@@ -68,8 +68,8 @@ public class IrrigationSystemDbManager {
     public static void insertSoilMoistureValue(double soilValue) {
         String insertQueryStatement = "INSERT INTO soilMoisture (soilValue) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setDouble(1, soilValue);
             prepareStatement.executeUpdate();
@@ -82,8 +82,8 @@ public class IrrigationSystemDbManager {
     public static void insertTapValues(double intensity, int interval) {
         String insertQueryStatement = "INSERT INTO tap (intensity, interval) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setDouble(1, intensity);
             prepareStatement.setInt(2, interval);
@@ -97,8 +97,8 @@ public class IrrigationSystemDbManager {
     public static void insertWaterLevAquifer(String nodeId, double waterLevel) {
         String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setString(1, nodeId);
             prepareStatement.setDouble(2, waterLevel);
@@ -112,8 +112,8 @@ public class IrrigationSystemDbManager {
     public static void insertWaterLevReservoir(String nodeId, double waterLevel) {
         String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?)";
 
-        try (Connection smartPoolConnection = makeJDBCConnection();
-             PreparedStatement prepareStatement = smartPoolConnection.prepareStatement(insertQueryStatement);
+        try (Connection IrrigationConnection = makeJDBCConnection();
+             PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
         ) {
             prepareStatement.setString(1, nodeId);
             prepareStatement.setDouble(2, waterLevel);
