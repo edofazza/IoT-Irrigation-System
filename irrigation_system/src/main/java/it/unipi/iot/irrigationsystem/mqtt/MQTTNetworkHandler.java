@@ -163,5 +163,13 @@ public class MQTTNetworkHandler implements MqttCallback{
             System.out.println("> " + sample.getKey() + "\n");
         }
     }
+
+    public Map<String, Double> getReceivedAquiferSamples() {
+        return receivedAquiferSamples;
+    }
+
+    public Map<String, Double> getReceivedReservoirSamples() {
+        return receivedReservoirSamples;
+    }
 }
 
