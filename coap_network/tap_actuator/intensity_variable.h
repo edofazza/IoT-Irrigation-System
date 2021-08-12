@@ -1,1 +1,1 @@
-static double intensity = 10; // cm^3
+static double intensity = 5;

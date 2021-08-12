@@ -1,5 +1,6 @@
 package it.unipi.iot.irrigationsystem;
 
+import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 import it.unipi.iot.irrigationsystem.mqtt.aquifer.AquiferCollector;
 import it.unipi.iot.irrigationsystem.mqtt.reservoir.ReservoirCollector;
@@ -9,10 +10,30 @@ import java.util.concurrent.atomic.AtomicLong;
 
 class Parameters{
     public boolean isRaining;
-    public double soilTension;
-    public int temperature;
+    public BoundStatus soilStatus;
+    public BoundStatus temperatureStatus;
     public double aquiferLevel;
     public double reservoirLevel;
+    public double tapIntensity;
+}
+
+class Levels{
+    public static final double NOT_NEEDED = 0;
+    public static final double LOW = 0.4;
+    public static final double MEDIUM = 0.8;
+    public static final double HIGH = 1.2;
+    public static final double VERY_HIGH = 1.4;
+
+    public static double increaseLevel(double level){
+        if (level == NOT_NEEDED) {
+            return LOW;
+        } else if (level == LOW) {
+            return MEDIUM;
+        } else if (level == MEDIUM) {
+            return HIGH;
+        }
+        return VERY_HIGH;
+    }
 }
 
 public class AutomaticIrrigationSystem implements Runnable{
@@ -47,14 +68,19 @@ public class AutomaticIrrigationSystem implements Runnable{
                 e.printStackTrace();
             }
             Parameters p = new Parameters();
-            WhereWater w = WhereWater.AQUIFER;
+            WhereWater waterSource = WhereWater.AQUIFER;
             double quantity = 0;
             populateParameters(p);
             if(p.isRaining){
                 System.out.println("Is Raining, no irrigation is needed");
                 continue;
             }
-
+            double need = computeNeed(p);
+            quantity = need*p.tapIntensity;
+            waterSource = determineWaterSource(quantity, p);
+            System.out.println("Output of  "+quantity+ " cm^3 of water from the tap, source is " +waterSource);
+            //TODO log of quantity and source
+            actuate(quantity, waterSource, p);
         }
     }
 
@@ -62,9 +88,50 @@ public class AutomaticIrrigationSystem implements Runnable{
         p.isRaining = rs.getWeather();
         if(p.isRaining==true)
             return;
-        p.soilTension = rs.getSoilTension();
-        p.temperature = rs.getTemperature();
+        p.soilStatus = rs.getSoilTensionBoundStatus();
+        p.temperatureStatus = rs.getTempBoundStatus();
         p.aquiferLevel = ac.getLastAverageAquiferLevel();
         p.reservoirLevel = rc.getLastAverageReservoirLevel();
+        p.tapIntensity = rs.getTapIntensity();
     }
+
+    private double computeNeed(Parameters p){
+        double level;
+        switch(p.soilStatus){
+            case TOO_LOW:
+                level = Levels.HIGH;
+                break;
+            case NORMAL:
+                level = Levels.MEDIUM;
+                break;
+            default:
+                level = Levels.LOW;
+        }
+        if (p.temperatureStatus == BoundStatus.TOO_HIGH)
+            level = Levels.increaseLevel(level);
+        return level;
+    }
+
+    private WhereWater determineWaterSource(double need, Parameters p){
+        if (need>p.aquiferLevel)
+            return WhereWater.RESERVOIR;
+        return WhereWater.AQUIFER;
+    }
+
+    private void actuate(double quantity, WhereWater source, Parameters p){
+        if (source == WhereWater.RESERVOIR){
+            rc.changeReservoirLevel(0-quantity);
+            System.out.println("\tFetched "+quantity + " from the RESERVOIR");
+        }
+        else{
+            rc.changeReservoirLevel(p.aquiferLevel-quantity);
+            System.out.println("\tFetched "+p.aquiferLevel+"cm^3 from the aquifer");
+            System.out.println("\t" + quantity + "cm^3 of them are output of the tap,");
+            System.out.println("\t" + (p.aquiferLevel-quantity) + "cm^3 of them are stored in the reservoir");
+        }
+        rs.setTapWhereWater(source);
+        //TODO rs.setTapQuantity(quantity)
+        //TODO db del tap??
+    }
+
 }
