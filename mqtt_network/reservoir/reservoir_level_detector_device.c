@@ -73,6 +73,7 @@ static char sub_topic_interval[BUFFER_SIZE];
 static char sub_topic_level[BUFFER_SIZE];
 
 static struct etimer periodic_timer;
+static long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
 
 /*---------------------------------------------------------------------------*/
 /*
@@ -98,15 +99,15 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
   if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
 
-	long interval = atol(const char*)chunk;
-    printf("%d\n", interval);
+	long interval = atol((char*)chunk);
+    printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   }
   else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];
     char *eptr;
     double quantity;
-    strcpy(value, (const char*)chunk);
+    strcpy(value, (char*)chunk);
     quantity = strtod(value, &eptr);
     if (result == 0){
         /* If the value provided was out of range, display a warning message */

@@ -5,4 +5,3 @@
 //Total capacity is 200*100*50 = 1e6 cm^3 = 1000 l
 
 #define DEFAULT_PUBLISH_INTERVAL    (CLOCK_SECOND>>1)
-static long PUBLISH_INTERVAL = DEFAULT_PUBLISH_INTERVAL;
