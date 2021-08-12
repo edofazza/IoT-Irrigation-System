@@ -112,6 +112,10 @@ public class CoapNetworkHandler {
         return tapActuator.setTapInterval(newValue);
     }
 
+    public boolean changeTapSwitchStatus(SwitchStatus switchStatus) {
+        return tapActuator.turnSwitch(switchStatus);
+    }
+
     // General functions
     public void printAllDevices() {
         temperatureSensorNetwork.printDevices();

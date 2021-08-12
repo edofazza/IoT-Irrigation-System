@@ -73,6 +73,10 @@ public class RegistrationServer extends CoapServer {
         return  coapHandler.setTapInterval(newValue);
     }
 
+    public boolean changeTapSwitchStatus(SwitchStatus switchStatus) {
+        return coapHandler.changeTapSwitchStatus(switchStatus);
+    }
+
     // General functions
     public void printDevices() {
         coapHandler.printAllDevices();

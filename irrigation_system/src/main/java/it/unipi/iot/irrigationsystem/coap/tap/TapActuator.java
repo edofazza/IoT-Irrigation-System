@@ -1,6 +1,7 @@
 package it.unipi.iot.irrigationsystem.coap.tap;
 
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
+import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
@@ -63,6 +64,8 @@ public class TapActuator {
     }
 
     public WhereWater getWhereWater() {
+        whereWater = clientTapWhereWater.get().getResponseText().equals("aquifer") ? WhereWater.AQUIFER : WhereWater.RESERVOIR;
+
         return whereWater;
     }
 
@@ -145,6 +148,41 @@ public class TapActuator {
         }, msg, MediaTypeRegistry.TEXT_PLAIN);
 
         tapInterval = newValue;
+        return true;
+    }
+
+    public boolean turnSwitch(SwitchStatus switchStatus) {
+        if (clientTapSwitch == null)
+            return false;
+
+        String msg;
+        switch (switchStatus) {
+            case ON:
+                msg = "ON";
+                break;
+            case OFF:
+                msg = "OFF";
+                break;
+            default:
+                return false;
+        }
+
+
+        clientTapSwitch.put(new CoapHandler() {
+
+            public void onLoad(CoapResponse response) {
+                if (response != null) {
+                    if(!response.isSuccess())
+                        System.out.println("Something went wrong with temperature switch");
+                }
+            }
+
+            public void onError() {
+                    System.err.println("[ERROR: TemperatureSwitch " + clientTapSwitch.getURI() + "] ");
+                }
+
+            }, msg, MediaTypeRegistry.TEXT_PLAIN);
+
         return true;
     }
 
