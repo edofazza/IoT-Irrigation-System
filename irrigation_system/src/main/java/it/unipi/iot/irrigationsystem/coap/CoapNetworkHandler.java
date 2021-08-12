@@ -6,6 +6,7 @@ import it.unipi.iot.irrigationsystem.coap.tap.TapActuator;
 import it.unipi.iot.irrigationsystem.coap.temperature.TemperatureSensorNetwork;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
+import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 
 public class CoapNetworkHandler {
     private TemperatureSensorNetwork temperatureSensorNetwork = new TemperatureSensorNetwork();
@@ -84,6 +85,19 @@ public class CoapNetworkHandler {
 
     public boolean changeSoilMoistureSwitch(SwitchStatus switchStatus) {
         return soilMoistureNetwork.turnSwitch(switchStatus);
+    }
+
+    // Tap Actions
+    public int getTapInterval() {
+        return tapActuator.getTapInterval();
+    }
+
+    public double getTapIntensity() {
+        return tapActuator.getTapIntensity();
+    }
+
+    public WhereWater getTapWhereWater() {
+        return tapActuator.getWhereWater();
     }
 
     // General functions

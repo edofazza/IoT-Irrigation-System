@@ -57,6 +57,21 @@ public class Collector {
                     case "setSoilTension":
                         setSoilTensionAction(chunks, rs);
                         break;
+                    case "getTapInterval":
+                        getTapIntervalAction(rs);
+                        break;
+                    case "getTapIntensity":
+                        getTapIntensityAction(rs);
+                        break;
+                    case "setTapInterval":
+                        setTapInterval(chunks, rs);
+                        break;
+                    case "setTapIntensity":
+                        setTapIntensity(chunks, rs);
+                        break;
+                    case "getWaterLevels":
+                        System.out.println("PASS"); //TODO: dedicated function
+                        break;
                     case "start": // TODO: simulation thread
                         System.out.println("PASS"); //TODO: dedicated function
                         break;
@@ -82,7 +97,9 @@ public class Collector {
                 "\n\t!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +  // DONE
                 "\n\t!getWeather: get if the rain sensor feels rain or not" + // DONE
                 "\n\t!getSoilTension: get the soil tension" + // DONE
-                "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" +
+                "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" + // DONE
+                "\n\t!getTapInterval: get interval which the tap operates" +
+                "\n\t!getTapIntensity: get intensity which the tap operates" +
                 "\n\t!setTapInterval <seconds>: set interval which the tap operates" +
                 "\n\t!setTapIntensity <value>: set intensity which the tap operates" +
                 "\n\t!getWaterLevels: print the water levels of aquifer and reservoir" +
@@ -175,5 +192,21 @@ public class Collector {
             default:
                 System.out.println("Bound inserted is not valid");
         }
+    }
+
+    private static void getTapIntensityAction(RegistrationServer rs) {
+        System.out.println("The tap intensity is: " + rs.getTapIntensity());
+    }
+
+    private static void getTapIntervalAction(RegistrationServer rs) {
+        System.out.println("The tap interval is: " + rs.getTapInterval());
+    }
+
+    private static void setTapInterval(String[] chunks, RegistrationServer rs) {
+
+    }
+
+    private static void setTapIntensity(String[] chunks, RegistrationServer rs) {
+        
     }
 }

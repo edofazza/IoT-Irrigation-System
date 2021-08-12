@@ -3,6 +3,7 @@ package it.unipi.iot.irrigationsystem.registration;
 import it.unipi.iot.irrigationsystem.coap.CoapNetworkHandler;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
+import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 import it.unipi.iot.irrigationsystem.registration.resources.RegistrationResource;
 import org.eclipse.californium.core.CoapServer;
 
@@ -45,6 +46,19 @@ public class RegistrationServer extends CoapServer {
 
     public boolean changeSoilMoistureSwitchStatus(SwitchStatus switchStatus) {
         return coapHandler.changeSoilMoistureSwitch(switchStatus);
+    }
+
+    // Tap utility functions
+    public int getTapInterval() {
+        return coapHandler.getTapInterval();
+    }
+
+    public double getTapIntensity() {
+        return coapHandler.getTapIntensity();
+    }
+
+    public WhereWater getTapWhereWater() {
+        return coapHandler.getTapWhereWater();
     }
 
     // General functions

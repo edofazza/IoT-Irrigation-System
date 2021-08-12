@@ -17,6 +17,7 @@ EVENT_RESOURCE(tap_interval,
                get_where_water_handler,
                NULL,
                put_where_water_handler,
+               NULL,
                NULL);
 
 static void get_where_water_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
