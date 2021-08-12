@@ -14,10 +14,7 @@ public class MQTTNetworkHandler implements MqttCallback{
     private final String broker = "tcp://" + brokerIpAddr + brokerPort;
     private final String clientId = "JavaApp";
 
-    private final String intervalPubTopic = "interval";
-
     private final String reservoirSubTopic = "reservoir_level";
-    private final String reservoirPubTopic = "set_reservoir_level";
 
     private final String aquiferSubTopic = "aquifer_level";
 
@@ -26,7 +23,7 @@ public class MQTTNetworkHandler implements MqttCallback{
     private Map<String, Double> receivedAquiferSamples = new HashMap();
     private Map<String, Double> receivedReservoirSamples = new HashMap();
 
-    public CollectorMqttClient() throws InterruptedException {
+    public MQTTNetworkHandler() throws InterruptedException {
         do {
             try {
                 this.mqttClient = new MqttClient(this.broker,this.clientId);
@@ -66,8 +63,8 @@ public class MQTTNetworkHandler implements MqttCallback{
                 timeWindow *= 2;
                 this.mqttClient.connect();
 
-                this.mqttClient.subscribe(this.tempSubTopic);
-                this.mqttClient.subscribe(this.clSubTopic);
+                this.mqttClient.subscribe(this.aquiferSubTopic);
+                this.mqttClient.subscribe(this.reservoirSubTopic);
                 System.out.println("Connection is restored");
             }catch(MqttException me) {
                 System.out.println("I could not connect");
@@ -130,18 +127,6 @@ public class MQTTNetworkHandler implements MqttCallback{
 
     }
 
-
-    private double averageSampleValue(final Map<String, Double> samples) {
-        int sum = 0;
-        int num = 0;
-        for(Map.Entry<String, Double> sample: samples.entrySet()) {
-            sum += sample.getValue();
-            num++;
-        }
-        return (double) sum / num;
-    }
-
-
     public int getNumberOfAquiferSensors() {
         return receivedAquiferSamples.size();
     }
@@ -151,11 +136,11 @@ public class MQTTNetworkHandler implements MqttCallback{
     }
 
     public void printAquiferSensors() {
-        stampSensors(receivedAquiferSamples);
+        printSensors(receivedAquiferSamples);
     }
 
     public void printReservoirSensors() {
-        stampSensors(receivedReservoirSamples);
+        printSensors(receivedReservoirSamples);
     }
 
     private void printSensors(final Map<String, Double> samples) {

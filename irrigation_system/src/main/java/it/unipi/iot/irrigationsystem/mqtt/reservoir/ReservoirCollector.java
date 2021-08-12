@@ -1,19 +1,23 @@
 package it.unipi.iot.irrigationsystem.mqtt.reservoir;
 import it.unipi.iot.irrigationsystem.mqtt.MQTTNetworkHandler;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
-public class AcquiferCollector{
+import java.util.Map;
+
+public class ReservoirCollector {
     private MQTTNetworkHandler handler;
     private final String intervalPubTopic = "interval";
-    private final String reservoirSubTopic = "reservoir_level";
     private final String reservoirPubTopic = "set_reservoir_level";
 
-    public AcquiferCollector(MQTTNetworkHandler handler){
+    public ReservoirCollector(MQTTNetworkHandler handler){
         this.handler = handler;
     }
 
     public double getLastAverageReservoirLevel(){
-        int sum=num=0;
-        Map<String, Double>samples = handler.getReceivedReservoirSamples();
+        int sum = 0;
+        int num = 0;
+
+        Map<String, Double> samples = handler.getReceivedReservoirSamples();
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
             sum += sample.getValue();
             num++;
@@ -22,10 +26,18 @@ public class AcquiferCollector{
     }
 
     public void changeInterval(long newInterval){
-        handler.publish(intervalPubTopic, Long.toString(newInterval));
+        try {
+            handler.publish(intervalPubTopic, Long.toString(newInterval));
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     public void changeReservoirLevel(double quantity){
-        handler.publish(reservoirPubTopic, Double.toString(quantity));
+        try {
+            handler.publish(reservoirPubTopic, Double.toString(quantity));
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }

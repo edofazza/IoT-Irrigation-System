@@ -1,6 +1,9 @@
 package it.unipi.iot.irrigationsystem;
 
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
+import it.unipi.iot.irrigationsystem.mqtt.MQTTNetworkHandler;
+import it.unipi.iot.irrigationsystem.mqtt.aquifer.AquiferCollector;
+import it.unipi.iot.irrigationsystem.mqtt.reservoir.ReservoirCollector;
 import it.unipi.iot.irrigationsystem.registration.RegistrationServer;
 
 import java.io.BufferedReader;
@@ -11,7 +14,7 @@ import java.net.SocketException;
 public class Collector {
     private static boolean celciusUnit = true;
 
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) throws SocketException, InterruptedException {
         // Init
         MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
         AquiferCollector ac = new AquiferCollector(mqttnh);
@@ -42,6 +45,8 @@ public class Collector {
                         break;
                     case "getDevicesList":
                         rs.printDevices();
+                        mqttnh.printAquiferSensors();
+                        mqttnh.printReservoirSensors();
                         break;
                     case "getTemp":
                         getTemperatureAction(rs.getTemperature());
@@ -106,7 +111,7 @@ public class Collector {
                 "\n\t!getTapIntensity: get intensity which the tap operates" + // DONE
                 "\n\t!setTapInterval <seconds>: set interval which the tap operates" + // DONE
                 "\n\t!setTapIntensity <value>: set intensity which the tap operates" + // DONE
-                "\n\t!getWaterLevels: print the water levels of aquifer and reservoir" +
+                "\n\t!getWaterLevels: print the water levels of aquifer and reservoir" + // DONE
                 "\n\t!start: start the simulation" +
                 "\n\t!stop: stop the simulation" +
                 "\n\t!help: print commands list" + // DONE

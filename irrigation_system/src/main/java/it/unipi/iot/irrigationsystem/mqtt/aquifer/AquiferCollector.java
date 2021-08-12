@@ -1,18 +1,21 @@
 package it.unipi.iot.irrigationsystem.mqtt.aquifer;
 import it.unipi.iot.irrigationsystem.mqtt.MQTTNetworkHandler;
+import org.eclipse.paho.client.mqttv3.MqttException;
 
-public class AcquiferCollector{
+import java.util.Map;
+
+public class AquiferCollector {
     private MQTTNetworkHandler handler;
     private final String intervalPubTopic = "interval";
-    private final String aquiferSubTopic = "aquifer_level";
 
-    public AcquiferCollector(MQTTNetworkHandler handler){
+    public AquiferCollector(MQTTNetworkHandler handler){
         this.handler = handler;
     }
 
     public double getLastAverageAquiferLevel(){
-        int sum=num=0;
-        Map<String, Double>samples = handler.getReceivedAquiferSamples();
+        int sum = 0;
+        int num = 0;
+        Map<String, Double> samples = handler.getReceivedAquiferSamples();
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
             sum += sample.getValue();
             num++;
@@ -21,6 +24,10 @@ public class AcquiferCollector{
     }
 
     public void changeInterval(long newInterval){
-        handler.publish(intervalPubTopic, Long.toString(newInterval));
+        try {
+            handler.publish(intervalPubTopic, Long.toString(newInterval));
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 }
