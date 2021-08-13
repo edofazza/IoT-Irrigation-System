@@ -86,7 +86,7 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
         
         chunk = strtok(NULL, " ");
         int new_value = atoi(chunk);
-        if (strncmp(type, "u", strlen("u")))
+        if (strncmp(type, "u", strlen("u"))==0)
         {
             if (new_value < LOWER_BOUND_TEMP)
                 success = false;
