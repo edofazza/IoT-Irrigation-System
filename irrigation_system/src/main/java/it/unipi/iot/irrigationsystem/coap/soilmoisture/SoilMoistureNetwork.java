@@ -55,7 +55,7 @@ public class SoilMoistureNetwork {
                             soilTensionDetected = Double.parseDouble(responseString);
                             boundStatus.set(BoundStatus.NORMAL);
                         }
-                        IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
+                        // TODO IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
                     }
 
                     public void onError() {
