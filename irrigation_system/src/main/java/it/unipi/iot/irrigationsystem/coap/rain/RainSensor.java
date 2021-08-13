@@ -15,7 +15,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RainSensor {
     private CoapClient clientRainSensor;
     private CoapObserveRelation observeRain;
-    private AtomicBoolean isRaining=new AtomicBoolean();
+    private AtomicBoolean isRaining;
+
+    private SoilMoistureNetwork moistureNetwork;
+    private TapActuator tapActuator;
+    private TemperatureSensorNetwork temperatureSensorNetwork;
 
     private SoilMoistureNetwork moistureNetwork;
     private TapActuator tapActuator;
