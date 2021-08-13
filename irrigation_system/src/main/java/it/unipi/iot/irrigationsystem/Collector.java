@@ -32,7 +32,6 @@ public class Collector {
 
         printCommands();
 
-        label:
         while(true) {
             System.out.print(">!");
             try {
@@ -41,7 +40,7 @@ public class Collector {
 
                 switch (chunks[0]) {
                     case "quit":
-                        break label;
+                        System.exit(0);
                     case "help":
                         printCommands();
                         break;
