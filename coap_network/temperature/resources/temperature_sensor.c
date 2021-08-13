@@ -41,14 +41,14 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
     // IF TOO HOT OR TOO COLD SEND A WARNING
     if (temperature < LOWER_BOUND_TEMP)
     {
-        LOG_INFO("Temperature greater than normal\n");
+        LOG_INFO("Temperature lower than normal\n");
         int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN cold") + 1;
         msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN cold %d", temperature);
     }
     else if (temperature > UPPER_BOUND_TEMP)
     {
-        LOG_INFO("Temperature lower than normal\n");
+        LOG_INFO("Temperature greater than normal\n");
         int length = snprintf(NULL, 0,"%d", temperature) + sizeof("WARN hot") + 1;
         msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN hot %d", temperature);
@@ -63,7 +63,7 @@ static void get_temperature_handler(coap_message_t *request, coap_message_t *res
     // prepare buffer
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, len);
-    
+    free(msg);
     // COAP FUNCTIONS
     coap_set_header_content_format(response, TEXT_PLAIN);
     coap_set_header_etag(response, (uint8_t *)&len, 1);
@@ -114,10 +114,10 @@ static void temperature_event_handler(void)
     // extimate new temperature
     srand(time(NULL));
     int new_temp = temperature;
-    int random = rand() % 4; // generate 0, 1, 2, 3
+    int random = rand() % 8; // generate 0, 1, 2, 3, 4, 5, 6, 7
     
-    if (random == 0) {// 25% of changing the value
-        if (random < 2) // decrease
+    if (random <2) {// 25% of changing the value
+        if (random == 0) // decrease
             new_temp -= VARIATION;
         else // increase
             new_temp += VARIATION;
