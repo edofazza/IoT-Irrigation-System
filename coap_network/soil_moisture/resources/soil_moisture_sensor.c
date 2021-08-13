@@ -64,7 +64,7 @@ static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     // prepare buffer
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, len);
-    
+    free(msg);
     // COAP FUNCTIONS
     coap_set_header_content_format(response, TEXT_PLAIN);
     coap_set_header_etag(response, (uint8_t *)&len, 1);
@@ -82,12 +82,15 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     if((len = coap_get_payload(request, &payload)))
     {
         char* chunk = strtok((char*)payload, " ");
-        char* type = chunk;
-        
+        char* type = (char*)malloc((strlen(chunk))*sizeof(char));
+        strcpy(type, chunk);
+
         chunk = strtok(NULL, " ");
         double new_value;
+        printf("type: %s\n", type);
         sscanf(chunk, "%lf", &new_value);
-        if (strncmp(type, "u", strlen("u")))
+
+        if (strncmp(type, "u", strlen("u"))==0)
         {
             if (new_value < LOWER_BOUND_SOIL_TENSION)
                 success = false;
@@ -116,14 +119,14 @@ static void soil_moisture_event_handler(void)
     // extimate new tension
     srand(time(NULL));
     int new_soilTension = soilTension;
-    int random = rand() % 4; // generate 0, 1, 2, 3
-    
-    if (random == 0) {// 25% of changing the value
-        if (random < 2) // decrease
-            new_soilTension -= VARIATION;
-        else // increase
-            new_soilTension += VARIATION;
-    }
+    int random = rand() % 8; // generate 0, 1, 2, 3, 4, 5, 6, 7
+
+        if (random <2) {// 25% of changing the value
+            if (random == 0) // decrease
+                new_soilTension -= VARIATION;
+            else // increase
+                new_soilTension += VARIATION;
+        }
     
     // if not equal
     if (new_soilTension != soilTension)
