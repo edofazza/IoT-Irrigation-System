@@ -21,10 +21,6 @@ public class RainSensor {
     private TapActuator tapActuator;
     private TemperatureSensorNetwork temperatureSensorNetwork;
 
-    private SoilMoistureNetwork moistureNetwork;
-    private TapActuator tapActuator;
-    private TemperatureSensorNetwork temperatureSensorNetwork;
-
     public void addRainSensor(String ip) {
         System.out.println("The rain sensor: [" + ip + "] + is now registered");
         clientRainSensor = new CoapClient("coap://[" + ip + "]/rain_sensor");
