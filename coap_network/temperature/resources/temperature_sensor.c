@@ -102,6 +102,7 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
         }
         free(type);
     }
+    printf("LOWER B: %d, UPPER B: %d\n", LOWER_BOUND_TEMP, UPPER_BOUND_TEMP);
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);
