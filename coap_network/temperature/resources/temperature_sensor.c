@@ -81,7 +81,8 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
     if((len = coap_get_payload(request, &payload)))
     {
         char* chunk = strtok((char*)payload, " ");
-        char* type = chunk;
+        char* type = (char*)malloc((strlen(chunk))*sizeof(char));
+        strcpy(chunk, type);
         
         chunk = strtok(NULL, " ");
         int new_value = atoi(chunk);
@@ -99,6 +100,7 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
             else
                 LOWER_BOUND_TEMP = new_value;
         }
+        free(type);
     }
 
     if(!success)
