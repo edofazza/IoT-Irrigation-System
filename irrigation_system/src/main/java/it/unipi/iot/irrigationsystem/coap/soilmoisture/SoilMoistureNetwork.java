@@ -12,13 +12,14 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SoilMoistureNetwork {
     private List<CoapClient> clientSoilMoistureSensorList = new ArrayList<>();
     private List<CoapObserveRelation> observeSoilTensionList = new ArrayList<>();
     private List<CoapClient> clientSoilMoistureSwitchList = new ArrayList<>();
     private double soilTensionDetected = 0;
-    private BoundStatus boundStatus = BoundStatus.NORMAL;
+    private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addSoilMoisture(String ip) {
         System.out.println("The soil moisture sensor: [" + ip + "] + is now registered");
@@ -42,17 +43,17 @@ public class SoilMoistureNetwork {
                             switch (tokens[1]) {
                                 case "hot":
                                     System.out.println("Tension too low!!!");
-                                    boundStatus = BoundStatus.TOO_LOW;
+                                    boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
                                 case "cold":
                                     System.out.println("Tension too high!!!");
-                                    boundStatus = BoundStatus.TOO_HIGH;
+                                    boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
                             }
                             soilTensionDetected = Double.parseDouble(tokens[2]);
                         } else {
                             soilTensionDetected = Double.parseDouble(responseString);
-                            boundStatus = BoundStatus.NORMAL;
+                            boundStatus.set(BoundStatus.NORMAL);
                         }
                         IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
                     }
@@ -159,6 +160,6 @@ public class SoilMoistureNetwork {
     }
 
     public BoundStatus getBoundStatus() {
-        return boundStatus;
+        return boundStatus.get();
     }
 }

@@ -9,6 +9,8 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public class TapActuator {
     private CoapClient clientTapActuator; // intensity
     private CoapClient clientTapSwitch;
@@ -17,7 +19,7 @@ public class TapActuator {
     private CoapObserveRelation observeTapIntensity;
 
     private int tapInterval = 2; // Default value
-    private double tapIntensity = 1; // Default value
+    private AtomicReference<Double> tapIntensity = new AtomicReference<Double>(1.0); // Default value
     private WhereWater whereWater = WhereWater.AQUIFER; // Default value
 
 
@@ -35,13 +37,13 @@ public class TapActuator {
                         String responseString = response.getResponseText();
                         String[] tokens = responseString.split(" ");
 
-                        tapIntensity = Double.parseDouble(tokens[0]);
+                        tapIntensity.set(Double.parseDouble(tokens[0]));
 
                         // TODO: do something with the information about the water
                         // align the where water with the device
                         whereWater = tokens[1].equals("A") ? WhereWater.AQUIFER : WhereWater.RESERVOIR;
 
-                        IrrigationSystemDbManager.insertTapValues(tapIntensity, tapInterval);
+                        IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
                     }
 
                     public void onError() {
@@ -59,7 +61,7 @@ public class TapActuator {
     }
 
     public double getTapIntensity() {
-        return tapIntensity;
+        return tapIntensity.get();
     }
 
     public int getTapInterval() {
@@ -128,7 +130,7 @@ public class TapActuator {
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
 
-        tapIntensity = newValue;
+        tapIntensity.set(newValue);
         return true;
     }
 
