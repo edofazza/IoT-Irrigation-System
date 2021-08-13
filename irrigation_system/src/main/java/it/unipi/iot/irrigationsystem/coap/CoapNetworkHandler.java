@@ -17,6 +17,10 @@ public class CoapNetworkHandler {
 
     private static CoapNetworkHandler instance = null; // SINGLETON
 
+    private CoapNetworkHandler() {
+        rainSensor.addControlledDevices(soilMoistureNetwork, tapActuator, temperatureSensorNetwork);
+    }
+
     public static CoapNetworkHandler getInstance() {
         if (instance == null)
             instance = new CoapNetworkHandler();
