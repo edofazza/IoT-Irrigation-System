@@ -82,11 +82,12 @@ static void put_temperature_handler(coap_message_t *request, coap_message_t *res
     {
         char* chunk = strtok((char*)payload, " ");
         char* type = (char*)malloc((strlen(chunk))*sizeof(char));
-        strcpy(chunk, type);
+        strcpy(type, chunk);
         
         chunk = strtok(NULL, " ");
         int new_value = atoi(chunk);
-        if (strncmp(type, "u", strlen("u"))==0)
+        printf("type: %s\n", type);
+        if (strncmp(type, "u", 1)==0)
         {
             if (new_value < LOWER_BOUND_TEMP)
                 success = false;
