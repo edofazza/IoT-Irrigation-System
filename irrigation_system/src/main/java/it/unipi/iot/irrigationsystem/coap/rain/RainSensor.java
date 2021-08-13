@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class RainSensor {
     private CoapClient clientRainSensor;
     private CoapObserveRelation observeRain;
-    private AtomicBoolean isRaining;
+    private AtomicBoolean isRaining = new AtomicBoolean(false);
 
     private SoilMoistureNetwork moistureNetwork;
     private TapActuator tapActuator;
@@ -40,7 +40,7 @@ public class RainSensor {
                         if (tapActuator != null)
                             tapActuator.turnSwitch(isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
 
-                        IrrigationSystemDbManager.insertRainStatus(isRaining.get());
+                        //IrrigationSystemDbManager.insertRainStatus(isRaining.get());
                     }
 
                     public void onError() {
