@@ -42,7 +42,7 @@ static void get_rain_status_handler(coap_message_t *request, coap_message_t *res
     {
         int length = sizeof("not raining") + 1;
         msg = (char*)malloc((length)*sizeof(char));
-        snprintf(msg, length, "raining");
+        snprintf(msg, length, "not raining");
     }
     
     size_t len = strlen(msg);
