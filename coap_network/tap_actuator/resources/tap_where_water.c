@@ -74,11 +74,11 @@ static void put_where_water_handler(coap_message_t *request, coap_message_t *res
         }
         else
         {
-            success = !success;
+            success = false;
             LOG_INFO("Not valid message");
         }
     } else
-        success = !success;
+        success = false;
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);

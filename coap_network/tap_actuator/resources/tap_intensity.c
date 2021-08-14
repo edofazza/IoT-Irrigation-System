@@ -62,7 +62,7 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
         sscanf((char*)payload, "%lf", &intensity);
         printf("Tap intensity changed to %lf\n", intensity);
     } else
-        success = !success;
+        success = false;
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);

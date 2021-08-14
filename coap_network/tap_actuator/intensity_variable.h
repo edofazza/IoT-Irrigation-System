@@ -1,1 +1,1 @@
-static double intensity = 5;
+static double intensity = 5.0;

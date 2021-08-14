@@ -60,7 +60,7 @@ static void put_interval_handler(coap_message_t *request, coap_message_t *respon
         printf("Tap intensity changed to %lf\n", intensity);
         interval = new_interval;
     } else
-        success = !success;
+        success = false;
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);

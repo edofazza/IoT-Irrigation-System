@@ -44,5 +44,7 @@ static void put_switch_handler(coap_message_t *request, coap_message_t *response
             LOG_INFO("Switch off\n");
         }
     } else
-        success = !success;
+        success = false;
+    if(!success)
+        coap_set_status_code(response, BAD_REQUEST_4_00);
 }
