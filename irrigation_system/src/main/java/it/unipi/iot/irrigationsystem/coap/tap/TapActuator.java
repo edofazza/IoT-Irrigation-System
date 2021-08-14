@@ -43,7 +43,7 @@ public class TapActuator {
                         // align the where water with the device
                         whereWater = tokens[1].equals("A") ? WhereWater.AQUIFER : WhereWater.RESERVOIR;
 
-                        IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
+                        // TODO IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
                     }
 
                     public void onError() {
