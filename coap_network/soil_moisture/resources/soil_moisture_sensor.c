@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <errno.h>
 #include "coap-engine.h"
 #include "dev/leds.h"
 #include "sys/log.h"
@@ -87,8 +88,9 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
 
         chunk = strtok(NULL, " ");
         double new_value;
-        printf("type: %s\n", type);
-        sscanf(chunk, "%lf", &new_value);
+        char* eptr;
+        new_value=strtod(chunk, &eptr);
+        printf("type: %s, new_value: %f\n", type, new_value);
 
         if (strncmp(type, "u", 1)==0)
         {
