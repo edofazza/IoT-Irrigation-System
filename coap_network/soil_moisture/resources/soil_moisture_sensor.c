@@ -14,7 +14,7 @@
 /**************** RESOURCES **********************/
 #include "global_variables.h"
 
-#define VARIATION 1
+#define VARIATION 0.02
 
 static double LOWER_BOUND_SOIL_TENSION = -0.60; // bar
 static double UPPER_BOUND_SOIL_TENSION = -0.40; // bar
@@ -44,22 +44,22 @@ static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     if (soilTension < LOWER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension lower than normal\n");
-        int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN low") + 1;
+        int length = snprintf(NULL, 0,"%.2lf", soilTension) + sizeof("WARN low") + 1;
         msg = (char*)malloc((length)*sizeof(char));
-        snprintf(msg, length, "WARN low %lf", soilTension);
+        snprintf(msg, length, "WARN low %.2lf", soilTension);
     }
     else if (soilTension > UPPER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension greater than normal\n");
-        int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN high") + 1;
+        int length = snprintf(NULL, 0,"%.2lf", soilTension) + sizeof("WARN high") + 1;
         msg = (char*)malloc((length)*sizeof(char));
-        snprintf(msg, length, "WARN high %lf", soilTension);
+        snprintf(msg, length, "WARN high %.2lf", soilTension);
     }
     else
     {
-        int max_char_len = snprintf(NULL, 0,"%lf", soilTension) + 1;
+        int max_char_len = snprintf(NULL, 0,"%.2lf", soilTension) + 1;
         msg = (char*)malloc((max_char_len)*sizeof(char));
-        snprintf(msg, max_char_len, "%lf", soilTension);
+        snprintf(msg, max_char_len, "%.2lf", soilTension);
     }
     
     // prepare buffer
