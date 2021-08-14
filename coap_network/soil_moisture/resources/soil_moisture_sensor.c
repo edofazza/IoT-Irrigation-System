@@ -38,34 +38,36 @@ EVENT_RESOURCE(soil_moisture_sensor,
 static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
     LOG_INFO("Handling soil moisture get request...\n");
-    char* msg;
-    
+    //char* msg;
+    char msg[128];
+    int len = 128;
+    int max_char_len = len;
     // IF TOO HOT OR TOO COLD SEND A WARNING
     if (soilTension < LOWER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension lower than normal\n");
-        int length = snprintf(NULL, 0,"%.2lf", soilTension) + sizeof("WARN low") + 1;
-        msg = (char*)malloc((length)*sizeof(char));
+        //int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN low") + 1;
+        //msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN low %.2lf", soilTension);
     }
     else if (soilTension > UPPER_BOUND_SOIL_TENSION)
     {
         LOG_INFO("Tension greater than normal\n");
-        int length = snprintf(NULL, 0,"%.2lf", soilTension) + sizeof("WARN high") + 1;
-        msg = (char*)malloc((length)*sizeof(char));
+        //int length = snprintf(NULL, 0,"%lf", soilTension) + sizeof("WARN high") + 1;
+        //msg = (char*)malloc((length)*sizeof(char));
         snprintf(msg, length, "WARN high %.2lf", soilTension);
     }
     else
     {
-        int max_char_len = snprintf(NULL, 0,"%.2lf", soilTension) + 1;
-        msg = (char*)malloc((max_char_len)*sizeof(char));
+        //int max_char_len = snprintf(NULL, 0,"%lf", soilTension) + 1;
+        //msg = (char*)malloc((max_char_len)*sizeof(char));
         snprintf(msg, max_char_len, "%.2lf", soilTension);
     }
     
     // prepare buffer
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, len);
-    free(msg);
+    //free(msg);
     // COAP FUNCTIONS
     coap_set_header_content_format(response, TEXT_PLAIN);
     coap_set_header_etag(response, (uint8_t *)&len, 1);
@@ -122,7 +124,7 @@ static void soil_moisture_event_handler(void)
     
     // extimate new tension
     srand(time(NULL));
-    int new_soilTension = soilTension;
+    double new_soilTension = soilTension;
     int random = rand() % 8; // generate 0, 1, 2, 3, 4, 5, 6, 7
 
         if (random <2) {// 25% of changing the value
