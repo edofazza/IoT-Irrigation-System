@@ -28,7 +28,7 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
 static void soil_moisture_event_handler(void);
 
 EVENT_RESOURCE(soil_moisture_sensor,
-               "title=\"Soil_moisture sensor\";obs",
+               "</soil_moisture_sensor>;title=\"Soil_moisture sensor\";obs",
                get_soil_moisture_handler,
                NULL,
                put_soil_moisture_handler,

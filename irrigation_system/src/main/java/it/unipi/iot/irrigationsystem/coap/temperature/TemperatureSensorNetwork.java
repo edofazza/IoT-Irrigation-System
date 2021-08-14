@@ -112,7 +112,7 @@ public class TemperatureSensorNetwork {
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
         }
-        
+
         return true;
     }
 
