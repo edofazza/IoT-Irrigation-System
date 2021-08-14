@@ -113,6 +113,7 @@ public class TemperatureSensorNetwork {
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
         }
 
+        turnSwitch(SwitchStatus.OFF);
         return true;
     }
 
@@ -132,7 +133,7 @@ public class TemperatureSensorNetwork {
                 return false;
         }
 
-        for (CoapClient coapClient: clientTemperatureSensorList) {
+        for (CoapClient coapClient: clientTemperatureSwitchList) {
             coapClient.put(new CoapHandler() {
 
                 public void onLoad(CoapResponse response) {

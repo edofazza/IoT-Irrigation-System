@@ -16,7 +16,7 @@
 static void put_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
 EVENT_RESOURCE(temperature_switch,
-               "title=\"Temperature switch\";rf=\"switch\"",
+               "</temperature_switch>;title=\"Temperature switch\";rf=\"switch\"",
                NULL,
                NULL,
                put_switch_handler,

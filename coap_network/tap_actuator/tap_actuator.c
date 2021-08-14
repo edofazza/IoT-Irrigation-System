@@ -44,7 +44,7 @@ static struct etimer simulation;
 extern coap_resource_t tap_intensity;
 extern coap_resource_t tap_interval;
 extern coap_resource_t tap_where_water;
-extern coap_resource_t tap_switch;
+//extern coap_resource_t tap_switch;
 
 //*************************** UTILITY FUNCTIONS *****************************//
 static void check_connection()
@@ -119,7 +119,7 @@ PROCESS_THREAD(tap_server, ev, data)
     coap_activate_resource(&tap_intensity, "tap_intensity");
     coap_activate_resource(&tap_interval, "tap_interval");
     coap_activate_resource(&tap_where_water, "tap_where_water");
-    coap_activate_resource(&tap_switch, "tap_switch");
+    //coap_activate_resource(&tap_switch, "tap_switch");
     
     // SIMULATION
     etimer_set(&simulation, CLOCK_SECOND * interval);

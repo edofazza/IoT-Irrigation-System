@@ -6,7 +6,8 @@
 #include "sys/log.h"
 
 #include "global_variables.h"
-#include "intensity_variable.h"
+static bool isActive = true;
+static bool takesWaterFromAquifer = true;
 
 /* Log configuration */
 #define LOG_MODULE "App"
@@ -14,12 +15,14 @@
 
 static void get_intensity_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 static void put_intensity_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
+static void post_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 static void intensity_event_handler(void);
+
 
 EVENT_RESOURCE(tap_intensity,
                "title=\"Tap intensity\";obs",
                get_intensity_handler,
-               NULL,
+               post_switch_handler,
                put_intensity_handler,
                NULL,
                intensity_event_handler);
@@ -55,7 +58,25 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
     
     if((len = coap_get_payload(request, &payload)))
     {
-        sscanf((char*)payload, "%lf", &intensity);
+        char* chunk = strtok((char*)payload, " ");
+        char* where = (char*)malloc((strlen(chunk))*sizeof(char));
+        strcpy(type, chunk);
+
+        chunk = strtok(NULL, " ");
+        char* eptr;
+        intensity = strtod(chunk, &eptr);
+        printf("where: %s, new_value: %f\n", where, new_value);
+
+        if (strncmp(where, "A", 1)==0)
+        {
+            takesWaterFromAquifer = true;
+        }
+        else if (strncmp(where, "R", 1)==0)
+        {
+            takesWaterFromAquifer = false;
+        }
+        free(where);
+        
         printf("Tap intensity changed to %lf\n", intensity);
     } else
         success = false;
@@ -70,4 +91,32 @@ static void intensity_event_handler(void)
     // has been used. This is done for simulation purposes
     if (isActive)
         coap_notify_observers(&tap_intensity);
+}
+
+
+static void post_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+    LOG_INFO("Handling switch post request...\n");
+
+    size_t len = 0;
+    const uint8_t* payload = NULL;
+    bool success = true;
+    
+    if((len = coap_get_payload(request, &payload)))
+    {
+        if (strncmp((char*)payload, "ON", strlen("ON")) == 0)
+        {
+            isActive = true;
+            LOG_INFO("Switch on\n");
+        }
+        if (strncmp((char*)payload, "OFF", strlen("OFF")) == 0)
+        {
+            isActive = false;
+            LOG_INFO("Switch off\n");
+        }
+    } else
+        success = false;
+    
+    if(!success)
+        coap_set_status_code(response, BAD_REQUEST_4_00);
 }

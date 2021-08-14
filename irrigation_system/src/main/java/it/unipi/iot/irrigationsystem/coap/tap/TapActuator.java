@@ -12,9 +12,7 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TapActuator {
-    private CoapClient clientTapActuator; // intensity
-    private CoapClient clientTapSwitch;
-    private CoapClient clientTapWhereWater;
+    private CoapClient clientTapActuator; // intensity + switch
     private CoapClient clientTapInterval;
     private CoapObserveRelation observeTapIntensity;
 
@@ -26,9 +24,7 @@ public class TapActuator {
     public void addTapActuator(String ip) {
         System.out.println("The tap actuator: [" + ip + "] + is now registered");
         clientTapActuator = new CoapClient("coap://[" + ip + "]/tap_intensity");
-        clientTapSwitch = new CoapClient("coap://[" + ip + "]/tap_switch");
         clientTapInterval = new CoapClient("coap://[" + ip + "]/tap_interval");
-        clientTapWhereWater = new CoapClient("coap://[" + ip + "]/tap_where_water");
 
         observeTapIntensity = clientTapActuator.observe(
                 new CoapHandler() {
@@ -69,50 +65,28 @@ public class TapActuator {
     }
 
     public WhereWater getWhereWater() {
-        whereWater = clientTapWhereWater.get().getResponseText().equals("aquifer") ? WhereWater.AQUIFER : WhereWater.RESERVOIR;
-
         return whereWater;
     }
 
     public boolean setWhereWater(WhereWater whereWater) {
-        if (clientTapWhereWater == null)
-            return false;
-
-        String msg;
-        switch (whereWater) {
-            case AQUIFER:
-                msg = "aquifer";
-                break;
-            case RESERVOIR:
-                msg = "reservoir";
-                break;
-            default:
-                return false;
-        }
-
-        clientTapWhereWater.put(new CoapHandler() {
-            public void onLoad(CoapResponse response) {
-                if (response != null) {
-                    if(!response.isSuccess())
-                        System.out.println("Something went wrong with temperature sensor");
-                }
-            }
-
-            public void onError() {
-                System.err.println("[ERROR: TemperatureSensor " + clientTapWhereWater.getURI() + "] ");
-            }
-
-        }, msg, MediaTypeRegistry.TEXT_PLAIN);
-
         this.whereWater = whereWater;
-        return true;
+        return setTapIntensity(this.tapIntensity.get());
     }
 
     public boolean setTapIntensity(double newValue) {
         if (clientTapActuator == null)
             return false;
 
-        String msg = Double.toString(newValue);
+        String msg = "";
+        switch (whereWater) {
+            case AQUIFER:
+                msg = "A ";
+                break;
+            case RESERVOIR:
+                msg = "R ";
+                break;
+        }
+        msg += Double.toString(newValue);
 
         clientTapActuator.put(new CoapHandler() {
             public void onLoad(CoapResponse response) {
@@ -157,7 +131,7 @@ public class TapActuator {
     }
 
     public boolean turnSwitch(SwitchStatus switchStatus) {
-        if (clientTapSwitch == null)
+        if (clientTapActuator == null)
             return false;
 
         String msg;
@@ -173,17 +147,17 @@ public class TapActuator {
         }
 
 
-        clientTapSwitch.put(new CoapHandler() {
+        clientTapActuator.post(new CoapHandler() {
 
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with temperature switch");
+                        System.out.println("Something went wrong with Tap switch");
                 }
             }
 
             public void onError() {
-                    System.err.println("[ERROR: TemperatureSwitch " + clientTapSwitch.getURI() + "] ");
+                    System.err.println("[ERROR: TapSwitch " + clientTapActuator.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
