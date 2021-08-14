@@ -40,8 +40,9 @@ static void get_soil_moisture_handler(coap_message_t *request, coap_message_t *r
     LOG_INFO("Handling soil moisture get request...\n");
     //char* msg;
     char msg[128];
-    int len = 128;
-    int max_char_len = len;
+    int length = 128;
+    int max_char_len = length;
+
     // IF TOO HOT OR TOO COLD SEND A WARNING
     if (soilTension < LOWER_BOUND_SOIL_TENSION)
     {
