@@ -52,7 +52,10 @@ public class SoilMoistureNetwork {
                             }
                             soilTensionDetected = Double.parseDouble(tokens[2]);
                         } else {
-                            soilTensionDetected = Double.parseDouble(responseString);
+                            try {
+                                soilTensionDetected = Double.parseDouble(responseString);
+                            }catch(Exception e){
+                            }
                             boundStatus.set(BoundStatus.NORMAL);
                         }
                         // TODO IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);

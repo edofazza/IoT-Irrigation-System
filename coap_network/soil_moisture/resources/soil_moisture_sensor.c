@@ -90,7 +90,7 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
         printf("type: %s\n", type);
         sscanf(chunk, "%lf", &new_value);
 
-        if (strncmp(type, "u", strlen("u"))==0)
+        if (strncmp(type, "u", 1)==0)
         {
             if (new_value < LOWER_BOUND_SOIL_TENSION)
                 success = false;
@@ -104,7 +104,9 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
             else
                 LOWER_BOUND_SOIL_TENSION = new_value;
         }
+        free(type);
     }
+    printf("LOWER B: %d, UPPER B: %d\n", LOWER_BOUND_SOIL_TENSION, UPPER_BOUND_SOIL_TENSION);
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);
