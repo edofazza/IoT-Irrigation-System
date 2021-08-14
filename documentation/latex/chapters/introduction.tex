@@ -25,3 +25,13 @@ All these sensors and the tap actuator will exploit \textit{CoAP} as explained i
 		\includegraphics[width=1\linewidth]{img/deployment.png} 
 	\end{subfigure}
 \end{figure}
+
+
+
+\subsection{Implementation Choices}
+Before starting explaining the implementation of the application, it is important to list here some implementation choices that we made:
+
+\begin{itemize}
+	\item We decided to implement the \textbf{Collector} and the \textit{control logic} using Java.
+	\item Regarding the \textit{data encoding}, we opted for \textbf{JSON} since our devices are very constrained devices which can fail without putting at risk the system (e.g., the farmer can check the situation on site without any problem). Our application is not a critical application, thus a data encoding language such as XML is not needed. Anyway, the best solution would be CBOR, but because it is not mature on contiki we did not use it.
+\end{itemize}
