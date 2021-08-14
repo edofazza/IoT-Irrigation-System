@@ -14,7 +14,7 @@
 /**************** RESOURCES **********************/
 #include "global_variables.h"
 
-#define VARIATION 0.02
+#define VARIATION 0.1
 
 static double LOWER_BOUND_SOIL_TENSION = -0.60; // bar
 static double UPPER_BOUND_SOIL_TENSION = -0.40; // bar
@@ -108,7 +108,7 @@ static void put_soil_moisture_handler(coap_message_t *request, coap_message_t *r
         }
         free(type);
     }
-    printf("LOWER B: %d, UPPER B: %d\n", LOWER_BOUND_SOIL_TENSION, UPPER_BOUND_SOIL_TENSION);
+    printf("LOWER B: %f, UPPER B: %f\n", LOWER_BOUND_SOIL_TENSION, UPPER_BOUND_SOIL_TENSION);
 
     if(!success)
         coap_set_status_code(response, BAD_REQUEST_4_00);
