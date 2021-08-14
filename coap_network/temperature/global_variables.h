@@ -1,1 +1,1 @@
-static bool isActive = true;
+extern bool isActive;

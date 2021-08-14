@@ -9,8 +9,8 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /*          RESOURCES            */
-#include "global_variables.h"
-
+//#include "global_variables.h"
+bool isActive = true;
 
 /*          HANDLERS          */
 static void put_switch_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
