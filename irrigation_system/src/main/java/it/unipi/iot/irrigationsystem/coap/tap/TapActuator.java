@@ -35,14 +35,12 @@ public class TapActuator {
 
                     public void onLoad(CoapResponse response) {
                         String responseString = response.getResponseText();
-                        String[] tokens = responseString.split(" ");
 
-                        tapIntensity.set(Double.parseDouble(tokens[0]));
-
+                        try {
+                            tapIntensity.set(Double.parseDouble(responseString));
+                        }catch (Exception e){}
                         // TODO: do something with the information about the water
                         // align the where water with the device
-                        whereWater = tokens[1].equals("A") ? WhereWater.AQUIFER : WhereWater.RESERVOIR;
-
                         // TODO IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
                     }
 

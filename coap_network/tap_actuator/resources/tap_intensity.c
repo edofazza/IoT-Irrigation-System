@@ -7,7 +7,6 @@
 
 #include "global_variables.h"
 #include "intensity_variable.h"
-#include "where_variable.h"
 
 /* Log configuration */
 #define LOG_MODULE "App"
@@ -30,13 +29,10 @@ static void get_intensity_handler(coap_message_t *request, coap_message_t *respo
     LOG_INFO("Handling tap intensity get request...\n");
     char* msg;
     
-    int length = snprintf(NULL, 0,"%lf", intensity) + sizeof(" R") + 1;
+    int length = snprintf(NULL, 0,"%lf", intensity) + 1;
     msg = (char*)malloc((length)*sizeof(char));
-    
-    if (takesWaterFromAquifer)
-        snprintf(msg, length, "%lf A", intensity);
-    else
-        snprintf(msg, length, "%lf R", intensity);
+    snprintf(msg, length, "%lf", intensity);
+
     
     
     // prepare buffer
