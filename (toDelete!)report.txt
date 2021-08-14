@@ -1,0 +1,13 @@
+SIMULATION AND TEST REPORT
+
+Temp Sensor: funziona
+Soil Sensor: funziona
+Rain Sensor: funziona
+Tap Actuator: alla creazione del Mote, eccezione di Cooja
+
+
+Temp + Soil: funziona ma a volte solo un sensore fa get, l'altro no
+Temp + Rain: alla registrazione dei 2 sensori Cooja esplode
+Soil + Rain: alla registrazione dei 2 sensori Cooja esplode
+
+Aquifer Sensor: impossibile prelevare l'output dal testbed, sappiamo solo che tutto si blocca. Da Cooja non funziona MQTT broker
