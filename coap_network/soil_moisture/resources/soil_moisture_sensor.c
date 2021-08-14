@@ -14,7 +14,7 @@
 /**************** RESOURCES **********************/
 #include "global_variables.h"
 
-#define VARIATION 0.1
+#define VARIATION 1
 
 static double LOWER_BOUND_SOIL_TENSION = -0.60; // bar
 static double UPPER_BOUND_SOIL_TENSION = -0.40; // bar
