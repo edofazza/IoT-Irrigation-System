@@ -17,7 +17,7 @@ static void get_rain_status_handler(coap_message_t *request, coap_message_t *res
 static void rain_event_handler(void);
 
 EVENT_RESOURCE(rain_sensor,
-               "title=\"Rain sensor\";obs",
+               "<\rain_sensor>;title=\"Rain sensor\";obs",
                get_rain_status_handler,
                NULL,
                NULL,

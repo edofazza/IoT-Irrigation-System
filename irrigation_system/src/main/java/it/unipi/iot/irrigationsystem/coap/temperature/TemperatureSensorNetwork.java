@@ -112,8 +112,7 @@ public class TemperatureSensorNetwork {
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
         }
-
-        turnSwitch(SwitchStatus.OFF);
+        
         return true;
     }
 
