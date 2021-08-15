@@ -14,11 +14,10 @@ Aquifer Sensor: impossibile prelevare l'output dal testbed, sappiamo solo che tu
 
 
 SIMULAZIONI POMERIDIANE:
-Premessa: non mi funziona molto bene il border router, non mi permette di connettersi. Come mai? Ma che accidenti ne so.
-
-Ho modificato TemperatureSensorNetwork.java in modo tale che quando viene cambiando bound con la changeBounds() venga anche spento il device (non manderà più get). Il motivo di questa modifica è di testing per vedere se lo switch funziona, nel caso funzionante nel LOG viene scritto.
+Temp + Rain funziona (forse la probabilità o i CLOCK_SECONDS di rain possono essere aumentati)
 
 Per quanto riguarda la Tap, visto che bisogna garantire tutte e quattro le risorse quello che ho fatto è di mergiarle insieme. Specificatamente:
 	- quando viene fatta una put sull'intensità all'interno del messaggio deve stare anche da dove prendere l'acqua. In questo modo si rimuove la risorsa Where_Water
 	- per quando riguarda lo switch ho pensato di metterlo come funzione POST di intensity, lo so che non è corretto ma è l'unico modo per far tornare le risorse a 2. Nella documentazione spiegherò questa cosa, quindi non ci saranno troppi problemi, poi se Cooja non lo permette non possiamo farci nulla.
-SE NON TI VA BENE: fai rollback
+
+C'è da testare le funzionalità di Tap da solo, il codice è da riscrivere usando correttamente extern dove richiesto (Forse solo per intensity).
