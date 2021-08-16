@@ -20,7 +20,7 @@ static void intensity_event_handler(void);
 
 
 EVENT_RESOURCE(tap_intensity,
-               "title=\"Tap intensity\";obs",
+               "<\tap_intensity>;title=\"Tap intensity\";obs",
                get_intensity_handler,
                post_switch_handler,
                put_intensity_handler,
