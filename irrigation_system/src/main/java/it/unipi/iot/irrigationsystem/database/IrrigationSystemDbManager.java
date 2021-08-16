@@ -66,7 +66,7 @@ public class IrrigationSystemDbManager {
     }
 
     public static void insertSoilMoistureValue(double soilValue) {
-        String insertQueryStatement = "INSERT INTO soilMoisture (soilValue) VALUES (?)";
+        String insertQueryStatement = "INSERT INTO soilMoisture (soilValue) VALUES (?);";
 
         try (Connection IrrigationConnection = makeJDBCConnection();
              PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
@@ -80,7 +80,7 @@ public class IrrigationSystemDbManager {
     }
 
     public static void insertTapValues(double intensity, int interval) {
-        String insertQueryStatement = "INSERT INTO tap (intensity, interval) VALUES (?, ?)";
+        String insertQueryStatement = "INSERT INTO tap(intensity, tap.interval) VALUES (?, ?);";
 
         try (Connection IrrigationConnection = makeJDBCConnection();
              PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
@@ -95,7 +95,7 @@ public class IrrigationSystemDbManager {
     }
 
     public static void insertWaterLevAquifer(String nodeId, double waterLevel) {
-        String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?, ?)";
+        String insertQueryStatement = "INSERT INTO waterLevelAquifer(nodeId, waterLevel) VALUES (?, ?);";
 
         try (Connection IrrigationConnection = makeJDBCConnection();
              PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
@@ -110,7 +110,7 @@ public class IrrigationSystemDbManager {
     }
 
     public static void insertWaterLevReservoir(String nodeId, double waterLevel) {
-        String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?, ?)";
+        String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?, ?);";
 
         try (Connection IrrigationConnection = makeJDBCConnection();
              PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
