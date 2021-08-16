@@ -26,7 +26,9 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_APP
 
-#include "interval_variable.h"
+/* RESOURCES */
+int interval = 1;
+double intensity = 5.0;
 
 PROCESS(tap_server, "Server for the tap actuator");
 AUTOSTART_PROCESSES(&tap_server);

@@ -9,7 +9,6 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /*          RESOURCES            */
-//#include "global_variables.h"
 bool isActive = true;
 
 /*          HANDLERS          */

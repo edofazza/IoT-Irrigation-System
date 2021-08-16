@@ -1,1 +1,2 @@
-static double intensity = 5.0;
+extern double intensity;
+extern int interval;
