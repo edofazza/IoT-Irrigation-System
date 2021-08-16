@@ -9,7 +9,7 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /**************** RESOURCES **********************/
-#include "global_variables.h"
+static bool isRaining = false;
 
 
 /**************** REST: Rain **********************/
@@ -58,10 +58,10 @@ static void rain_event_handler(void)
 {
     // check if raining
     srand(time(NULL));
-    int random = rand() % 10; // generate 0, 1, ..., 9
+    int random = rand() % 2; // generate 0, 1
     
     bool new_isRaining = isRaining;
-    if (random == 0) // 10% of changing the value
+    if (random == 0) // 50% of changing the value
         new_isRaining = !isRaining;
 
     // if not equal, notify

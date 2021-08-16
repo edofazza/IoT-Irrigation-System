@@ -1,1 +1,0 @@
-static bool isRaining = false;
