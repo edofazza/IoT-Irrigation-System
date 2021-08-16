@@ -17,9 +17,9 @@
 #include "coap-blocking-api.h"
 
 #define SERVER_EP "coap://[fd00::1]:5683"
-#define CONN_TRY_INTERVAL 35
+#define CONN_TRY_INTERVAL 40
 #define REG_TRY_INTERVAL 1
-#define SIMULATION_INTERVAL 40
+#define SIMULATION_INTERVAL 50
 #define SENSOR_TYPE "rain_sensor"
 
 /* Log configuration */
