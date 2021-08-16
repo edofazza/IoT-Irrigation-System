@@ -65,7 +65,7 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
         chunk = strtok(NULL, " ");
         char* eptr;
         intensity = strtod(chunk, &eptr);
-        printf("where: %s, new_value: %f\n", where, new_value);
+        printf("where: %s, new_value: %f\n", where, intensity);
 
         if (strncmp(where, "A", 1)==0)
         {
