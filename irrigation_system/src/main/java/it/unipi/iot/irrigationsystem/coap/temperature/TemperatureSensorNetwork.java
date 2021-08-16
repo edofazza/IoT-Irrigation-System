@@ -155,6 +155,7 @@ public class TemperatureSensorNetwork {
         System.out.println("Temperature sensors:");
         for(CoapClient cc: clientTemperatureSensorList)
             System.out.println("\t" + cc.getURI());
+        System.out.println("");
     }
 
     public int getTemperatureDetected() {

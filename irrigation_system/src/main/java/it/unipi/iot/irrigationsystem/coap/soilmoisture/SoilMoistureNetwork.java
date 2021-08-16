@@ -157,9 +157,10 @@ public class SoilMoistureNetwork {
 
     public void printDevices() {
         System.out.println("Soil moisture sensors:");
-        for(CoapClient cc: clientSoilMoistureSensorList) {
-            System.out.println("\t" + cc.getURI() + "\n");
-        }
+        for(CoapClient cc: clientSoilMoistureSensorList)
+            System.out.println("\t" + cc.getURI());
+
+        System.out.println("");
     }
 
     public BoundStatus getBoundStatus() {
