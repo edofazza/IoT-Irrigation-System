@@ -7,17 +7,11 @@ Tap Actuator: funziona
 
 
 Temp + Soil: funziona ma a volte solo un sensore fa get, l'altro no
-Temp + Rain: alla registrazione dei 2 sensori Cooja esplode
-Soil + Rain: alla registrazione dei 2 sensori Cooja esplode
+Temp + Rain: funziona
+Soil + Rain: funziona
+Tap + Rain:
+Temp + Tap:
+Temp + Soil + Tap + Rain:
+2xTemp + 2xSoil + Tap + Rain:
 
 Aquifer Sensor: impossibile prelevare l'output dal testbed, sappiamo solo che tutto si blocca. Da Cooja non funziona MQTT broker
-
-
-SIMULAZIONI POMERIDIANE:
-Temp + Rain funziona (forse la probabilità o i CLOCK_SECONDS di rain possono essere aumentati)
-
-Per quanto riguarda la Tap, visto che bisogna garantire tutte e quattro le risorse quello che ho fatto è di mergiarle insieme. Specificatamente:
-	- quando viene fatta una put sull'intensità all'interno del messaggio deve stare anche da dove prendere l'acqua. In questo modo si rimuove la risorsa Where_Water
-	- per quando riguarda lo switch ho pensato di metterlo come funzione POST di intensity, lo so che non è corretto ma è l'unico modo per far tornare le risorse a 2. Nella documentazione spiegherò questa cosa, quindi non ci saranno troppi problemi, poi se Cooja non lo permette non possiamo farci nulla.
-
-C'è da testare le funzionalità di Tap da solo, il codice è da riscrivere usando correttamente extern dove richiesto (Forse solo per intensity).
