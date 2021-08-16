@@ -201,15 +201,17 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
   /* Main loop */
   while(1) {
-
+    printf("I'm in main while\n");
     PROCESS_YIELD();
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) ||
 	      ev == PROCESS_EVENT_POLL){
 
 		  if(state==STATE_INIT){
-			 if(have_connectivity()==true)
+			 if(have_connectivity()==true){
 				 state = STATE_NET_OK;
+				 printf("STATE=STATE_NET_OK\n");
+			 }
 		  }
 
 		  if(state == STATE_NET_OK){
@@ -222,6 +224,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
+			  printf("STATE=STATE_CONNECTING\n");
 		  }
 
 		  if(state==STATE_CONNECTED){
@@ -237,9 +240,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				PROCESS_EXIT();
 			  }
 			  state = STATE_SUBSCRIBED;
-			  PUBLISH_INTERVAL = 1*CLOCK_SECOND;
+			  PUBLISH_INTERVAL = 5*CLOCK_SECOND;
+			  printf("STATE=STATE_SUBSCRIBED\n");
 		  } else if(state == STATE_SUBSCRIBED){
-
+            printf("I try to publish a message\n");
 		    sensed_level = simulate_level();
 		    sprintf(pub_topic, "aquifer_level");
 		    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
