@@ -221,11 +221,19 @@ public class Collector {
         }
 
         if (newInterval!= rs.getTapInterval()) {
-            rs.setTapInterval(newInterval);
-            ac.changeInterval((long) newInterval);
-            air.setNewInterval(newInterval);
+            changeCoapTapInterval(rs, newInterval);
+            //changeMqttTapInterval(ac, air, newInterval);
         }
         System.out.println("Tap interval correctly updated");
+    }
+
+    private static void changeCoapTapInterval(RegistrationServer rs, int interval){
+        rs.setTapInterval(interval);
+    }
+
+    private static void changeMqttTapInterval(AquiferCollector ac, AutomaticIrrigationSystem air, int interval){
+        ac.changeInterval((long) interval);
+        air.setNewInterval(interval);
     }
 
     private static void setTapIntensity(String[] chunks, RegistrationServer rs) {
