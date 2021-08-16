@@ -9,7 +9,8 @@ Tap Actuator: funziona
 Temp + Soil: funziona ma a volte solo un sensore fa get, l'altro no
 Temp + Rain: funziona
 Soil + Rain: funziona
-Tap + Rain:
+Temp + Soil + Rain:
+Tap + Rain: funziona tutto ma le get non aggiornano i valori e sono più rare del normale
 Temp + Tap:
 Temp + Soil + Tap + Rain:
 2xTemp + 2xSoil + Tap + Rain:
