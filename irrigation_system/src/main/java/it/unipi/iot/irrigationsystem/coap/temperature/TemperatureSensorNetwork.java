@@ -57,7 +57,7 @@ public class TemperatureSensorNetwork {
                             }catch(Exception e){
                             }
                         }
-                        //IrrigationSystemDbManager.insertTemperature(temperatureDetected);
+                        IrrigationSystemDbManager.insertTemperature(temperatureDetected);
                         boundStatus.set(BoundStatus.NORMAL);
                     }
 

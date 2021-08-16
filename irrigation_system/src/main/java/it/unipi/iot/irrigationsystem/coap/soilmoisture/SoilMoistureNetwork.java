@@ -58,7 +58,7 @@ public class SoilMoistureNetwork {
                             }
                             boundStatus.set(BoundStatus.NORMAL);
                         }
-                        // TODO IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
+                        IrrigationSystemDbManager.insertSoilMoistureValue(soilTensionDetected);
                     }
 
                     public void onError() {

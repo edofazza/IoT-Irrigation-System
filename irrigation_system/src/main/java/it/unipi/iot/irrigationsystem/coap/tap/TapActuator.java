@@ -37,7 +37,7 @@ public class TapActuator {
                         }catch (Exception e){}
                         // TODO: do something with the information about the water
                         // align the where water with the device
-                        // TODO IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
+                        IrrigationSystemDbManager.insertTapValues(tapIntensity.get(), tapInterval);
                     }
 
                     public void onError() {

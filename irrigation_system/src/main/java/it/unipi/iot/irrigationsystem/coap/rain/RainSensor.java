@@ -40,7 +40,7 @@ public class RainSensor {
                         if (tapActuator != null)
                             tapActuator.turnSwitch(!isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
 
-                        //IrrigationSystemDbManager.insertRainStatus(isRaining.get());
+                        IrrigationSystemDbManager.insertRainStatus(isRaining.get());
                     }
 
                     public void onError() {
