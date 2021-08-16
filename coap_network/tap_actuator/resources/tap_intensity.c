@@ -7,6 +7,7 @@
 
 #include "global_variables.h"
 static bool isActive = true;
+static bool takesWaterFromAquifer = true;
 
 /* Log configuration */
 #define LOG_MODULE "App"
@@ -35,7 +36,8 @@ static void get_intensity_handler(coap_message_t *request, coap_message_t *respo
     msg = (char*)malloc((length)*sizeof(char));
     snprintf(msg, length, "%lf", intensity);
 
-
+    
+    
     // prepare buffer
     size_t len = strlen(msg);
     memcpy(buffer, (const void *)msg, length);
@@ -56,11 +58,24 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
     
     if((len = coap_get_payload(request, &payload)))
     {
-        char* chunk = (char*)payload;
+        char* chunk = strtok((char*)payload, " ");
+        char* where = (char*)malloc((strlen(chunk))*sizeof(char));
+        strcpy(type, chunk);
 
+        chunk = strtok(NULL, " ");
         char* eptr;
         intensity = strtod(chunk, &eptr);
-        printf("new_value: %f\n", new_value);
+        printf("where: %s, new_value: %f\n", where, new_value);
+
+        if (strncmp(where, "A", 1)==0)
+        {
+            takesWaterFromAquifer = true;
+        }
+        else if (strncmp(where, "R", 1)==0)
+        {
+            takesWaterFromAquifer = false;
+        }
+        free(where);
         
         printf("Tap intensity changed to %lf\n", intensity);
     } else
