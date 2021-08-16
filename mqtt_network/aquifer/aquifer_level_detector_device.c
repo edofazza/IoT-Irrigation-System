@@ -212,6 +212,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				 state = STATE_NET_OK;
 				 printf("STATE=STATE_NET_OK\n");
 			 }
+			 printf("STATE=STATE_INIT")
 		  }
 
 		  if(state == STATE_NET_OK){
