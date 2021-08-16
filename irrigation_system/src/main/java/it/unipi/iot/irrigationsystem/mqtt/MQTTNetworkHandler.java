@@ -24,6 +24,7 @@ public class MQTTNetworkHandler implements MqttCallback{
     private Map<String, Double> receivedReservoirSamples = new HashMap();
 
     public MQTTNetworkHandler() throws InterruptedException {
+        /*
         do {
             try {
                 this.mqttClient = new MqttClient(this.broker,this.clientId);
@@ -41,6 +42,7 @@ public class MQTTNetworkHandler implements MqttCallback{
                 System.out.println("I could not connect, Retrying ...");
             }
         }while(!this.mqttClient.isConnected());
+         */
     }
 
     public void publish(final String topic, final String content) throws MqttException{

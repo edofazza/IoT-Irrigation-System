@@ -16,14 +16,14 @@ public class Collector {
 
     public static void main(String[] args) throws SocketException, InterruptedException {
         // Init
-        // MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
-        // AquiferCollector ac = new AquiferCollector(mqttnh);
-        // ReservoirCollector rc = new ReservoirCollector(mqttnh);
+        MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
+        AquiferCollector ac = new AquiferCollector(mqttnh);
+        ReservoirCollector rc = new ReservoirCollector(mqttnh);
 
         RegistrationServer rs = new RegistrationServer();
         rs.start();
 
-        // AutomaticIrrigationSystem air = new AutomaticIrrigationSystem(rs, ac, rc);
+        AutomaticIrrigationSystem air = new AutomaticIrrigationSystem(rs, ac, rc);
 
         // CLI
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -74,7 +74,7 @@ public class Collector {
                         getTapIntensityAction(rs);
                         break;
                     case "setTapInterval":
-                        //setTapInterval(chunks, rs, ac, air);
+                        setTapInterval(chunks, rs, ac, air);
                         break;
                     case "setTapIntensity":
                         setTapIntensity(chunks, rs);
