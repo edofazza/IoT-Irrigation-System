@@ -9,7 +9,7 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /*          RESOURCES            */
-static int interval = 1;
+#include "interval_variable.h"
 
 /*          HANDLERS          */
 static void get_interval_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
