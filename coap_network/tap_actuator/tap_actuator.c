@@ -45,8 +45,6 @@ static struct etimer simulation;
 
 extern coap_resource_t tap_intensity;
 extern coap_resource_t tap_interval;
-extern coap_resource_t tap_where_water;
-//extern coap_resource_t tap_switch;
 
 //*************************** UTILITY FUNCTIONS *****************************//
 static void check_connection()
