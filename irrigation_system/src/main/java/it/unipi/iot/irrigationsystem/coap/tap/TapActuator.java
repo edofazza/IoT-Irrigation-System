@@ -16,8 +16,8 @@ public class TapActuator {
     private CoapClient clientTapInterval;
     private CoapObserveRelation observeTapIntensity;
 
-    private int tapInterval = 2; // Default value
-    private AtomicReference<Double> tapIntensity = new AtomicReference<>(1.0); // Default value
+    private int tapInterval = 10; // Default value
+    private AtomicReference<Double> tapIntensity = new AtomicReference<>(5.0); // Default value
     private WhereWater whereWater = WhereWater.AQUIFER; // Default value
 
 
