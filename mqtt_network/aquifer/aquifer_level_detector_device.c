@@ -164,8 +164,11 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
 static bool
 have_connectivity(void)
 {
-  if(uip_ds6_get_global(ADDR_PREFERRED) == NULL ||
-     uip_ds6_defrt_choose() == NULL) {
+  bool problem1 = uip_ds6_get_global(ADDR_PREFERRED) == NULL;
+  bool problem2 = uip_ds6_defrt_choose() == NULL
+  printf("problem1 is: %s, ", problem1 ? "true": "false");
+  printf("problem2 is: %s\n", problem2 ? "true": "false");
+  if( problem1|| problem2) {
     return false;
   }
   return true;
