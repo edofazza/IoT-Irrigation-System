@@ -3,7 +3,7 @@ SIMULATION AND TEST REPORT
 Temp Sensor: funziona
 Soil Sensor: funziona
 Rain Sensor: funziona
-Tap Actuator: alla creazione del Mote, eccezione di Cooja
+Tap Actuator: funziona
 
 
 Temp + Soil: funziona ma a volte solo un sensore fa get, l'altro no
