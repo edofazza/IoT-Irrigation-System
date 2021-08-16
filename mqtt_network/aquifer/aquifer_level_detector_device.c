@@ -189,9 +189,11 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
                      linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
 
   // Broker registration
+  printf("Try to connect\n");
   mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
 
+  printf("Registered\n");
   state=STATE_INIT;
 
   // Initialize periodic timer to check the status
