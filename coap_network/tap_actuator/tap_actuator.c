@@ -120,8 +120,6 @@ PROCESS_THREAD(tap_server, ev, data)
     // RESOURCES ACTIVATION
     coap_activate_resource(&tap_intensity, "tap_intensity");
     coap_activate_resource(&tap_interval, "tap_interval");
-    coap_activate_resource(&tap_where_water, "tap_where_water");
-    //coap_activate_resource(&tap_switch, "tap_switch");
     
     // SIMULATION
     etimer_set(&simulation, CLOCK_SECOND * interval);

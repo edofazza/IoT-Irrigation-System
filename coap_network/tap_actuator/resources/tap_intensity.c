@@ -60,7 +60,7 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
     {
         char* chunk = strtok((char*)payload, " ");
         char* where = (char*)malloc((strlen(chunk))*sizeof(char));
-        strcpy(type, chunk);
+        strcpy(where, chunk);
 
         chunk = strtok(NULL, " ");
         char* eptr;
