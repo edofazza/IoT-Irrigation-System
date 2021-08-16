@@ -78,14 +78,6 @@ public class TapActuator {
             return false;
 
         String msg = "";
-        switch (whereWater) {
-            case AQUIFER:
-                msg = "A ";
-                break;
-            case RESERVOIR:
-                msg = "R ";
-                break;
-        }
         msg += Double.toString(newValue);
 
         clientTapActuator.put(new CoapHandler() {

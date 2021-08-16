@@ -34,11 +34,11 @@ public class RainSensor {
                         isRaining.set(responseString.equals("raining"));
 
                         if (moistureNetwork != null)
-                            moistureNetwork.turnSwitch(isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
+                            moistureNetwork.turnSwitch(!isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
                         if (temperatureSensorNetwork != null)
-                            temperatureSensorNetwork.turnSwitch(isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
+                            temperatureSensorNetwork.turnSwitch(!isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
                         if (tapActuator != null)
-                            tapActuator.turnSwitch(isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
+                            tapActuator.turnSwitch(!isRaining.get() ? SwitchStatus.ON : SwitchStatus.OFF);
 
                         //IrrigationSystemDbManager.insertRainStatus(isRaining.get());
                     }
