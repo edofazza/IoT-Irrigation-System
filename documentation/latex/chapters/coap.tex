@@ -14,7 +14,7 @@ The change of the bounds is done at step, the user will specify the threshold th
 The \textbf{temperature\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
 
 \subsubsection{Data Generation}
-Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the temperature is updated using the following algorithm:
+Data is generated every \textit{8 $\times$ CLOCK\_SECOND} in order to have a smooth simulation (i.e., without too many records in the Cooja's Log that let the simulation being difficult to understand). The value for the temperature is updated using the following algorithm:
 
 \begin{lstlisting}
 static void temperature_event_handler(void)
@@ -25,14 +25,15 @@ static void temperature_event_handler(void)
     
     // extimate new temperature
     srand(time(NULL));
-    int new_temp;
-    int random = rand() % 4; // generate 0, 1, 2, 3
+    int new_temp = temperature;
+    int random = rand() % 8; // generate 0, 1, 2, 3, 4, 5, 6, 7
     
-    if (random == 0) // 25% of changing the value
-        if (random < 2) // decrease
+    if (random <2) {// 25% of changing the value
+        if (random == 0) // decrease
             new_temp -= VARIATION;
         else // increase
             new_temp += VARIATION;
+    }
 
     // if not equal
     if (new_temp != temperature)
@@ -58,7 +59,7 @@ The change of the bounds is done at step, the user will specify the threshold th
 The \textbf{soil\_moisture\_switch} resource is connected to the \textit{isActive} boolean variable, which indicates if the sensor is operating or not. This is done for turning off the temperature sensor when it is raining in order to save energy, since we do not perform any analysis for irrigating when the weather does that for us. For the reason that we want to change the status of the resources based on the rain sensor, it is implemented a \textit{PUT} method for changing the value of the \textit{isActive} variable.
 
 \subsubsection{Data Generation}
-Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value for the tension is updated using the following algorithm (the same of to the one used for the temperature):
+Data is generated every \textit{8 $\times$ CLOCK\_SECOND} in order to have a smooth simulation. The value for the tension is updated using the following algorithm (the same of to the one used for the temperature):
 
 \begin{lstlisting}
 static void soil_moisture_event_handler(void)
@@ -69,15 +70,16 @@ static void soil_moisture_event_handler(void)
     
     // extimate new tension
     srand(time(NULL));
-    int new_soilTension = soilTension;
-    int random = rand() % 4; // generate 0, 1, 2, 3
-    
-    if (random == 0) // 25% of changing the value
-        if (random < 2) // decrease
-            new_soilTension -= VARIATION;
-        else // increase
-            new_soilTension += VARIATION;
+    double new_soilTension = soilTension;
+    int random = rand() % 8; // generate 0, 1, 2, 3, 4, 5, 6, 7
 
+        if (random <2) {// 25% of changing the value
+            if (random == 0) // decrease
+                new_soilTension -= VARIATION;
+            else // increase
+                new_soilTension += VARIATION;
+        }
+    
     // if not equal
     if (new_soilTension != soilTension)
     {
@@ -98,17 +100,17 @@ The only resource provided by the rain sensor is a value indicating if it is rai
 The only possible action is the \textbf{GET} method, which will respond with a text saying \textit{"raining"} or \textit{"not raining"} based on the status of \textit{isRaining}.
 
 \subsubsection{Data Generation}
-Data is generated every \textit{CLOCK\_SECOND} in order to have a rapid simulation. The value of \textbf{isRaining} flips (i.e., if it was indicating raining it turns to not raining, and vice versa) with a probability of 10\%. This is done in the \textit{rain\_event\_handler} function in the following way:
+Data is generated every \textit{50 $\times$ CLOCK\_SECOND}  in order to have a slow simulation, helpful to see all the possible scenarios the our application can offer. The value of \textbf{isRaining} flips (i.e., if it was indicating raining it turns to not raining, and vice versa) with a probability of 50\%. This is done in the \textit{rain\_event\_handler} function in the following way:
 
 \begin{lstlisting}
 static void rain_event_handler(void)
 {
     // check if raining
     srand(time(NULL));
-    int random = rand() % 10; // generate 0, 1, ..., 9
+    int random = rand() % 2; // generate 0, 1
     
     bool new_isRaining = isRaining;
-    if (random == 0) // 10% of changing the value
+    if (random == 0) // 50% of changing the value
         new_isRaining = !isRaining;
 
     // if not equal, notify
@@ -128,9 +130,11 @@ In case the value changes, this is notified to all the subscribers.
 The tap actuator is the device aim at irrigating the fields.
 
 \subsubsection{Resources}
-The tap actuator exposes four resources: the \textit{tap\_intensity}, the \textit{tap\_interval}, \textit{tap\_where\_water} and the \textit{tap\_switch}.
+The tap actuator should be had four resources: the \textit{tap\_intensity}, the \textit{tap\_interval}, \textit{tap\_where\_water} and the \textit{tap\_switch}. However, Cooja does not permit that, limiting the maximum number of resources to two. Thus, we united the resources making just two: the \textit{tap\_intensity} (which include  \textit{tap\_intensity}, \textit{tap\_where\_water} and the \textit{tap\_switch}) and the \textit{tap\_interval}.
 
-The \textbf{tap\_intensity} resource is related to the \textit{intensity} variable, which indicates the volume of water to provide at each simulation. Since we want to pull water from the aquifer or the reservoir, we made this resource observable in the way of better controlling the \textit{water level sensors} in the simulation. The method implemented for this resource are the \textit{GET} and \textit{PUT} methods. The \textit{GET} method respond to the user with a string containing the value of the intensity and, separated by a space, a character value indicating if the water is taken from the aquifer ('A') or the reservoir('R'). On the other hand, the \textit{PUT} method gives to the user the possibility to set up the intensity value updating the current one.
+The \textbf{tap\_intensity} resource is mainly related to the \textit{intensity} variable, which indicates the volume of water to provide at each simulation. Since we want to pull water from the aquifer or the reservoir, we made this resource observable in the way of better controlling the \textit{water level sensors} in the simulation. The method implemented for this resource are the \textit{GET} and \textit{PUT} methods. The \textit{GET} method respond to the user with a string containing the value of the intensity. On the other hand, the \textit{PUT} method gives to the user the possibility to set up the intensity value updating the current one and to update where to take the water. The message received for the request is in the form of: \textit{A/R} (indicating the aquifer or the reservoir), space, new value for the intensity. 
+
+Since we needed to include \textit{tap\_switch} in the resource, and since the \textit{PUT} method was already implemented, we added a \textit{POST} method for updating the switch status. This was the only possible solution for limiting the number of resources to two and we are full aware of the fact that the \textit{POST} method should be used for creating new elements and not for updating variables, but we could not do otherwise.
 
 The \textbf{tap\_interval} resource indicates the period of time (expressed in \textit{CLOCK\_SECOND}) between two activations of the tap. This resource can be retrieved using the \textit{GET} method associated to it, and it can be updated using the \textit{PUT} method. The \textit{PUT} method does not only update the value, but it updates also the intensity based on the following formula.
 
@@ -139,7 +143,3 @@ The \textbf{tap\_interval} resource indicates the period of time (expressed in \
     \text{intensity} = \text{intensity} * \frac{\text{new\_interval\_value}}{\text{old\_interval\_value}}
   \end{gathered}
 \end{equation}
-
-The \textbf{tap\_where\_water} resource is used by the device in order to decide where to take the water for every irrigation activity. Thus, the resource provide a \textit{PUT} method for changing this value and, for sake of control, we implemented the possibility to retrieve the value through a \textit{GET} method.
-
-The \textbf{tap\_switch} resource works in the same way of the \textbf{temperature\_switch} and \textbf{soil\_moisture\_switch} resources. The meaning of use this type of resource is for not irrigating when raining since it would be a waste.
