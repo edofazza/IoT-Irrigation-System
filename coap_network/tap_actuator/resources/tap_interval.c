@@ -9,7 +9,6 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /*          RESOURCES            */
-#include "intensity_variable.h"
 static int interval = 1;
 
 /*          HANDLERS          */

@@ -9,7 +9,7 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /*          RESOURCES            */
-#include "where_variable.h"
+bool takesWaterFromAquifer = true;
 
 
 /*          HANDLERS          */
