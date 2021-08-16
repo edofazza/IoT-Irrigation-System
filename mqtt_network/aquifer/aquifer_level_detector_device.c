@@ -200,8 +200,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   etimer_set(&periodic_timer, PUBLISH_INTERVAL);
 
   /* Main loop */
+  printf("I'm in main while\n");
   while(1) {
-    printf("I'm in main while\n");
     PROCESS_YIELD();
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) ||
@@ -212,7 +212,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 				 state = STATE_NET_OK;
 				 printf("STATE=STATE_NET_OK\n");
 			 }
-			 printf("STATE=STATE_INIT\n");
+			 else
+			    printf("STATE=STATE_INIT\n");
 		  }
 
 		  if(state == STATE_NET_OK){
