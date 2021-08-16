@@ -27,7 +27,7 @@
 #define LOG_LEVEL LOG_LEVEL_APP
 
 /* RESOURCES */
-int interval = 1;
+int interval = 10;
 double intensity = 5.0;
 
 PROCESS(tap_server, "Server for the tap actuator");
