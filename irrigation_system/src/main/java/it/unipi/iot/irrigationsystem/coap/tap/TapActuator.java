@@ -126,6 +126,7 @@ public class TapActuator {
 
         }, msg, MediaTypeRegistry.TEXT_PLAIN);
 
+        tapIntensity.set(tapIntensity.get()* ((double)newValue)/((double)tapInterval));
         tapInterval = newValue;
         return true;
     }
