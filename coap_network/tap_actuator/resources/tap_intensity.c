@@ -60,12 +60,12 @@ static void put_intensity_handler(coap_message_t *request, coap_message_t *respo
     {
         char* chunk = strtok((char*)payload, " ");
         char* where = (char*)malloc((strlen(chunk))*sizeof(char));
-        strcpy(type, chunk);
+        strcpy(where, chunk);
 
         chunk = strtok(NULL, " ");
         char* eptr;
         intensity = strtod(chunk, &eptr);
-        printf("where: %s, new_value: %f\n", where, new_value);
+        printf("where: %s, new_value: %f\n", where, intensity);
 
         if (strncmp(where, "A", 1)==0)
         {
