@@ -13,6 +13,6 @@ Temp + Soil + Rain: funziona
 Tap + Rain: funziona
 Temp + Tap: funziona
 Temp + Soil + Tap + Rain: funziona, tuttavia spesso uno o piu mote non fanno get
-2xTemp + 2xSoil + Tap + Rain:
+2xTemp + 2xSoil + Tap + Rain: funziona bene
 
 Aquifer Sensor: impossibile prelevare l'output dal testbed, sappiamo solo che tutto si blocca. Da Cooja non funziona MQTT broker
