@@ -1,5 +1,6 @@
 package it.unipi.iot.irrigationsystem;
 
+import it.unipi.iot.irrigationsystem.automation.AutomaticIrrigationSystem;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.mqtt.MQTTNetworkHandler;
 import it.unipi.iot.irrigationsystem.mqtt.aquifer.AquiferCollector;

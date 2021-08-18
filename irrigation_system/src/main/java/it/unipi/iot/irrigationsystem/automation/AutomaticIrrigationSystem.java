@@ -1,5 +1,7 @@
-package it.unipi.iot.irrigationsystem;
+package it.unipi.iot.irrigationsystem.automation;
 
+import it.unipi.iot.irrigationsystem.automation.utils.Levels;
+import it.unipi.iot.irrigationsystem.automation.utils.Parameters;
 import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
 import it.unipi.iot.irrigationsystem.mqtt.aquifer.AquiferCollector;
@@ -8,33 +10,6 @@ import it.unipi.iot.irrigationsystem.registration.RegistrationServer;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-class Parameters{
-    public boolean isRaining;
-    public BoundStatus soilStatus;
-    public BoundStatus temperatureStatus;
-    public double aquiferLevel;
-    public double reservoirLevel;
-    public double tapIntensity;
-}
-
-class Levels{
-    public static final double NOT_NEEDED = 0;
-    public static final double LOW = 0.4;
-    public static final double MEDIUM = 0.8;
-    public static final double HIGH = 1.2;
-    public static final double VERY_HIGH = 1.4;
-
-    public static double increaseLevel(double level){
-        if (level == NOT_NEEDED) {
-            return LOW;
-        } else if (level == LOW) {
-            return MEDIUM;
-        } else if (level == MEDIUM) {
-            return HIGH;
-        }
-        return VERY_HIGH;
-    }
-}
 
 public class AutomaticIrrigationSystem implements Runnable{
     private RegistrationServer rs;
@@ -96,7 +71,7 @@ public class AutomaticIrrigationSystem implements Runnable{
     }
 
     private double computeNeed(Parameters p){
-        double level;
+        Levels level;
         switch(p.soilStatus){
             case TOO_LOW:
                 level = Levels.HIGH;
@@ -108,8 +83,8 @@ public class AutomaticIrrigationSystem implements Runnable{
                 level = Levels.LOW;
         }
         if (p.temperatureStatus == BoundStatus.TOO_HIGH)
-            level = Levels.increaseLevel(level);
-        return level;
+            level = level.increaseLevel(level);
+        return level.getAction();
     }
 
     private WhereWater determineWaterSource(double need, Parameters p){
