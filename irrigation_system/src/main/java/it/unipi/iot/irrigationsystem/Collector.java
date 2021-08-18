@@ -108,7 +108,7 @@ public class Collector {
                 "\n\t!setUnit <F/C>: change unit in C (Celsius) F (Fahrenheit)" +  // DONE
                 "\n\t!getWeather: get if the rain sensor feels rain or not" + // DONE
                 "\n\t!getSoilTension: get the soil tension" + // DONE
-                "\n\t!setSoilTension <lower tension> <upper tension>: set desired tension bounds" + // DONE
+                "\n\t!setSoilTension <l/u> <value>: set desired tension bounds" + // DONE
                 "\n\t!getTapInterval: get interval which the tap operates" + // DONE
                 "\n\t!getTapIntensity: get intensity which the tap operates" + // DONE
                 "\n\t!setTapInterval <seconds>: set interval which the tap operates" + // DONE

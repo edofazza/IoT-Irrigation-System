@@ -23,6 +23,8 @@
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Topics}{subsection.3.3}% 23
 \BOOKMARK [3][-]{subsubsection.3.3.2}{Data Generation and Actuation Mechanism}{subsection.3.3}% 24
 \BOOKMARK [1][-]{section.4}{Collector}{}% 25
-\BOOKMARK [2][-]{subsection.4.1}{MQTT Side}{section.4}% 26
-\BOOKMARK [2][-]{subsection.4.2}{CoAP Side}{section.4}% 27
-\BOOKMARK [2][-]{subsection.4.3}{Database And Data Visualization}{section.4}% 28
+\BOOKMARK [2][-]{subsection.4.1}{Command Line Interface}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.2}{MQTT Side}{section.4}% 27
+\BOOKMARK [2][-]{subsection.4.3}{CoAP Side}{section.4}% 28
+\BOOKMARK [2][-]{subsection.4.4}{Database And Data Visualization}{section.4}% 29
+\BOOKMARK [2][-]{subsection.4.5}{Automatic Irrigation System}{section.4}% 30
