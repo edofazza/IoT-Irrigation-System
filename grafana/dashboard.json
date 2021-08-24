@@ -33,14 +33,13 @@
         "x": 0,
         "y": 0
       },
-      "id": 10,
+      "id": 6,
       "panels": [],
-      "title": "All in one (for rain detecting purposes)",
+      "title": "Single Sensor Values",
       "type": "row"
     },
     {
-      "datasource": null,
-      "description": "Group all the values produced by the CoAP sensors in order to understand how the devices behavior react to the change of weather.",
+      "datasource": "MySQL",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -49,6 +48,8 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "axisSoftMin": -1,
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 0,
@@ -81,196 +82,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 11,
-        "w": 20,
-        "x": 2,
-        "y": 1
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "table",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "queryType": "randomWalk",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  isRaining\nFROM rain\nWHERE\n  $__timeFilter(timestamp)\nORDER BY timestamp",
-          "refId": "Rain",
-          "select": [
-            [
-              {
-                "params": [
-                  "isRaining"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "rain",
-          "timeColumn": "timestamp",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  tempValue\nFROM temperature\nORDER BY timestamp",
-          "refId": "Temp",
-          "select": [
-            [
-              {
-                "params": [
-                  "tempValue"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "temperature",
-          "timeColumn": "timestamp",
-          "timeColumnType": "timestamp",
-          "where": []
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  soilValue\nFROM soilMoisture\nORDER BY timestamp",
-          "refId": "soil tension",
-          "select": [
-            [
-              {
-                "params": [
-                  "soilValue"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "soilMoisture",
-          "timeColumn": "timestamp",
-          "timeColumnType": "timestamp",
-          "where": []
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  intensity\nFROM tap\nORDER BY timestamp",
-          "refId": "Tap Intensity",
-          "select": [
-            [
-              {
-                "params": [
-                  "intensity"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "tap",
-          "timeColumn": "timestamp",
-          "timeColumnType": "timestamp",
-          "where": []
-        }
-      ],
-      "title": "Global CoAP situation",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 12
-      },
-      "id": 6,
-      "panels": [],
-      "title": "Single Sensor Values",
-      "type": "row"
-    },
-    {
-      "datasource": null,
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 6,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
@@ -281,7 +92,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 13
+        "y": 1
       },
       "id": 2,
       "options": {
@@ -302,10 +113,10 @@
         {
           "format": "time_series",
           "group": [],
+          "hide": false,
           "metricColumn": "none",
-          "queryType": "randomWalk",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  soilValue\nFROM soilMoisture\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_add(timestamp, interval 4 hour) AS \"time\",\n  soilValue\nFROM soilMoisture\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -327,7 +138,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "MySQL",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -337,8 +148,10 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 50,
+            "axisSoftMin": -10,
             "barAlignment": 0,
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -383,7 +196,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 13
+        "y": 1
       },
       "id": 3,
       "options": {
@@ -405,9 +218,8 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "queryType": "randomWalk",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  tempValue\nFROM temperature\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_add(timestamp, INTERVAL 4 hour) AS \"time\",\n  tempValue\nFROM temperature\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -429,7 +241,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "MySQL",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -439,8 +251,10 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 50,
+            "axisSoftMin": 0,
             "barAlignment": 0,
-            "drawStyle": "points",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -485,7 +299,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 13
+        "y": 1
       },
       "id": 12,
       "options": {
@@ -506,11 +320,10 @@
         {
           "format": "time_series",
           "group": [],
-          "hide": false,
           "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  intensity\nFROM tap\nORDER BY timestamp",
-          "refId": "Intensity",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_add(timestamp, interval 4 hour) AS \"time\",\n  intensity\nFROM tap\nORDER BY timestamp",
+          "refId": "A",
           "select": [
             [
               {
@@ -531,7 +344,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "MySQL",
       "description": "0 if SUNNY, 1 if RAINING",
       "fieldConfig": {
         "defaults": {
@@ -541,8 +354,10 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 2,
+            "axisSoftMin": -1,
             "barAlignment": 0,
-            "drawStyle": "points",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -581,13 +396,38 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "idrain"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 9
       },
       "id": 4,
       "options": {
@@ -607,9 +447,8 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "queryType": "randomWalk",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  isRaining\nFROM rain\nWHERE\n  $__timeFilter(timestamp)\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_add(timestamp, interval 4 hour) AS \"time\",\n  isRaining\nFROM rain\nWHERE\n  $__timeFilter(timestamp)\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -637,7 +476,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "MySQL",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -693,7 +532,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 21
+        "y": 9
       },
       "id": 7,
       "options": {
@@ -715,7 +554,6 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "queryType": "randomWalk",
           "rawQuery": false,
           "rawSql": "SELECT\n  timestamp AS \"time\",\n  waterLevel\nFROM waterLevelAquifer\nORDER BY timestamp",
           "refId": "A",
@@ -739,7 +577,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": null,
+      "datasource": "MySQL",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -795,7 +633,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 21
+        "y": 9
       },
       "id": 8,
       "options": {
@@ -818,7 +656,6 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "queryType": "randomWalk",
           "rawQuery": false,
           "rawSql": "SELECT\n  timestamp AS \"time\",\n  waterLevel\nFROM waterLevelReservoir\nORDER BY timestamp",
           "refId": "A",
@@ -842,7 +679,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "",
+  "refresh": "5s",
   "schemaVersion": 30,
   "style": "dark",
   "tags": [],
@@ -850,12 +687,12 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Smart Irrigation System",
-  "uid": "IlMRbTn7z",
-  "version": 6
+  "uid": "SmmeuT77z",
+  "version": 9
 }
