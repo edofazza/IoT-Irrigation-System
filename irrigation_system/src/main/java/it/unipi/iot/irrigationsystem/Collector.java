@@ -244,10 +244,6 @@ public class Collector {
         } catch (Exception e) {
             System.out.println("Not correct value inserted, insert an integer");
         }
-        if (newIntensity<1 || newIntensity>10) {
-            System.out.println("Tap intensity is out of bounds: choose a value between 1 and 10");
-            return;
-        }
         rs.setTapIntensity(newIntensity);
         System.out.println("Tap intensity correctly updated");
     }
