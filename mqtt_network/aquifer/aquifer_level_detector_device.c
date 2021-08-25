@@ -200,7 +200,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   state=STATE_INIT;
 
   // Initialize periodic timer to check the status
-  etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+  etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
   /* Main loop */
   printf("I'm in main while\n");
@@ -226,7 +226,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 			  printf("STATE=STATE_CONNECTING\n");
@@ -250,7 +250,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		  } else if(state == STATE_SUBSCRIBED){
             printf("I try to publish a message\n");
 		    sensed_level = simulate_level();
-		    sprintf(pub_topic, "aquifer_level");
+		    sprintf(pub_topic, "%s", "aquifer_level");
 		    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
 		    available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
 		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
@@ -262,7 +262,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		   // Recover from error
 		}
 
-		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
     }
 
