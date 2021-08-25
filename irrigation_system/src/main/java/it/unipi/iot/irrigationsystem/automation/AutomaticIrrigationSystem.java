@@ -15,7 +15,7 @@ public class AutomaticIrrigationSystem implements Runnable{
     private RegistrationServer rs;
     private AquiferCollector ac;
     private ReservoirCollector rc;
-    private AtomicLong interval= new AtomicLong(1);
+    private AtomicLong interval= new AtomicLong(10);
 
     public AutomaticIrrigationSystem(RegistrationServer rs, AquiferCollector ac, ReservoirCollector rc){
         this.ac = ac;
@@ -36,6 +36,8 @@ public class AutomaticIrrigationSystem implements Runnable{
 
     @Override
     public void run() {
+        WhereWater waterSource;
+        double quantity;
         while(true){
             try {
                 Thread.sleep(interval.get() * 1000);
@@ -43,8 +45,6 @@ public class AutomaticIrrigationSystem implements Runnable{
                 e.printStackTrace();
             }
             Parameters p = new Parameters();
-            WhereWater waterSource = WhereWater.AQUIFER;
-            double quantity = 0;
             populateParameters(p);
             if(p.isRaining){
                 System.out.println("Is Raining, no irrigation is needed");
@@ -105,8 +105,6 @@ public class AutomaticIrrigationSystem implements Runnable{
             System.out.println("\t" + (p.aquiferLevel-quantity) + "cm^3 of them are stored in the reservoir");
         }
         rs.setTapWhereWater(source);
-        //TODO rs.setTapQuantity(quantity)
-        //TODO db del tap??
     }
 
 }
