@@ -38,13 +38,13 @@ public class AutomaticIrrigationSystem implements Runnable{
     public void run() {
         WhereWater waterSource;
         double quantity;
+        Parameters p = new Parameters();
         while(!Thread.currentThread().isInterrupted()){
             try {
                 Thread.sleep(interval.get() * 1000);
             }catch (Exception e){
                 break;
             }
-            Parameters p = new Parameters();
             populateParameters(p);
             if(p.isRaining){
                 System.out.println("It's Raining, no irrigation is needed");
