@@ -8,7 +8,7 @@ public class ReservoirCollector {
     private MQTTNetworkHandler handler;
     private final String intervalPubTopic = "interval";
     private final String reservoirPubTopic = "set_reservoir_level";
-    private double level = 0;
+    private double level = 2.0;
 
     public ReservoirCollector(MQTTNetworkHandler handler){
         this.handler = handler;
@@ -29,11 +29,14 @@ public class ReservoirCollector {
     }
 
     public void changeInterval(long newInterval){
+        /*
         try {
             handler.publish(intervalPubTopic, Long.toString(newInterval));
         } catch (MqttException e) {
             e.printStackTrace();
         }
+
+         */
     }
 
     public void changeReservoirLevel(double quantity){

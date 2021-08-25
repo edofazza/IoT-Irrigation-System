@@ -25,10 +25,12 @@ public class AquiferCollector {
     }
 
     public void changeInterval(long newInterval){
+        /*
         try {
             handler.publish(intervalPubTopic, Long.toString(newInterval));
         } catch (MqttException e) {
             e.printStackTrace();
         }
+        */
     }
 }
