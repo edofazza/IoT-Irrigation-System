@@ -13,14 +13,15 @@ public class AquiferCollector {
     }
 
     public double getLastAverageAquiferLevel(){
-        int sum = 0;
+        return 4.0;
+        /*int sum = 0;
         int num = 0;
         Map<String, Double> samples = handler.getReceivedAquiferSamples();
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
             sum += sample.getValue();
             num++;
         }
-        return (double) sum / num;
+        return (double) sum / num;*/
     }
 
     public void changeInterval(long newInterval){
