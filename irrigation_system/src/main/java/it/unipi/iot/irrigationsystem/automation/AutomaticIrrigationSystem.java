@@ -38,11 +38,11 @@ public class AutomaticIrrigationSystem implements Runnable{
     public void run() {
         WhereWater waterSource;
         double quantity;
-        while(true){
+        while(!Thread.currentThread().isInterrupted()){
             try {
                 Thread.sleep(interval.get() * 1000);
             }catch (Exception e){
-                e.printStackTrace();
+                break;
             }
             Parameters p = new Parameters();
             populateParameters(p);
@@ -57,6 +57,7 @@ public class AutomaticIrrigationSystem implements Runnable{
             //TODO log of quantity and source
             actuate(quantity, waterSource, p);
         }
+        System.out.println("Exiting automatic system");
     }
 
     private void populateParameters(Parameters p){

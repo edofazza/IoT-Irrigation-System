@@ -23,8 +23,8 @@ public class Collector {
 
         RegistrationServer rs = new RegistrationServer();
         rs.start();
-
         AutomaticIrrigationSystem air = new AutomaticIrrigationSystem(rs, ac, rc);
+        Thread thread = new Thread(air);
 
         // CLI
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -81,13 +81,13 @@ public class Collector {
                         setTapIntensity(chunks, rs);
                         break;
                     case "getWaterLevels":
-                        //getWaterLevels(ac, rc);
+                        getWaterLevels(ac, rc);
                         break;
-                    case "start": // TODO: simulation thread
-                        System.out.println("PASS"); //TODO: dedicated function
+                    case "start":
+                        thread.start();
                         break;
                     case "stop":
-                        System.out.println("PASS"); //TODO: dedicated function
+                        thread.interrupt();
                         break;
                     default:
                         System.out.println("Invalid command");
