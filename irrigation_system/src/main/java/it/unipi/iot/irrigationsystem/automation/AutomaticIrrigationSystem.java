@@ -47,7 +47,7 @@ public class AutomaticIrrigationSystem implements Runnable{
             Parameters p = new Parameters();
             populateParameters(p);
             if(p.isRaining){
-                System.out.println("Is Raining, no irrigation is needed");
+                System.out.println("It's Raining, no irrigation is needed");
                 continue;
             }
             double need = computeNeed(p);

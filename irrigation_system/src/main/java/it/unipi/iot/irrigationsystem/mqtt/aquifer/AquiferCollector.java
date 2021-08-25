@@ -13,7 +13,7 @@ public class AquiferCollector {
     }
 
     public double getLastAverageAquiferLevel(){
-        return 4.0;
+        return 6.0;
         /*int sum = 0;
         int num = 0;
         Map<String, Double> samples = handler.getReceivedAquiferSamples();
