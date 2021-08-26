@@ -16,19 +16,19 @@ On the contrary during rainy seasons the water level will probably be enough to 
 #define VERY_HIGH_NEED 7
 
 
-double simulate_level(){
+static double simulate_level(){
     bool summer = false;
     int month = 8;  //September
     if (month >=5 && month<8)  //between June and August
         summer = true;
-    double availability;  //   cm^3
+    int availability;  //   cm^3
     if (summer)
         availability = rand()%MEDIUM_NEED;
     else
         availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
 
     //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-    double level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
+    int level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }
 
