@@ -43,11 +43,11 @@ public class TemperatureSensorNetwork {
 
                             switch (tokens[1]) {
                                 case "hot":
-                                    Logger.log("Temperature too hot!!!");
+                                    Logger.warning("Temperature too hot!!!");
                                     boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
                                 case "cold":
-                                    Logger.log("Temperature too cold!!!");
+                                    Logger.warning("Temperature too cold!!!");
                                     boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
                             }
