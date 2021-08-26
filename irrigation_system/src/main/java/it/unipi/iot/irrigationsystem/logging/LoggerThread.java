@@ -1,5 +1,6 @@
 package it.unipi.iot.irrigationsystem.logging;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,6 +22,9 @@ class LoggerThread extends Thread {
 
     private static synchronized void writeOnFile(String msg){
         try {
+            File file = new File("log/logFile.txt");
+            file.getParentFile().mkdirs();
+            file.createNewFile();
             Files.write(Paths.get(logFilePath), msg.getBytes(), StandardOpenOption.APPEND);
         }
         catch (IOException i){
