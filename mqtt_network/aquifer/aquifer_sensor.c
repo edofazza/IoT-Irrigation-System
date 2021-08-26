@@ -28,7 +28,7 @@ static double simulate_level(){
         availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
 
     //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-    int level = ((availability/WATER_SPEED)/SECTION)/PUBLISH_INTERVAL;   //cm
+    int level = ((availability/WATER_SPEED)/SECTION)/(PUBLISH_INTERVAL/CLOCK_SECOND);   //cm
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }
 
