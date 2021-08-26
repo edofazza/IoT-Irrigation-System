@@ -1,6 +1,5 @@
 #include "random.h"
 #include "reservoir_parameters.h"
-#include "time.h"
 
 /*   The following code is just a simulation of the output of a level sensor and the corresponding actuator that
      puts or fetches the water from the reservoir*/
