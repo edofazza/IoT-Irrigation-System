@@ -17,9 +17,9 @@ public class Collector {
     private static boolean celciusUnit = true;
 
     public static void main(String[] args) throws SocketException, InterruptedException {
-        // Remove log messages from Californium
+        // Remove log messages (Californium)
         LogManager.getLogManager().reset();
-        
+
         // Init
         MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
         AquiferCollector ac = new AquiferCollector(mqttnh);
