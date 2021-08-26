@@ -23,7 +23,6 @@ public class TemperatureSensorNetwork {
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addTemperatureSensor(String ip) {
-        //System.out.println("The temperature sensor: [" + ip + "] is now registered");
         Logger.log("The temperature sensor: [" + ip + "] is now registered");
 
         // Add the temperature_switch resource
@@ -44,12 +43,10 @@ public class TemperatureSensorNetwork {
 
                             switch (tokens[1]) {
                                 case "hot":
-                                    //System.out.println("Temperature too hot!!!"); // TODO
                                     Logger.log("Temperature too hot!!!");
                                     boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
                                 case "cold":
-                                    //System.out.println("Temperature too cold!!!");
                                     Logger.log("Temperature too cold!!!");
                                     boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
@@ -66,7 +63,7 @@ public class TemperatureSensorNetwork {
                     }
 
                     public void onError() {
-                        System.err.println("OBSERVING FAILED");
+                        Logger.error("coap://[" + ip + "]/temperature_sensor: "+ " OBSERVING FAILED");
                     }
                 });
 
@@ -106,12 +103,12 @@ public class TemperatureSensorNetwork {
                 public void onLoad(CoapResponse response) {
                     if (response != null) {
                         if(!response.isSuccess())
-                            System.out.println("Something went wrong with temperature sensor");
+                            Logger.error("Something went wrong with temperature sensor");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: TemperatureSensor " + coapClient.getURI() + "] ");
+                    Logger.error("[ERROR: TemperatureSensor " + coapClient.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
@@ -142,12 +139,12 @@ public class TemperatureSensorNetwork {
                 public void onLoad(CoapResponse response) {
                     if (response != null) {
                         if(!response.isSuccess())
-                            System.out.println("Something went wrong with temperature switch");
+                            Logger.error("Something went wrong with temperature switch");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: TemperatureSwitch " + coapClient.getURI() + "] ");
+                    Logger.error("[ERROR: TemperatureSwitch " + coapClient.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
