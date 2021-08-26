@@ -4,6 +4,7 @@ import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
+import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -22,7 +23,8 @@ public class TemperatureSensorNetwork {
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addTemperatureSensor(String ip) {
-        System.out.println("The temperature sensor: [" + ip + "] is now registered");
+        //System.out.println("The temperature sensor: [" + ip + "] is now registered");
+        Logger.log("The temperature sensor: [" + ip + "] is now registered");
 
         // Add the temperature_switch resource
         CoapClient newTemperatureSwitch = new CoapClient("coap://[" + ip + "]/temperature_switch");
@@ -42,11 +44,13 @@ public class TemperatureSensorNetwork {
 
                             switch (tokens[1]) {
                                 case "hot":
-                                    System.out.println("Temperature too hot!!!");
+                                    //System.out.println("Temperature too hot!!!"); // TODO
+                                    Logger.log("Temperature too hot!!!");
                                     boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
                                 case "cold":
-                                    System.out.println("Temperature too cold!!!");
+                                    //System.out.println("Temperature too cold!!!");
+                                    Logger.log("Temperature too cold!!!");
                                     boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
                             }

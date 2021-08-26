@@ -4,6 +4,7 @@ import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.enumerate.Bound;
 import it.unipi.iot.irrigationsystem.enumerate.BoundStatus;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
+import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -22,7 +23,8 @@ public class SoilMoistureNetwork {
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addSoilMoisture(String ip) {
-        System.out.println("The soil moisture sensor: [" + ip + "] + is now registered");
+        //System.out.println("The soil moisture sensor: [" + ip + "] + is now registered");
+        Logger.log("The soil moisture sensor: [" + ip + "] + is now registered");
 
         // Add the soil moisture switch resource
         CoapClient newSoilMoistureSwitch = new CoapClient("coap://[" + ip + "]/soil_moisture_switch");

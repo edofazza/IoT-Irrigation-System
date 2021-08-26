@@ -5,6 +5,7 @@ import it.unipi.iot.irrigationsystem.coap.tap.TapActuator;
 import it.unipi.iot.irrigationsystem.coap.temperature.TemperatureSensorNetwork;
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
+import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -22,7 +23,8 @@ public class RainSensor {
     private TemperatureSensorNetwork temperatureSensorNetwork;
 
     public void addRainSensor(String ip) {
-        System.out.println("The rain sensor: [" + ip + "] + is now registered");
+        //System.out.println("The rain sensor: [" + ip + "] + is now registered"); TODO
+        Logger.log("The rain sensor: [\" + ip + \"] + is now registered");
         clientRainSensor = new CoapClient("coap://[" + ip + "]/rain_sensor");
 
         observeRain = clientRainSensor.observe(

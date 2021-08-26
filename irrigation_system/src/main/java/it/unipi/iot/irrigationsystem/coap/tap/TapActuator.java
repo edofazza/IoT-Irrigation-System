@@ -3,6 +3,7 @@ package it.unipi.iot.irrigationsystem.coap.tap;
 import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.enumerate.SwitchStatus;
 import it.unipi.iot.irrigationsystem.enumerate.WhereWater;
+import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -22,7 +23,8 @@ public class TapActuator {
 
 
     public void addTapActuator(String ip) {
-        System.out.println("The tap actuator: [" + ip + "] + is now registered");
+        //System.out.println("The tap actuator: [" + ip + "] + is now registered"); TODO
+        Logger.error("The tap actuator: [" + ip + "] + is now registered");
         clientTapActuator = new CoapClient("coap://[" + ip + "]/tap_intensity");
         clientTapInterval = new CoapClient("coap://[" + ip + "]/tap_interval");
 
@@ -92,12 +94,12 @@ public class TapActuator {
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with temperature sensor");
+                        System.out.println("Something went wrong with tap actuator");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: TemperatureSensor " + clientTapActuator.getURI() + "] ");
+                    System.err.println("[ERROR: TapActuator " + clientTapActuator.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
@@ -116,12 +118,12 @@ public class TapActuator {
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with temperature sensor");
+                        System.out.println("Something went wrong with tap actuator");
                 }
             }
 
             public void onError() {
-                System.err.println("[ERROR: TemperatureSensor " + clientTapInterval.getURI() + "] ");
+                System.err.println("[ERROR: Tap actuator " + clientTapInterval.getURI() + "] ");
             }
 
         }, msg, MediaTypeRegistry.TEXT_PLAIN);
