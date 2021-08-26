@@ -23,7 +23,6 @@ static double simulate_level(){
     int month = tm.tm_mon;
     if (month >=5 && month<8)  //between June and August
         summer = true;
-    srand(time(NULL));
     double availability;  //   cm^3
     if (summer)
         availability = rand()%MEDIUM_NEED;
