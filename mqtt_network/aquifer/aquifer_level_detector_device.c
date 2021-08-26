@@ -68,8 +68,8 @@ static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 /***********************************************SIMULATION PARAMETERS*****************************************/
-static double sensed_level = 50;
-static double available = 5;
+static int sensed_level = 50;
+static int available = 5;
 
 // Periodic timer to check the state of the MQTT client
 static struct etimer periodic_timer;
