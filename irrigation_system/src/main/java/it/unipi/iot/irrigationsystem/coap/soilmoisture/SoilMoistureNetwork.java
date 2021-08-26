@@ -23,7 +23,6 @@ public class SoilMoistureNetwork {
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addSoilMoisture(String ip) {
-        //System.out.println("The soil moisture sensor: [" + ip + "] + is now registered");
         Logger.log("The soil moisture sensor: [" + ip + "] + is now registered");
 
         // Add the soil moisture switch resource
@@ -44,11 +43,11 @@ public class SoilMoistureNetwork {
 
                             switch (tokens[1]) {
                                 case "hot":
-                                    System.out.println("Tension too low!!!");
+                                    Logger.warning("Tension too low!!!");
                                     boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
                                 case "cold":
-                                    System.out.println("Tension too high!!!");
+                                    Logger.warning("Tension too high!!!");
                                     boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
                             }
@@ -64,7 +63,7 @@ public class SoilMoistureNetwork {
                     }
 
                     public void onError() {
-                        System.err.println("OBSERVING FAILED");
+                        Logger.error("Soil Moisture OBSERVING FAILED");
                     }
                 });
 
@@ -108,12 +107,12 @@ public class SoilMoistureNetwork {
                 public void onLoad(CoapResponse response) {
                     if (response != null) {
                         if(!response.isSuccess())
-                            System.out.println("Something went wrong with soil moisture sensor");
+                            Logger.error("Something went wrong with soil moisture sensor");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: SoilMoistureSensor " + coapClient.getURI() + "] ");
+                    Logger.error("[ERROR: SoilMoistureSensor " + coapClient.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
@@ -144,12 +143,12 @@ public class SoilMoistureNetwork {
                 public void onLoad(CoapResponse response) {
                     if (response != null) {
                         if(!response.isSuccess())
-                            System.out.println("Something went wrong with soil moisture switch");
+                            Logger.error("Something went wrong with soil moisture switch");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: SoilMoistureSwitch " + coapClient.getURI() + "] ");
+                    Logger.error("[ERROR: SoilMoistureSwitch " + coapClient.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
