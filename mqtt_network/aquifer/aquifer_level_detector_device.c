@@ -17,7 +17,7 @@
 #include <string.h>
 #include <strings.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "mqtt-client"
+#define LOG_MODULE "aquifer_level_detector"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
 #define LOG_LEVEL MQTT_CLIENT_CONF_LOG_LEVEL
 #else
@@ -49,8 +49,8 @@ static uint8_t state;
 #define STATE_DISCONNECTED    5
 
 /*---------------------------------------------------------------------------*/
-PROCESS_NAME(mqtt_client_process);
-AUTOSTART_PROCESSES(&mqtt_client_process);
+PROCESS_NAME(aquifer_level_detector_process);
+AUTOSTART_PROCESSES(&aquifer_level_detector_process);
 
 /*---------------------------------------------------------------------------*/
 /* Maximum TCP segment size for outgoing segments of our socket */
@@ -72,7 +72,6 @@ static double sensed_level = 50;
 static double available = 5;
 
 // Periodic timer to check the state of the MQTT client
-#define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
 
 /*---------------------------------------------------------------------------*/
@@ -88,25 +87,24 @@ static struct mqtt_message *msg_ptr = 0;
 static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(mqtt_client_process, "MQTT Client");
+PROCESS(aquifer_level_detector_process, "Aquifer Level Detector");
 
 
 
-/*---------------------------------------------------------------------------*/
-static void
-pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
+/*--------------------------handles incoming messages------------------------------------------*/
+static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
             uint16_t chunk_len)
 {
+  LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
   if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
 
-	long interval = atol((char*)chunk);
+	long interval = atol((const char*)chunk);
     printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   } else {
-	  printf("Topic not recognized!\n");
+	  LOG_ERR("Topic not recognized!\n");
   }
-  return;
 }
 /*---------------------------------------------------------------------------*/
 static void
@@ -115,7 +113,6 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
   switch(event) {
   case MQTT_EVENT_CONNECTED: {
     printf("Application has a MQTT connection\n");
-
     state = STATE_CONNECTED;
     break;
   }
@@ -123,7 +120,7 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
     printf("MQTT Disconnect. Reason %u\n", *((mqtt_event_t *)data));
 
     state = STATE_DISCONNECTED;
-    process_poll(&mqtt_client_process);
+    process_poll(&aquifer_level_detector_process);
     break;
   }
   case MQTT_EVENT_PUBLISH: {
@@ -161,8 +158,7 @@ mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
   }
 }
 
-static bool
-have_connectivity(void)
+static bool have_connectivity(void)
 {
   bool problem1 = uip_ds6_get_global(ADDR_PREFERRED) == NULL;
   bool problem2 = uip_ds6_defrt_choose() == NULL;
@@ -175,7 +171,7 @@ have_connectivity(void)
 }
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(mqtt_client_process, ev, data)
+PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 {
 
   PROCESS_BEGIN();
@@ -183,7 +179,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   mqtt_status_t status;
   char broker_address[CONFIG_IP_ADDR_STR_LEN];
 
-  printf("MQTT Client Process\n");
+  printf("Acquifer Level Detector Process\n");
 
   // Initialize the ClientID as MAC address
   snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
@@ -192,9 +188,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
                      linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
 
   // Broker registration
-  printf("Try to connect\n");
-  mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
-                  MAX_TCP_SEGMENT_SIZE);
+  printf("Try to register\n");
+  mqtt_register(&conn, &aquifer_level_detector_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
 
   printf("Registered\n");
   state=STATE_INIT;
@@ -221,12 +216,12 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
-			  printf("Connecting!\n");
+			  LOG_INFO("Connecting to MQTT server\n");
 
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 
 			  mqtt_connect(&conn, broker_address, DEFAULT_BROKER_PORT,
-						   (PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
+						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
 			  printf("STATE=STATE_CONNECTING\n");
@@ -259,10 +254,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");
-		   // Recover from error
+		   state = STATE_INIT;
 		}
 
-		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
+		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
 
     }
 
