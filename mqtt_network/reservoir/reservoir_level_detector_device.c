@@ -20,7 +20,7 @@
 #include <string.h>
 #include <errno.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "mqtt-client"
+#define LOG_MODULE "reservoir_level_detector_device"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
 #define LOG_LEVEL MQTT_CLIENT_CONF_LOG_LEVEL
 #else
@@ -52,8 +52,8 @@ static uint8_t state;
 #define STATE_DISCONNECTED    5
 
 /*---------------------------------------------------------------------------*/
-PROCESS_NAME(mqtt_client_process);
-AUTOSTART_PROCESSES(&mqtt_client_process);
+PROCESS_NAME(reservoir_level_detector_process);
+AUTOSTART_PROCESSES(&reservoir_level_detector_process);
 
 /*---------------------------------------------------------------------------*/
 /* Maximum TCP segment size for outgoing segments of our socket */
@@ -86,7 +86,7 @@ static struct mqtt_message *msg_ptr = 0;
 static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(mqtt_client_process, "MQTT Client");
+PROCESS(reservoir_level_detector_process, "Reservoir Level Detector");
 
 
 
@@ -94,10 +94,11 @@ PROCESS(mqtt_client_process, "MQTT Client");
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
             uint16_t chunk_len) {
 
+  LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
   if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
 
-	long interval = atol((char*)chunk);
+	long interval = atol((const char*)chunk);
     printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   }
@@ -105,7 +106,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     char value[10];
     char *eptr;
     double quantity;
-    strcpy(value, (char*)chunk);
+    strcpy(value, (const char*)chunk);
     quantity = strtod(value, &eptr);
     if (result == 0){
         /* If the value provided was out of range, display a warning message */
@@ -113,11 +114,11 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
             printf("The value provided was out of range\n");
         return;
     }
-    printf("Changing reservoir water level by: %f\n", quantity);
+    printf("Changing reservoir water level by: %d\n", (int)(quantity));
     put_get_water(quantity);
   }
   else {
-	  printf("Topic not recognized!\n");
+	  LOG_ERR("Topic not recognized!\n");
   }
   return;
 }
@@ -151,7 +152,7 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
           mqtt_suback_event_t *suback_event = (mqtt_suback_event_t *)data;
           if(suback_event->success)
           {
-              LOG_INFO("Application has subscribed to the topic\n");
+              LOG_INFO("Application has subscribed to the topic successfully\n");
           }
           else
           {
@@ -178,9 +179,15 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
   }
 }
 
-static bool have_connectivity(void) {
-  if(uip_ds6_get_global(ADDR_PREFERRED) == NULL || uip_ds6_defrt_choose() == NULL)
+static bool have_connectivity(void)
+{
+  bool problem1 = uip_ds6_get_global(ADDR_PREFERRED) == NULL;
+  bool problem2 = uip_ds6_defrt_choose() == NULL;
+  printf("problem1 is: %s, ", problem1 ? "true" : "false");
+  printf("problem2 is: %s\n", problem2 ? "true" : "false");
+  if( problem1|| problem2) {
     return false;
+  }
   return true;
 }
 
@@ -193,7 +200,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
   mqtt_status_t status;
   char broker_address[CONFIG_IP_ADDR_STR_LEN];
 
-  printf("MQTT Client Process\n");
+  printf("Reservoir Level Detector Process\n");
 
   // Initialize the ClientID as MAC address
   snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
@@ -202,13 +209,15 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
                      linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
 
   // Broker registration
+  printf("Try to register\n");
   mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
 
+  printf("Registered\n");
   state=STATE_INIT;
 
   // Initialize periodic timer to check the status
-  etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+  etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
   /* Main loop */
   while(1) {
@@ -219,13 +228,17 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 	      ev == PROCESS_EVENT_POLL){
 
 		  if(state==STATE_INIT){
-			 if(have_connectivity()==true)
-				 state = STATE_NET_OK;
-		  }
+             if(have_connectivity()==true){
+                 state = STATE_NET_OK;
+                 LOG_INFO("STATE=STATE_NET_OK\n");
+             }
+             else
+                LOG_INFO("STATE=STATE_INIT\n");
+          }
 
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
-			  printf("Connecting!\n");
+			  LOG_INFO("Connecting to MQTT server\n");
 
 			  memcpy(broker_address, broker_ip, strlen(broker_ip));
 
@@ -233,6 +246,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
+			  LOG_INFO("STATE=STATE_CONNECTING\n");
 		  }
 
 		  if(state==STATE_CONNECTED){
@@ -242,7 +256,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
 			  status = mqtt_subscribe(&conn, NULL, sub_topic_interval, MQTT_QOS_LEVEL_0);
 
-			  printf("Subscribing!\n");
+			  printf("Subscribing to the interval topic!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
@@ -251,29 +265,34 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
               status = mqtt_subscribe(&conn, NULL, sub_topic_level, MQTT_QOS_LEVEL_0);
 
-              printf("Subscribing!\n");
+              printf("Subscribing to the level topic!\n");
               if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
                 LOG_ERR("Tried to subscribe but command queue was full!\n");
                 PROCESS_EXIT();
               }
 			  state = STATE_SUBSCRIBED;
-			  PUBLISH_INTERVAL = 1*CLOCK_SECOND;
+			  PUBLISH_INTERVAL = 10*CLOCK_SECOND;
+              STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
+              printf("STATE=STATE_SUBSCRIBED\n");
 		  } else if(state == STATE_SUBSCRIBED){
 
+            LOG_INFO("I try to publish a message\n");
 		    int level = simulate_level();
-		    sprintf(pub_topic, "reservoir_level");
+		    sprintf(pub_topic, "%s", "reservoir_level");
+
 		    //assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
 		    available = sensed_level*WIDTH*DEPTH;
-		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
+		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		    printf("Sensed water level is: %.2f cm, reservoir water availability is %.2f cm^3\n", sensed_level, available);
+		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", sensed_level, available);
+            STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 
 		} else if ( state == STATE_DISCONNECTED ){
 		   LOG_ERR("Disconnected form MQTT broker\n");
-		   // Recover from error
+		   state = STATE_INIT;
 		}
 
-		etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
     }
 
