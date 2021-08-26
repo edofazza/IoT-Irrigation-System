@@ -107,54 +107,59 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
   }
 }
 /*---------------------------------------------------------------------------*/
-static void
-mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data)
-{
-  switch(event) {
-  case MQTT_EVENT_CONNECTED: {
-    printf("Application has a MQTT connection\n");
-    state = STATE_CONNECTED;
-    break;
-  }
-  case MQTT_EVENT_DISCONNECTED: {
-    printf("MQTT Disconnect. Reason %u\n", *((mqtt_event_t *)data));
+static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data){
 
-    state = STATE_DISCONNECTED;
-    process_poll(&aquifer_level_detector_process);
-    break;
-  }
-  case MQTT_EVENT_PUBLISH: {
-    msg_ptr = data;
-
-    pub_handler(msg_ptr->topic, strlen(msg_ptr->topic),
-                msg_ptr->payload_chunk, msg_ptr->payload_length);
-    break;
-  }
-  case MQTT_EVENT_SUBACK: {
-#if MQTT_311
-    mqtt_suback_event_t *suback_event = (mqtt_suback_event_t *)data;
-
-    if(suback_event->success) {
-      printf("Application is subscribed to topic successfully\n");
-    } else {
-      printf("Application failed to subscribe to topic (ret code %x)\n", suback_event->return_code);
-    }
-#else
-    printf("Application is subscribed to topic successfully\n");
-#endif
-    break;
-  }
-  case MQTT_EVENT_UNSUBACK: {
-    printf("Application is unsubscribed to topic successfully\n");
-    break;
-  }
-  case MQTT_EVENT_PUBACK: {
-    printf("Publishing complete.\n");
-    break;
-  }
-  default:
-    printf("Application got a unhandled MQTT event: %i\n", event);
-    break;
+  switch(event)
+  {
+      case MQTT_EVENT_CONNECTED:
+      {
+          LOG_INFO("MQTT connection acquired\n");
+          state = STATE_CONNECTED;
+          break;
+      }
+      case MQTT_EVENT_DISCONNECTED:
+      {
+          printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
+          state = STATE_DISCONNECTED;
+          process_poll(&humidity_analyzer_process);
+          break;
+      }
+      case MQTT_EVENT_PUBLISH:
+      {
+          msg_ptr = data;
+          pub_handler(msg_ptr->topic, strlen(msg_ptr->topic), msg_ptr->payload_chunk, msg_ptr->payload_length);
+          break;
+      }
+      case MQTT_EVENT_SUBACK:
+      {
+          #if MQTT_311
+          mqtt_suback_event_t *suback_event = (mqtt_suback_event_t *)data;
+          if(suback_event->success)
+          {
+              LOG_INFO("Application has subscribed to the topic successfully\n");
+          }
+          else
+          {
+              LOG_ERR("Application failed to subscribe to topic (ret code %x)\n", suback_event->return_code);
+          }
+          #else
+          LOG_INFO("Application has subscribed to the topic\n");
+          #endif
+          break;
+      }
+      case MQTT_EVENT_UNSUBACK:
+      {
+          LOG_INFO("Application is unsubscribed to topic successfully\n");
+          break;
+      }
+      case MQTT_EVENT_PUBACK:
+      {
+          LOG_INFO("Publishing complete.\n");
+          break;
+      }
+      default:
+          LOG_INFO("Application got a unhandled MQTT event: %i\n", event);
+          break;
   }
 }
 
@@ -179,7 +184,7 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
   mqtt_status_t status;
   char broker_address[CONFIG_IP_ADDR_STR_LEN];
 
-  printf("Acquifer Level Detector Process\n");
+  printf("Aquifer Level Detector Process\n");
 
   // Initialize the ClientID as MAC address
   snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
@@ -208,10 +213,10 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 		  if(state==STATE_INIT){
 			 if(have_connectivity()==true){
 				 state = STATE_NET_OK;
-				 printf("STATE=STATE_NET_OK\n");
+				 LOG_INFO("STATE=STATE_NET_OK\n");
 			 }
 			 else
-			    printf("STATE=STATE_INIT\n");
+			    LOG_INFO("STATE=STATE_INIT\n");
 		  }
 
 		  if(state == STATE_NET_OK){
@@ -224,7 +229,7 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 						   (DEFAULT_PUBLISH_INTERVAL * 3) / CLOCK_SECOND,
 						   MQTT_CLEAN_SESSION_ON);
 			  state = STATE_CONNECTING;
-			  printf("STATE=STATE_CONNECTING\n");
+			  LOG_INFO("STATE=STATE_CONNECTING\n");
 		  }
 
 		  if(state==STATE_CONNECTED){
@@ -243,8 +248,10 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 			  PUBLISH_INTERVAL = 10*CLOCK_SECOND;
 			  STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			  printf("STATE=STATE_SUBSCRIBED\n");
+
 		  } else if(state == STATE_SUBSCRIBED){
-              printf("I try to publish a message\n");
+
+              LOG_INFO("I try to publish a message\n");
               sensed_level = simulate_level();
               sprintf(pub_topic, "%s", "aquifer_level");
 

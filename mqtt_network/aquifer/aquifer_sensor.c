@@ -8,27 +8,27 @@
 On the contrary during rainy seasons the water level will probably be enough to cover the needs*/
 
 /* DEFAULT VALUES*/
-/*needed water is expressed in terms of cm^3 accumulated between 2 successive dispensings, those are default values*/
+/*needed water is expressed in terms of cm^3 accumulated between 2 successive dispensings*/
+/*Those are default level values that should be present in the aquifer in order to satisfy the relative need*/
+/* e.g. if the need is MEDIUM, the level in the aquifer must be at least 40 in order to satisfy it*/
 #define NOT_NEEDED 0
-#define LOW_NEED 2
-#define MEDIUM_NEED 4
-#define HIGH_NEED 6
-#define VERY_HIGH_NEED 7
+#define LOW_NEED 20
+#define MEDIUM_NEED 40
+#define HIGH_NEED 60
+#define VERY_HIGH_NEED 70
 
 
-static double simulate_level(){
+static int simulate_level(){
+    //TODO test seasons
     bool summer = false;
     int month = 8;  //September
     if (month >=5 && month<8)  //between June and August
         summer = true;
-    int availability;  //   cm^3
+    int level;  //   cm
     if (summer)
-        availability = rand()%MEDIUM_NEED;
+        level = rand()%MEDIUM_NEED;
     else
-        availability = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
-
-    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-    int level = ((availability/WATER_SPEED)/SECTION)/(PUBLISH_INTERVAL/CLOCK_SECOND);   //cm
+        level = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
     return level<MAX_LEVEL ? level : MAX_LEVEL;
 }
 

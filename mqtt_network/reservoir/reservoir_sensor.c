@@ -1,13 +1,12 @@
 #include "random.h"
 #include "reservoir_parameters.h"
-#include "time.h"
 
 /*   The following code is just a simulation of the output of a level sensor and the corresponding actuator that
      puts or fetches the water from the reservoir*/
 
-static double sensed_level=MAX_LEVEL;
+static int sensed_level=MAX_LEVEL;
 
-static double simulate_level(){
+static int simulate_level(){
     return sensed_level;
 }
 
