@@ -17,6 +17,7 @@ On the contrary during rainy seasons the water level will probably be enough to 
 
 
 static double simulate_level(){
+    bool summer = false;
     int month = 8;  //September
     if (month >=5 && month<8)  //between June and August
         summer = true;
