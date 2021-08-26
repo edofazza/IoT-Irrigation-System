@@ -244,18 +244,20 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 			  STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			  printf("STATE=STATE_SUBSCRIBED\n");
 		  } else if(state == STATE_SUBSCRIBED){
-            printf("I try to publish a message\n");
-		    sensed_level = simulate_level();
-		    sprintf(pub_topic, "%s", "aquifer_level");
-		    //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-		    available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
-		    sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
-		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		    printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\n", sensed_level, available);
+              printf("I try to publish a message\n");
+              sensed_level = simulate_level();
+              sprintf(pub_topic, "%s", "aquifer_level");
+
+            //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+              available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
+              sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
+              mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+              printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\n", sensed_level, available);
+              STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 
 		} else if ( state == STATE_DISCONNECTED ){
-		   LOG_ERR("Disconnected form MQTT broker\n");
-		   state = STATE_INIT;
+		      LOG_ERR("Disconnected form MQTT broker\n");
+		      state = STATE_INIT;
 		}
 
 		etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
