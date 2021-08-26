@@ -17,10 +17,7 @@ On the contrary during rainy seasons the water level will probably be enough to 
 
 
 static double simulate_level(){
-    bool summer = false;
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    int month = tm.tm_mon;
+    int month = 8;  //September
     if (month >=5 && month<8)  //between June and August
         summer = true;
     double availability;  //   cm^3
