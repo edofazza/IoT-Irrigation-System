@@ -11,11 +11,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketException;
+import java.util.logging.LogManager;
 
 public class Collector {
     private static boolean celciusUnit = true;
 
     public static void main(String[] args) throws SocketException, InterruptedException {
+        // Remove log messages from Californium
+        LogManager.getLogManager().reset();
+        
         // Init
         MQTTNetworkHandler mqttnh = new MQTTNetworkHandler();
         AquiferCollector ac = new AquiferCollector(mqttnh);
