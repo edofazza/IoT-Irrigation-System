@@ -23,8 +23,7 @@ public class TapActuator {
 
 
     public void addTapActuator(String ip) {
-        //System.out.println("The tap actuator: [" + ip + "] + is now registered"); TODO
-        Logger.error("The tap actuator: [" + ip + "] + is now registered");
+        Logger.log("The tap actuator: [" + ip + "] + is now registered");
         clientTapActuator = new CoapClient("coap://[" + ip + "]/tap_intensity");
         clientTapInterval = new CoapClient("coap://[" + ip + "]/tap_interval");
 
@@ -43,7 +42,7 @@ public class TapActuator {
                     }
 
                     public void onError() {
-                        System.err.println("OBSERVING FAILED");
+                        Logger.error("Tap actuator OBSERVING FAILED");
                     }
                 });
     }
@@ -94,12 +93,12 @@ public class TapActuator {
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with tap actuator");
+                        Logger.error("Something went wrong with tap actuator");
                     }
                 }
 
                 public void onError() {
-                    System.err.println("[ERROR: TapActuator " + clientTapActuator.getURI() + "] ");
+                    Logger.error("[ERROR: TapActuator " + clientTapActuator.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
@@ -118,12 +117,12 @@ public class TapActuator {
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with tap actuator");
+                        Logger.error("Something went wrong with tap actuator");
                 }
             }
 
             public void onError() {
-                System.err.println("[ERROR: Tap actuator " + clientTapInterval.getURI() + "] ");
+                Logger.error("[ERROR: Tap actuator " + clientTapInterval.getURI() + "] ");
             }
 
         }, msg, MediaTypeRegistry.TEXT_PLAIN);
@@ -155,12 +154,12 @@ public class TapActuator {
             public void onLoad(CoapResponse response) {
                 if (response != null) {
                     if(!response.isSuccess())
-                        System.out.println("Something went wrong with Tap switch");
+                        Logger.error("Something went wrong with Tap switch");
                 }
             }
 
             public void onError() {
-                    System.err.println("[ERROR: TapSwitch " + clientTapActuator.getURI() + "] ");
+                    Logger.error("[ERROR: TapSwitch " + clientTapActuator.getURI() + "] ");
                 }
 
             }, msg, MediaTypeRegistry.TEXT_PLAIN);
