@@ -23,7 +23,6 @@ public class RainSensor {
     private TemperatureSensorNetwork temperatureSensorNetwork;
 
     public void addRainSensor(String ip) {
-        //System.out.println("The rain sensor: [" + ip + "] + is now registered"); TODO
         Logger.log("The rain sensor: [\" + ip + \"] + is now registered");
         clientRainSensor = new CoapClient("coap://[" + ip + "]/rain_sensor");
 
@@ -46,7 +45,7 @@ public class RainSensor {
                     }
 
                     public void onError() {
-                        System.err.println("OBSERVING FAILED");
+                        Logger.error("Rain sensor OBSERVING FAILED");
                     }
                 });
     }
