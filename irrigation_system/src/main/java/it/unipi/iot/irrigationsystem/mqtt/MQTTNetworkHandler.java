@@ -1,5 +1,6 @@
 package it.unipi.iot.irrigationsystem.mqtt;
 
+import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.paho.client.mqttv3.*;
 import org.json.simple.*;
 import org.json.simple.parser.ParseException;
@@ -28,18 +29,18 @@ public class MQTTNetworkHandler implements MqttCallback{
         do {
             try {
                 this.mqttClient = new MqttClient(this.broker,this.clientId);
-                System.out.println("Connecting to broker: "+broker);
+                Logger.log("[MQTT Java Client]: Connecting to broker "+broker);
 
                 this.mqttClient.setCallback( this );
                 this.mqttClient.connect();
 
                 this.mqttClient.subscribe(this.reservoirSubTopic);
-                System.out.println("Subscribed to topic: "+this.reservoirSubTopic);
+                Logger.log("[MQTT Java Client]:Subscribed to topic "+this.reservoirSubTopic);
 
                 this.mqttClient.subscribe(this.aquiferSubTopic);
-                System.out.println("Subscribed to topic: "+this.aquiferSubTopic);
+                Logger.log("[MQTT Java Client]: Subscribed to topic "+this.aquiferSubTopic);
             }catch(MqttException me) {
-                System.out.println("I could not connect, Retrying ...");
+                Logger.error("[MQTT Java Client]: I could not connect, Retrying ...");
             }
         }while(!this.mqttClient.isConnected());
          */
@@ -55,23 +56,23 @@ public class MQTTNetworkHandler implements MqttCallback{
     }
 
     public void connectionLost(Throwable cause) {
-        System.out.println("Connection is broken: " + cause);
+        Logger.warning("[MQTT Java Client]: Connection is broken: " + cause);
         int timeWindow = 3000;
         while (!this.mqttClient.isConnected()) {
             try {
-                System.out.println("Trying to reconnect in " + timeWindow/1000 + " seconds.");
+                Logger.log("[MQTT Java Client]: Trying to reconnect in " + timeWindow/1000 + " seconds.");
                 Thread.sleep(timeWindow);
-                System.out.println("Reconnecting ...");
+                Logger.log("[MQTT Java Client]: Reconnecting ...");
                 timeWindow *= 2;
                 this.mqttClient.connect();
 
                 this.mqttClient.subscribe(this.aquiferSubTopic);
                 this.mqttClient.subscribe(this.reservoirSubTopic);
-                System.out.println("Connection is restored");
+                Logger.log("[MQTT Java Client]: Connection is restored");
             }catch(MqttException me) {
-                System.out.println("I could not connect");
+                Logger.error("[MQTT Java Client]: I could not connect");
             } catch (InterruptedException e) {
-                System.out.println("I could not connect");
+                Logger.error("[MQTT Java Client]: I could not connect");
             }
         }
     }

@@ -16,3 +16,19 @@ On the contrary during rainy seasons the water level will probably be enough to 
 #define VERY_HIGH_NEED 7
 
 
+static int simulate_level(){
+    bool summer = false;
+    /*time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    int month = tm.tm_mon;*/
+    int month=8;
+    if (month >=5 && month<8)  //between June and August
+        summer = true;
+    //srand(time(NULL));
+    int level;  //   cm
+    if (summer)
+        level = rand()%MEDIUM_NEED;
+    else
+        level = MEDIUM_NEED + rand()%(VERY_HIGH_NEED - MEDIUM_NEED);
+    return level<MAX_LEVEL ? level : MAX_LEVEL;
+}
