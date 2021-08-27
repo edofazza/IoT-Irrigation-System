@@ -120,7 +120,6 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
   else {
 	  LOG_ERR("Topic not recognized!\n");
   }
-  return;
 }
 /*---------------------------------------------------------------------------*/
 static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data){
@@ -254,18 +253,19 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 			  // Subscribe to a topic
 			  strcpy(sub_topic_interval,"interval");
 
+              printf("Subscribing to the interval topic!\n");
 			  status = mqtt_subscribe(&conn, NULL, sub_topic_interval, MQTT_QOS_LEVEL_0);
 
-			  printf("Subscribing to the interval topic!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
 			  }
 			  strcpy(sub_topic_level,"set_reservoir_level");
 
+              printf("Subscribing to the level topic!\n");
               status = mqtt_subscribe(&conn, NULL, sub_topic_level, MQTT_QOS_LEVEL_0);
 
-              printf("Subscribing to the level topic!\n");
+
               if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
                 LOG_ERR("Tried to subscribe but command queue was full!\n");
                 PROCESS_EXIT();
