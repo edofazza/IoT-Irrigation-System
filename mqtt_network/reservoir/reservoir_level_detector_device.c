@@ -260,6 +260,7 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
 			  }
+			  /*
 			  strcpy(sub_topic_level,"set_reservoir_level");
 
               printf("Subscribing to the level topic!\n");
@@ -270,6 +271,7 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
                 LOG_ERR("Tried to subscribe but command queue was full!\n");
                 PROCESS_EXIT();
               }
+              */
 			  state = STATE_SUBSCRIBED;
 			  PUBLISH_INTERVAL = 10*CLOCK_SECOND;
               STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
