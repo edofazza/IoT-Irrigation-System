@@ -108,7 +108,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     double quantity;
     strcpy(value, (const char*)chunk);
     quantity = strtod(value, &eptr);
-    if (result == 0){
+    if (quantity == 0){
         /* If the value provided was out of range, display a warning message */
         if (errno == ERANGE)
             printf("The value provided was out of range\n");
@@ -137,7 +137,7 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
       {
           printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
           state = STATE_DISCONNECTED;
-          process_poll(&humidity_analyzer_process);
+          process_poll(&reservoir_level_detector_process);
           break;
       }
       case MQTT_EVENT_PUBLISH:
@@ -210,7 +210,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 
   // Broker registration
   printf("Try to register\n");
-  mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event,
+  mqtt_register(&conn, &reservoir_level_detector_process, client_id, mqtt_event,
                   MAX_TCP_SEGMENT_SIZE);
 
   printf("Registered\n");
@@ -281,7 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		    sprintf(pub_topic, "%s", "reservoir_level");
 
 		    //assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
-		    available = sensed_level*WIDTH*DEPTH;
+		    int available = sensed_level*WIDTH*DEPTH;
 		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", sensed_level, available);
