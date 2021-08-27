@@ -69,7 +69,7 @@ AUTOSTART_PROCESSES(&reservoir_level_detector_process);
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic_interval[BUFFER_SIZE];
-static char sub_topic_level[BUFFER_SIZE];
+//static char sub_topic_level[BUFFER_SIZE];
 
 static struct etimer periodic_timer;
 
