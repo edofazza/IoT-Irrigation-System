@@ -20,7 +20,7 @@
 #include <string.h>
 #include <errno.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "reservoir_level_detector_device"
+#define LOG_MODULE "reservoir_level_detector"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
 #define LOG_LEVEL MQTT_CLIENT_CONF_LOG_LEVEL
 #else
@@ -192,7 +192,7 @@ static bool have_connectivity(void)
 }
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(mqtt_client_process, ev, data)
+PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 {
 
   PROCESS_BEGIN();
@@ -281,7 +281,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
 		    sprintf(pub_topic, "%s", "reservoir_level");
 
 		    //assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
-		    int available = sensed_level*WIDTH*DEPTH;
+		    int available = level*WIDTH*DEPTH;
 		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", sensed_level, available);
