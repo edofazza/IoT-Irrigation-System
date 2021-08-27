@@ -121,7 +121,7 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
       {
           printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
           state = STATE_DISCONNECTED;
-          process_poll(&humidity_analyzer_process);
+          process_poll(&aquifer_level_detector_process);
           break;
       }
       case MQTT_EVENT_PUBLISH:
