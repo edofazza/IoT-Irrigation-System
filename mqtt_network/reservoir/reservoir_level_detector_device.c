@@ -68,7 +68,7 @@ AUTOSTART_PROCESSES(&reservoir_level_detector_process);
 
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
-static char sub_topic_interval[BUFFER_SIZE];
+static char sub_topic[BUFFER_SIZE];
 //static char sub_topic_level[BUFFER_SIZE];
 
 static struct etimer periodic_timer;
@@ -251,10 +251,10 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 		  if(state==STATE_CONNECTED){
 
 			  // Subscribe to a topic
-			  strcpy(sub_topic_interval,"interval");
+			  strcpy(sub_topic,"interval");
 
               printf("Subscribing to the interval topic!\n");
-			  status = mqtt_subscribe(&conn, NULL, sub_topic_interval, MQTT_QOS_LEVEL_0);
+			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
