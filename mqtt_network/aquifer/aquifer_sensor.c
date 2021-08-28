@@ -21,7 +21,7 @@ static int simulate_level(){
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     int month = tm.tm_mon;
-    int month=8;
+    //int month=8;
     if (month >=5 && month<8)  //between June and August
         summer = true;
     srand(time(NULL));
