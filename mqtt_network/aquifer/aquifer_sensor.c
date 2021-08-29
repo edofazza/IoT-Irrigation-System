@@ -10,10 +10,10 @@ On the contrary during rainy seasons the water level will probably be enough to 
 /* DEFAULT VALUES*/
 /*needed water is expressed in terms of cm^3 accumulated between 2 successive dispensings, those are default values*/
 #define NOT_NEEDED 0
-#define LOW_NEED 2
-#define MEDIUM_NEED 4
-#define HIGH_NEED 6
-#define VERY_HIGH_NEED 7
+#define LOW_NEED 20
+#define MEDIUM_NEED 40
+#define HIGH_NEED 60
+#define VERY_HIGH_NEED 70
 
 
 static int simulate_level(){
