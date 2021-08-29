@@ -14,10 +14,10 @@
 #include "mqtt-client.h"
 #include "reservoir_sensor.c"
 
-#include <strings.h>
 #include <string.h>
+#include <strings.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "reservoir_level_detector"
+#define LOG_MODULE "reservoir_level"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
 #define LOG_LEVEL MQTT_CLIENT_CONF_LOG_LEVEL
 #else
@@ -49,8 +49,8 @@ static uint8_t state;
 #define STATE_DISCONNECTED    5
 
 /*---------------------------------------------------------------------------*/
-PROCESS_NAME(reservoir_level_detector_process);
-AUTOSTART_PROCESSES(&reservoir_level_detector_process);
+PROCESS_NAME(reservoir_level_process);
+AUTOSTART_PROCESSES(&reservoir_level_process);
 
 /*---------------------------------------------------------------------------*/
 /* Maximum TCP segment size for outgoing segments of our socket */
@@ -86,7 +86,7 @@ static struct mqtt_message *msg_ptr = 0;
 static struct mqtt_connection conn;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(reservoir_level_detector_process, "Reservoir Level Detector");
+PROCESS(reservoir_level_process, "Reservoir Level Detector");
 
 
 
@@ -137,7 +137,7 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
       {
           printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
           state = STATE_DISCONNECTED;
-          process_poll(&reservoir_level_detector_process);
+          process_poll(&reservoir_level_process);
           break;
       }
       case MQTT_EVENT_PUBLISH:
@@ -192,7 +192,7 @@ static bool have_connectivity(void)
 }
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(reservoir_level_detector_process, ev, data)
+PROCESS_THREAD(reservoir_level_process, ev, data)
 {
 
   PROCESS_BEGIN();
@@ -210,7 +210,7 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 
   // Broker registration
   printf("Try to register\n");
-  mqtt_register(&conn, &reservoir_level_detector_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
+  mqtt_register(&conn, &reservoir_level_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
 
   printf("Registered\n");
   state=STATE_INIT;

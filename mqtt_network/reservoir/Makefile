@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = reservoir_level_detector
+CONTIKI_PROJECT = reservoir_level
 all: $(CONTIKI_PROJECT)
 
 CONTIKI = ../../..
