@@ -102,6 +102,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   }
+  /*
   else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];
     char *eptr;
@@ -109,14 +110,14 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     strcpy(value, (const char*)chunk);
     quantity = strtod(value, &eptr);
     if (quantity == 0){
-        /* If the value provided was out of range, display a warning message */
+        // If the value provided was out of range, display a warning message
         if (errno == ERANGE)
             printf("The value provided was out of range\n");
         return;
     }
     printf("Changing reservoir water level by: %d\n", (int)(quantity));
     put_get_water((int)quantity);
-  }
+  }*/
   else {
 	  LOG_ERR("Topic not recognized!\n");
   }
