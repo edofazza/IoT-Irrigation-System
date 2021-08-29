@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = mqtt-network
+CONTIKI_PROJECT = reservoir_level_detector
 all: $(CONTIKI_PROJECT)
 
 CONTIKI = ../../..

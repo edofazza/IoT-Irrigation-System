@@ -245,7 +245,7 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 				PROCESS_EXIT();
 			  }
 			  state = STATE_SUBSCRIBED;
-			  PUBLISH_INTERVAL = 10*CLOCK_SECOND;
+			  PUBLISH_INTERVAL = (10*CLOCK_SECOND);
 			  STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			  printf("STATE=STATE_SUBSCRIBED\n");
 

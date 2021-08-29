@@ -1,6 +1,6 @@
 #include "random.h"
 #include "aquifer_parameters.h"
-#include "time.h"
+//#include "time.h"
 
 /*   The following code is just a simulation of the output of a level sensor   */
 
@@ -18,13 +18,13 @@ On the contrary during rainy seasons the water level will probably be enough to 
 
 static int simulate_level(){
     bool summer = false;
-    time_t t = time(NULL);
-    struct tm tm = *localtime(&t);
-    int month = tm.tm_mon;
-    //int month=8;
+    //time_t t = time(NULL);
+    //struct tm tm = *localtime(&t);
+    //int month = tm.tm_mon;
+    int month=8;
     if (month >=5 && month<8)  //between June and August
         summer = true;
-    srand(time(NULL));
+    //srand(time(NULL));
     int level;  //   cm
     if (summer)
         level = rand()%MEDIUM_NEED;
