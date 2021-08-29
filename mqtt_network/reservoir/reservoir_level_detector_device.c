@@ -115,7 +115,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         return;
     }
     printf("Changing reservoir water level by: %d\n", (int)(quantity));
-    put_get_water(quantity);
+    put_get_water((int)quantity);
   }
   else {
 	  LOG_ERR("Topic not recognized!\n");
@@ -273,7 +273,7 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
               }
               */
 			  state = STATE_SUBSCRIBED;
-			  PUBLISH_INTERVAL = 10*CLOCK_SECOND;
+			  PUBLISH_INTERVAL = (10*CLOCK_SECOND);
               STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
               printf("STATE=STATE_SUBSCRIBED\n");
 		  } else if(state == STATE_SUBSCRIBED){
