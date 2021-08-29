@@ -248,7 +248,6 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
 			  PUBLISH_INTERVAL = (10*CLOCK_SECOND);
 			  STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			  printf("STATE=STATE_SUBSCRIBED\n");
-
 		  } else if(state == STATE_SUBSCRIBED){
 
               LOG_INFO("I try to publish a message\n");

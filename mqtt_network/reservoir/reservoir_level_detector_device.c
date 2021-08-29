@@ -15,10 +15,7 @@
 #include "reservoir_sensor.c"
 
 #include <strings.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "reservoir_level_detector"
 #ifdef MQTT_CLIENT_CONF_LOG_LEVEL
@@ -71,6 +68,9 @@ static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 //static char sub_topic_level[BUFFER_SIZE];
 
+static int level = 0;
+static int available = 0;
+
 static struct etimer periodic_timer;
 
 /*---------------------------------------------------------------------------*/
@@ -92,8 +92,8 @@ PROCESS(reservoir_level_detector_process, "Reservoir Level Detector");
 
 /*---------------------------------------------------------------------------*/
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
-            uint16_t chunk_len) {
-
+            uint16_t chunk_len)
+{
   LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
   if(strcmp(topic, "interval") == 0) {
     printf("Changing detection interval to: ");
@@ -210,8 +210,7 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 
   // Broker registration
   printf("Try to register\n");
-  mqtt_register(&conn, &reservoir_level_detector_process, client_id, mqtt_event,
-                  MAX_TCP_SEGMENT_SIZE);
+  mqtt_register(&conn, &reservoir_level_detector_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
 
   printf("Registered\n");
   state=STATE_INIT;
@@ -220,21 +219,21 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
   etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
   /* Main loop */
+  printf("I'm in main while\n");
   while(1) {
-
     PROCESS_YIELD();
 
     if((ev == PROCESS_EVENT_TIMER && data == &periodic_timer) ||
 	      ev == PROCESS_EVENT_POLL){
 
 		  if(state==STATE_INIT){
-             if(have_connectivity()==true){
-                 state = STATE_NET_OK;
-                 LOG_INFO("STATE=STATE_NET_OK\n");
-             }
-             else
-                LOG_INFO("STATE=STATE_INIT\n");
-          }
+			 if(have_connectivity()==true){
+				 state = STATE_NET_OK;
+				 LOG_INFO("STATE=STATE_NET_OK\n");
+			 }
+			 else
+			    LOG_INFO("STATE=STATE_INIT\n");
+		  }
 
 		  if(state == STATE_NET_OK){
 			  // Connect to MQTT server
@@ -254,9 +253,9 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 			  // Subscribe to a topic
 			  strcpy(sub_topic,"interval");
 
-              printf("Subscribing to the interval topic!\n");
 			  status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
+			  printf("Subscribing!\n");
 			  if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
 				LOG_ERR("Tried to subscribe but command queue was full!\n");
 				PROCESS_EXIT();
@@ -275,19 +274,19 @@ PROCESS_THREAD(reservoir_level_detector_process, ev, data)
               */
 			  state = STATE_SUBSCRIBED;
 			  PUBLISH_INTERVAL = (10*CLOCK_SECOND);
-              STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
-              printf("STATE=STATE_SUBSCRIBED\n");
+			  STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
+			  printf("STATE=STATE_SUBSCRIBED\n");
 		  } else if(state == STATE_SUBSCRIBED){
 
             LOG_INFO("I try to publish a message\n");
-		    int level = simulate_level();
+		    level = simulate_level();
 		    sprintf(pub_topic, "%s", "reservoir_level");
 
 		    //assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
-		    int available = level*WIDTH*DEPTH;
+		    available = level*WIDTH*DEPTH;
 		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", sensed_level, available);
+		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", level, available);
             STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 
 		} else if ( state == STATE_DISCONNECTED ){
