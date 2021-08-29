@@ -9,7 +9,7 @@ static int capacity = MAX_LEVEL*WIDTH*DEPTH;
 static int simulate_level(){
     return sensed_level;
 }
-
+/*
 static void put_get_water(int quantity){
 //assuming rectangular reservoir
     capacity += quantity;
