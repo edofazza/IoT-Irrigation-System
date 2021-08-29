@@ -4,12 +4,12 @@
      puts or fetches the water from the reservoir*/
 
 static int sensed_level=MAX_LEVEL;
-static int capacity = MAX_LEVEL*WIDTH*DEPTH;
+//static int capacity = MAX_LEVEL*WIDTH*DEPTH;
 
 static int simulate_level(){
     return sensed_level;
 }
-
+/*
 static void put_get_water(int quantity){
 //assuming rectangular reservoir
     capacity += quantity;
@@ -27,4 +27,4 @@ static void put_get_water(int quantity){
         capacity = 0;
     }
 }
-
+*/
