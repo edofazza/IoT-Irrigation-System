@@ -108,8 +108,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
 }
 
 static int simulate_res_level(){
-    int my_level = 60;
-    return my_level;
+    return 60;
 }
 
 
@@ -258,7 +257,7 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
           } else if(state == STATE_SUBSCRIBED){
 
               LOG_INFO("I try to publish a message\n");
-              sensed_level = simulate_level();
+              sensed_level = simulate_res_level();
               sprintf(pub_topic, "%s", "re_level");
 
             //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
