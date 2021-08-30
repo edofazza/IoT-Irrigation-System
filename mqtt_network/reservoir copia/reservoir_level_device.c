@@ -34,9 +34,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define DEFAULT_BROKER_PORT         1883
 
 
-// We assume that the broker does not require authentication
-
-
 /*---------------------------------------------------------------------------*/
 /* Various states */
 static uint8_t state;
@@ -89,8 +86,6 @@ static struct mqtt_connection conn;
 /*---------------------------------------------------------------------------*/
 PROCESS(re_level_detector_process, "Reservoir Level Detector");
 
-
-
 /*--------------------------handles incoming messages------------------------------------------*/
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,
             uint16_t chunk_len)
@@ -106,11 +101,6 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
       LOG_ERR("Topic not recognized!\n");
   }
 }
-
-static int simulate_res_level(){
-    return 60;
-}
-
 
 /*---------------------------------------------------------------------------*/
 static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data){
@@ -255,12 +245,9 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
               STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
               printf("STATE=STATE_SUBSCRIBED\n");
           } else if(state == STATE_SUBSCRIBED){
-
-              LOG_INFO("I try to publish a message\n");
-              sensed_level = simulate_res_level();
+              sensed_level = 60;
               sprintf(pub_topic, "%s", "re_level");
 
-            //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
               available = sensed_level*SECTION*WATER_SPEED*(PUBLISH_INTERVAL/CLOCK_SECOND); // SE TOLTA QUESTA RIGA NON VA DI NUOVO
               sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
               mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
@@ -271,12 +258,9 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
               LOG_ERR("Disconnected form MQTT broker\n");
               state = STATE_INIT;
         }
-
         etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
     }
-
   }
-
   PROCESS_END();
 }
