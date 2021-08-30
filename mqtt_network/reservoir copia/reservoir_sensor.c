@@ -16,6 +16,6 @@ On the contrary during rainy seasons the water level will probably be enough to 
 
 
 static int simulate_level(){
-    int level = MAX_LEVEL;
+    int level = 60;
     return level;
 }
