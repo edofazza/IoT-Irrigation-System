@@ -255,7 +255,7 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
               sprintf(pub_topic, "%s", "re_level");
 
             //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-              available = sensed_level; // SE TOLTA QUESTA RIGA NON VA DI NUOVO
+              available = sensed_level*SECTION*WATER_SPEED*(PUBLISH_INTERVAL/CLOCK_SECOND); // SE TOLTA QUESTA RIGA NON VA DI NUOVO
               sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
               mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
               printf("Sensed water level is: %d cm, aquifer water availability is %d cm^3\n", sensed_level, available);
