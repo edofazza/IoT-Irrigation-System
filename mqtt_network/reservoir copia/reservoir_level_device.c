@@ -107,9 +107,9 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
   }
 }
 
-static int simulate_level(){
-    int level = 60;
-    return level;
+static int simulate_res_level(){
+    int my_level = 60;
+    return my_level;
 }
 
 
