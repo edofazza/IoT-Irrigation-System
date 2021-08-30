@@ -12,7 +12,7 @@
 #include "os/sys/log.h"
 #include <sys/node-id.h>
 #include "mqtt-client.h"
-#include "reservoir_sensor.c"
+#include "reservoir_parameters.h"
 
 #include <string.h>
 #include <strings.h>
@@ -106,6 +106,13 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
       LOG_ERR("Topic not recognized!\n");
   }
 }
+
+static int simulate_level(){
+    int level = 60;
+    return level;
+}
+
+
 /*---------------------------------------------------------------------------*/
 static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data){
 
