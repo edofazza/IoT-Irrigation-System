@@ -250,6 +250,7 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
               printf("STATE=STATE_SUBSCRIBED\n");
           } else if(state == STATE_SUBSCRIBED){
 
+
               LOG_INFO("I try to publish a message\n");
               sensed_level = simulate_level();
               sprintf(pub_topic, "%s", "re_level");
