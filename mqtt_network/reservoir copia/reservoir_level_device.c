@@ -86,23 +86,20 @@ static int available = 0;
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
 {
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
-    if(strcmp(topic, "reservoir/interval") == 0) {
-        printf("Changing detection interval to: ");
-
-    	long interval = atol((const char*)chunk);
-        printf("%ld\n", interval);
-        PUBLISH_INTERVAL = interval*CLOCK_SECOND;
-      }
-
-      else if(strcmp(topic, "reservoir/set_level") == 0){
-        /*char value[10];
-        char *eptr;
-        int quantity;
-        strcpy(value, (const char*)chunk);
-        quantity = atoi(value);
-        //printf("Changing reservoir water level by: %d\n", (int)(quantity));
-        put_get_water((int)quantity);*/
-        printf("Received a set_reservoir_level topic command");
+    if(strcmp(topic, "reservoir") == 0) {
+        char* message = (const char*)chunk;
+        char first = message[0]
+        if (first == 'i'){
+            printf("Changing detection interval to: ");
+            long interval = atol();
+            printf("%ld\n", interval);
+            PUBLISH_INTERVAL = interval*CLOCK_SECOND;
+        }
+        else if (first == 'l'){
+            printf("Received a set_reservoir_level topic command\n");
+        }
+        else
+            printf("Unrecognised command\n")
       }
       else {
     	  LOG_ERR("Topic not recognized!\n");
@@ -224,7 +221,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			if(state==STATE_CONNECTED)
 			{
 				// Subscribe to a topic
-				strcpy(sub_topic,"reservoir/*");
+				strcpy(sub_topic,"reservoir");
 				status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 				if(status == MQTT_STATUS_OUT_QUEUE_FULL)
 				{
