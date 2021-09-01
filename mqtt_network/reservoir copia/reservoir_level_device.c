@@ -84,7 +84,7 @@ static bool decrease_humidity = false;
 #define MAX_HUMIDITY 100
 //static int humidity_percentage = 50; // we cannot use float value in the testbed
 static int level = 0;
-
+static int available = 0;
 
 // Function called for handling an incoming message
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
@@ -250,6 +250,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 LOG_INFO("I try to publish a message\n");
                 level=simulate_level();
                 sprintf(pub_topic, "%s", "reservoir_level");
+                available = level*WIDTH*DEPTH;
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
