@@ -84,7 +84,9 @@ static bool decrease_humidity = false;
 #define MAX_HUMIDITY 100
 //static int humidity_percentage = 50; // we cannot use float value in the testbed
 static int level = 0;
+static char levelChar[BUFFER_SIZE];
 static int available = 0;
+static char availableChar[BUFFER_SIZE];
 
 // Function called for handling an incoming message
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
@@ -253,8 +255,9 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 available = level*WIDTH*DEPTH;
                 sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %i, \"unit\": \"cm^3\"}", node_id, available);
                 mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-                printf("Sensed water level is: cm, reservoir water availability is  cm^3\n");
-                printf("%d, %d", level, available);
+                sprintf(levelChar, "%s", level);
+                sprintf(availableChar, "%s", available);
+                printf("Sensed water level is: %s cm, reservoir water availability is %s cm^3\n", levelChar, availableChar);
                 STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			}
 			else if ( state == STATE_DISCONNECTED )
