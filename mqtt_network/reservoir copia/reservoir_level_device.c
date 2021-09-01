@@ -91,33 +91,28 @@ static int available = 0;
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
 {
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
+    if(strcmp(topic, "interval") == 0) {
+        printf("Changing detection interval to: ");
 
-	if(strcmp(topic, "humidifier") == 0)
-	{
-		LOG_INFO("Received Actuator command\n");
-		if (strcmp((const char*) chunk, "INC") == 0)
-		{
-			LOG_INFO("Switch ON humidifier\n");
-			increase_humidity = true;
-			decrease_humidity = false;
-		}
-		else if (strcmp((const char*) chunk, "DEC") == 0)
-		{
-			LOG_INFO("Switch ON dehumidifier\n");
-			increase_humidity = false;
-			decrease_humidity = true;
-		}
-		else if (strcmp((const char*) chunk, "OFF") == 0)
-		{
-			LOG_INFO("Turn OFF humidity regulator\n");
-			increase_humidity = false;
-			decrease_humidity = false;
-		}
-	}
-	else
-	{
-		LOG_ERR("Topic not valid!\n");
-	}
+    	long interval = atol((const char*)chunk);
+        printf("%ld\n", interval);
+        PUBLISH_INTERVAL = interval*CLOCK_SECOND;
+      }
+
+      else if(strcmp(topic, "set_reservoir_level") == 0){
+        /*char value[10];
+        char *eptr;
+        int quantity;
+        strcpy(value, (const char*)chunk);
+        quantity = atoi(value);
+        //printf("Changing reservoir water level by: %d\n", (int)(quantity));
+        put_get_water((int)quantity);*/
+        printf("Received a set_reservoir_level topic command")
+      }
+      else {
+    	  LOG_ERR("Topic not recognized!\n");
+      }
+
 }
 
 // This function is called each time occurs a MQTT event
