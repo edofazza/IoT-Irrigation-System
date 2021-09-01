@@ -251,9 +251,9 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 level=simulate_level();
                 sprintf(pub_topic, "%s", "reservoir_level");
                 available = level*WIDTH*DEPTH;
-                sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
+                sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %i, \"unit\": \"cm^3\"}", node_id, available);
                 mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-                LOG_INFO("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", level, available);
+                LOG_INFO("Sensed water level is: %i cm, reservoir water availability is %i cm^3\n", level, available);
                 STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 			}
 			else if ( state == STATE_DISCONNECTED )
