@@ -70,7 +70,7 @@ static struct etimer periodic_timer;
  * We will need to increase if we start publishing more data.
  */
 #define APP_BUFFER_SIZE 512
-//static char app_buffer[APP_BUFFER_SIZE];
+static char app_buffer[APP_BUFFER_SIZE];
 
 static struct mqtt_message *msg_ptr = 0;
 
@@ -251,6 +251,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 level=simulate_level();
                 sprintf(pub_topic, "%s", "reservoir_level");
                 available = level*WIDTH*DEPTH;
+                sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
