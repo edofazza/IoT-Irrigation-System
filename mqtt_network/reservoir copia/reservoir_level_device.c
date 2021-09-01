@@ -250,7 +250,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 LOG_INFO("I try to publish a message\n");
                 level=simulate_level();
                 sprintf(pub_topic, "%s", "reservoir_level");
-                available = level*WIDTH*DEPTH;
+                available = get_capacity();;
                 sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %i, \"unit\": \"cm^3\"}", node_id, available);
                 mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
                 STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;

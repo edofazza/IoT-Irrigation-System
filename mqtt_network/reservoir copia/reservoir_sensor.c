@@ -7,6 +7,10 @@ static int simulate_level(){
     return sensed_level;
 }
 
+static int get_capacity(){
+    return capacity;
+}
+
 static void put_get_water(int quantity){
 //assuming rectangular reservoir
     capacity += quantity;
