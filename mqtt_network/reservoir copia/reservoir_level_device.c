@@ -103,7 +103,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         quantity = atoi(value);
         //printf("Changing reservoir water level by: %d\n", (int)(quantity));
         put_get_water((int)quantity);*/
-        printf("Received a set_reservoir_level topic command")
+        printf("Received a set_reservoir_level topic command");
       }
       else {
     	  LOG_ERR("Topic not recognized!\n");
