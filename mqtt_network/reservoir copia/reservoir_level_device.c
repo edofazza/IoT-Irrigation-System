@@ -11,7 +11,7 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
-#include "reservoir_parameters.h"
+#include "reservoir_sensor.c"
 
 #include <string.h>
 #include <strings.h>
@@ -248,7 +248,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			if(state == STATE_SUBSCRIBED)
 			{
                 LOG_INFO("I try to publish a message\n");
-                level=60;
+                level=simulate_level();
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
