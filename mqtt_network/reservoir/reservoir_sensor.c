@@ -3,13 +3,13 @@
 /*   The following code is just a simulation of the output of a level sensor and the corresponding actuator that
      puts or fetches the water from the reservoir*/
 
-//static int sensed_level=MAX_LEVEL;
-//static int capacity = MAX_LEVEL*WIDTH*DEPTH;
+static int sensed_level=MAX_LEVEL;
+static int capacity = MAX_LEVEL*WIDTH*DEPTH;
 
 static int simulate_level(){
     return MAX_LEVEL;
 }
-/*
+
 static void put_get_water(int quantity){
 //assuming rectangular reservoir
     capacity += quantity;
@@ -27,4 +27,4 @@ static void put_get_water(int quantity){
         capacity = 0;
     }
 }
-*/
+

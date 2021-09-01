@@ -102,7 +102,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     printf("%ld\n", interval);
     PUBLISH_INTERVAL = interval*CLOCK_SECOND;
   }
-  /*
+
   else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];
     char *eptr;
@@ -117,7 +117,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
     }
     printf("Changing reservoir water level by: %d\n", (int)(quantity));
     put_get_water((int)quantity);
-  }*/
+  }
   else {
 	  LOG_ERR("Topic not recognized!\n");
   }
@@ -286,7 +286,7 @@ PROCESS_THREAD(reservoir_level_process, ev, data)
 		    available = level*WIDTH*DEPTH;
 		    sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
 		    mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-		    printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", level, available);
+		    //printf("Sensed water level is: %d cm, reservoir water availability is %d cm^3\n", level, available);
             STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 
 		} else if ( state == STATE_DISCONNECTED ){
