@@ -61,6 +61,7 @@ AUTOSTART_PROCESSES(&humidity_analyzer_process);
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
+static char sub_topic_level[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
 static struct etimer periodic_timer;
@@ -240,6 +241,17 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 					LOG_ERR("Tried to subscribe but command queue was full!\n");
 					PROCESS_EXIT();
 				}
+				strcpy(sub_topic_level,"set_reservoir_level");
+
+                printf("Subscribing to the level topic!\n");
+                status = mqtt_subscribe(&conn, NULL, sub_topic_level, MQTT_QOS_LEVEL_0);
+
+
+                if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
+                  LOG_ERR("Tried to subscribe but command queue was full!\n");
+                  PROCESS_EXIT();
+                }
+
 				state = STATE_SUBSCRIBED;
 				PUBLISH_INTERVAL = (10*CLOCK_SECOND);
                 STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;

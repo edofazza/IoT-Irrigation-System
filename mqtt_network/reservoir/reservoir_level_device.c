@@ -106,15 +106,9 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
   else if(strcmp(topic, "set_reservoir_level") == 0){
     char value[10];
     char *eptr;
-    double quantity;
+    int quantity;
     strcpy(value, (const char*)chunk);
-    quantity = strtod(value, &eptr);
-    if (quantity == 0){
-        // If the value provided was out of range, display a warning message
-        if (errno == ERANGE)
-            printf("The value provided was out of range\n");
-        return;
-    }
+    quantity = atoi(value);
     //printf("Changing reservoir water level by: %d\n", (int)(quantity));
     put_get_water((int)quantity);
   }
