@@ -19,7 +19,7 @@
 #include <sys/node-id.h>
 #include <time.h>
 
-#define LOG_MODULE "humidity-analyzer"
+#define LOG_MODULE "reservoir_level_detector"
 #ifdef  MQTT_CLIENT_CONF_LOG_LEVEL
 #define LOG_LEVEL MQTT_CLIENT_CONF_LOG_LEVEL
 #else
@@ -46,8 +46,8 @@ static uint8_t state;
 #define STATE_SUBSCRIBED      	4	// Topics subscription done
 #define STATE_DISCONNECTED    	5	// Disconnected from MQTT broker
 
-PROCESS_NAME(humidity_analyzer_process);
-AUTOSTART_PROCESSES(&humidity_analyzer_process);
+PROCESS_NAME(reservoir_level_detector_process);
+AUTOSTART_PROCESSES(&reservoir_level_detector_process);
 
 /* Maximum TCP segment size for outgoing segments of our socket */
 #define MAX_TCP_SEGMENT_SIZE    32
@@ -76,7 +76,7 @@ static struct mqtt_message *msg_ptr = 0;
 
 static struct mqtt_connection conn;
 
-PROCESS(humidity_analyzer_process, "Humidity analyzer process");
+PROCESS(reservoir_level_detector_process, "Reservoir Level Detector");
 
 //static int humidity_percentage = 50; // we cannot use float value in the testbed
 static int level = 0;
@@ -133,7 +133,7 @@ static void mqtt_event(struct mqtt_connection *m, mqtt_event_t event, void *data
 		{
 			printf("MQTT connection disconnected. Reason: %u\n", *((mqtt_event_t *)data));
 			state = STATE_DISCONNECTED;
-			process_poll(&humidity_analyzer_process);
+			process_poll(&reservoir_level_detector_process);
 			break;
 		}
 		case MQTT_EVENT_PUBLISH:
@@ -184,7 +184,7 @@ static bool have_connectivity(void)
 	return true;
 }
 
-PROCESS_THREAD(humidity_analyzer_process, ev, data)
+PROCESS_THREAD(reservoir_level_detector_process, ev, data)
 {
 
 	PROCESS_BEGIN();
@@ -199,7 +199,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 		     linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
 
 	// Broker registration
-	mqtt_register(&conn, &humidity_analyzer_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
+	mqtt_register(&conn, &reservoir_level_detector_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
 
 	state=STATE_INIT;
 
