@@ -99,7 +99,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
             printf("Received a set_reservoir_level topic command\n");
         }
         else
-            printf("Unrecognised command\n")
+            printf("Unrecognised command\n");
       }
       else {
     	  LOG_ERR("Topic not recognized!\n");
