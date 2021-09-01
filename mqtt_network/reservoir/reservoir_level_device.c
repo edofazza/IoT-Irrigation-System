@@ -115,7 +115,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
             printf("The value provided was out of range\n");
         return;
     }
-    printf("Changing reservoir water level by: %d\n", (int)(quantity));
+    //printf("Changing reservoir water level by: %d\n", (int)(quantity));
     put_get_water((int)quantity);
   }
   else {
