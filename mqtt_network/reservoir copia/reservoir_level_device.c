@@ -225,7 +225,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			if(state==STATE_CONNECTED)
 			{
 				// Subscribe to a topic
-				strcpy(sub_topic,"humidifier");
+				strcpy(sub_topic,"interval");
 				status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 				if(status == MQTT_STATUS_OUT_QUEUE_FULL)
 				{
