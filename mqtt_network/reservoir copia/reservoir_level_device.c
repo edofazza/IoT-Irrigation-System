@@ -87,8 +87,8 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
 {
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
     if(strcmp(topic, "reservoir") == 0) {
-        char* message = (const char*)chunk;
-        char first = message[0]
+        const char* message = (const char*)chunk;
+        const char first = message[0];
         if (first == 'i'){
             printf("Changing detection interval to: ");
             long interval = atol();
