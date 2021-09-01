@@ -59,7 +59,7 @@ AUTOSTART_PROCESSES(&humidity_analyzer_process);
 #define BUFFER_SIZE 64
 
 static char client_id[BUFFER_SIZE];
-//static char pub_topic[BUFFER_SIZE];
+static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
@@ -249,6 +249,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			{
                 LOG_INFO("I try to publish a message\n");
                 level=simulate_level();
+                sprintf(pub_topic, "%s", "reservoir_level");
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
