@@ -61,7 +61,6 @@ AUTOSTART_PROCESSES(&humidity_analyzer_process);
 static char client_id[BUFFER_SIZE];
 static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
-static char sub_topic_level[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
 static struct etimer periodic_timer;
@@ -87,7 +86,7 @@ static int available = 0;
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
 {
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
-    if(strcmp(topic, "interval") == 0) {
+    if(strcmp(topic, "reservoir/interval") == 0) {
         printf("Changing detection interval to: ");
 
     	long interval = atol((const char*)chunk);
@@ -95,7 +94,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         PUBLISH_INTERVAL = interval*CLOCK_SECOND;
       }
 
-      else if(strcmp(topic, "set_reservoir_level") == 0){
+      else if(strcmp(topic, "reservoir/set_level") == 0){
         /*char value[10];
         char *eptr;
         int quantity;
@@ -225,23 +224,13 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			if(state==STATE_CONNECTED)
 			{
 				// Subscribe to a topic
-				strcpy(sub_topic,"interval");
+				strcpy(sub_topic,"reservoir/*");
 				status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 				if(status == MQTT_STATUS_OUT_QUEUE_FULL)
 				{
 					LOG_ERR("Tried to subscribe but command queue was full!\n");
 					PROCESS_EXIT();
 				}
-				strcpy(sub_topic_level,"set_reservoir_level");
-
-                printf("Subscribing to the level topic!\n");
-                status = mqtt_subscribe(&conn, NULL, sub_topic_level, MQTT_QOS_LEVEL_0);
-
-
-                if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
-                  LOG_ERR("Tried to subscribe but command queue was full!\n");
-                  //PROCESS_EXIT();
-                }
 
 				state = STATE_SUBSCRIBED;
 				PUBLISH_INTERVAL = (10*CLOCK_SECOND);
