@@ -244,6 +244,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 			}
 			if(state == STATE_SUBSCRIBED)
 			{
+			/*
 				sprintf(pub_topic, "%s", "humidity");
 				srand(time(NULL));
 				// simulate the behavior of the sensor
@@ -284,7 +285,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 				sprintf(app_buffer, "{\"node\": %d, \"humidity\": %d}", node_id, humidity_percentage);
 				mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 				strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-
+            */
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
