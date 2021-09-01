@@ -252,6 +252,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
                 sprintf(pub_topic, "%s", "reservoir_level");
                 available = level*WIDTH*DEPTH;
                 sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
+                mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
