@@ -20,7 +20,6 @@ static int simulate_level(){
     int month=8;
     if (month >=5 && month<8)  //between June and August
         summer = true;
-    //srand(time(NULL));
     int level;  //   cm
     if (summer)
         level = rand()%MEDIUM_NEED;
