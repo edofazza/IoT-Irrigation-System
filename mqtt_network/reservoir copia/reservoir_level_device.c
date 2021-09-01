@@ -105,6 +105,9 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         }
         else if (command == 'l'){
             printf("Received a set_reservoir_level topic command\n");
+            int quantity = atoi(argument);
+            //printf("Changing reservoir water level by: %d\n", quantity);
+            put_get_water(quantity);
         }
         else
             printf("Unrecognised command\n");
