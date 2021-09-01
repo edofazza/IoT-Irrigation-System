@@ -203,7 +203,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 	state=STATE_INIT;
 
 	// Initialize periodic timer to check the status
-	etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+	etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 
 	while(1)
 	{
@@ -284,13 +284,16 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 				mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
 				strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
             */
+                PUBLISH_INTERVAL = (10*CLOCK_SECOND);
+                STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
+                printf("STATE=STATE_SUBSCRIBED\n");
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
 				LOG_ERR("Disconnected from MQTT broker\n");
 				state = STATE_INIT;
 			}
-			etimer_set(&periodic_timer, PUBLISH_INTERVAL);
+			etimer_set(&periodic_timer, STATE_MACHINE_PERIODIC);
 		}
 	}
 	PROCESS_END();
