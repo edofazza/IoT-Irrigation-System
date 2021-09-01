@@ -88,10 +88,16 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
     if(strcmp(topic, "reservoir") == 0) {
         const char* message = (const char*)chunk;
-        const char first = message[0];
+        const char command = message[0];
+        char* argument;
+        for (int i = 1, j=0; message[i]!=NULL; i++, j++){
+            argument[j] = message[i];
+            if (message[i] == "\0")
+                break;
+        }
         if (first == 'i'){
             printf("Changing detection interval to: ");
-            long interval = atol();
+            long interval = atol(argument);
             printf("%ld\n", interval);
             PUBLISH_INTERVAL = interval*CLOCK_SECOND;
         }
