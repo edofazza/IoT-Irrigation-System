@@ -11,6 +11,7 @@
 #include "dev/leds.h"
 #include "os/sys/log.h"
 #include "mqtt-client.h"
+#include "reservoir_parameters.h"
 
 #include <string.h>
 #include <strings.h>
@@ -32,8 +33,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Defaukt config values
 #define DEFAULT_BROKER_PORT         1883
-#define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
-#define PUBLISH_INTERVAL	    (5 * CLOCK_SECOND)
 
 // We assume that the broker does not require authentication
 
@@ -64,7 +63,6 @@ static char client_id[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
-#define STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
 static struct etimer periodic_timer;
 
 /*
