@@ -79,10 +79,6 @@ static struct mqtt_connection conn;
 
 PROCESS(humidity_analyzer_process, "Humidity analyzer process");
 
-static bool increase_humidity = false;
-static bool decrease_humidity = false;
-#define MIN_HUMIDITY 0
-#define MAX_HUMIDITY 100
 //static int humidity_percentage = 50; // we cannot use float value in the testbed
 static int level = 0;
 static int available = 0;
