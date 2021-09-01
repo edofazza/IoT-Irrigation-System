@@ -98,6 +98,8 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         if (first == 'i'){
             printf("Changing detection interval to: ");
             long interval = atol(argument);
+            if (interval<1)
+                interval=1;
             printf("%ld\n", interval);
             PUBLISH_INTERVAL = interval*CLOCK_SECOND;
         }
