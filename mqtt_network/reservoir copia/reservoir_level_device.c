@@ -64,11 +64,11 @@ AUTOSTART_PROCESSES(&re_level_detector_process);
 #define BUFFER_SIZE 64
 
 static char client_id[BUFFER_SIZE];
-static char pub_topic[BUFFER_SIZE];
+//static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 /***********************************************SIMULATION PARAMETERS*****************************************/
-//static int sensed_level = 50;
+static int sensed_level = 50;
 //static int available = 5;
 
 // Periodic timer to check the state of the MQTT client
@@ -79,8 +79,8 @@ static struct etimer periodic_timer;
  * The main MQTT buffers.
  * We will need to increase if we start publishing more data.
  */
-#define APP_BUFFER_SIZE 512
-static char app_buffer[APP_BUFFER_SIZE];
+//#define APP_BUFFER_SIZE 1024
+//static char app_buffer[APP_BUFFER_SIZE];
 /*---------------------------------------------------------------------------*/
 static struct mqtt_message *msg_ptr = 0;
 
@@ -251,7 +251,7 @@ PROCESS_THREAD(re_level_detector_process, ev, data)
           } else if(state == STATE_SUBSCRIBED){
 
               //LOG_INFO("I try to publish a message\n");
-              //sensed_level = simulate_level();
+              sensed_level = simulate_level();
               //sprintf(pub_topic, "%s", "re_level");
 
             //Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
