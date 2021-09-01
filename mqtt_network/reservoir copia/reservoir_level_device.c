@@ -249,7 +249,7 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 
                 if(status == MQTT_STATUS_OUT_QUEUE_FULL) {
                   LOG_ERR("Tried to subscribe but command queue was full!\n");
-                  PROCESS_EXIT();
+                  //PROCESS_EXIT();
                 }
 
 				state = STATE_SUBSCRIBED;
