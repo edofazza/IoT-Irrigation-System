@@ -60,7 +60,7 @@ AUTOSTART_PROCESSES(&humidity_analyzer_process);
 #define BUFFER_SIZE 64
 
 static char client_id[BUFFER_SIZE];
-static char pub_topic[BUFFER_SIZE];
+//static char pub_topic[BUFFER_SIZE];
 static char sub_topic[BUFFER_SIZE];
 
 // Periodic timer to check the state of the MQTT client
@@ -72,7 +72,7 @@ static struct etimer periodic_timer;
  * We will need to increase if we start publishing more data.
  */
 #define APP_BUFFER_SIZE 512
-static char app_buffer[APP_BUFFER_SIZE];
+//static char app_buffer[APP_BUFFER_SIZE];
 
 static struct mqtt_message *msg_ptr = 0;
 
@@ -84,7 +84,7 @@ static bool increase_humidity = false;
 static bool decrease_humidity = false;
 #define MIN_HUMIDITY 0
 #define MAX_HUMIDITY 100
-static int humidity_percentage = 50; // we cannot use float value in the testbed
+//static int humidity_percentage = 50; // we cannot use float value in the testbed
 
 // Function called for handling an incoming message
 static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
