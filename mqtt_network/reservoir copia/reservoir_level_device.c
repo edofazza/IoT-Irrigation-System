@@ -88,14 +88,14 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
 	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
     if(strcmp(topic, "reservoir") == 0) {
         const char* message = (const char*)chunk;
-        const char command = message[0];
-        char* argument;
+        char command = message[0];
+        char argument[20];
         for (int i = 1, j=0; message[i]!=NULL; i++, j++){
             argument[j] = message[i];
             if (message[i] == "\0")
                 break;
         }
-        if (first == 'i'){
+        if (command == 'i'){
             printf("Changing detection interval to: ");
             long interval = atol(argument);
             if (interval<1)
@@ -103,7 +103,7 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
             printf("%ld\n", interval);
             PUBLISH_INTERVAL = interval*CLOCK_SECOND;
         }
-        else if (first == 'l'){
+        else if (command == 'l'){
             printf("Received a set_reservoir_level topic command\n");
         }
         else
