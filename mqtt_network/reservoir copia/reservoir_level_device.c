@@ -239,54 +239,13 @@ PROCESS_THREAD(humidity_analyzer_process, ev, data)
 					PROCESS_EXIT();
 				}
 				state = STATE_SUBSCRIBED;
+				PUBLISH_INTERVAL = (10*CLOCK_SECOND);
+                STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
+                printf("STATE=STATE_SUBSCRIBED\n");
 			}
 			if(state == STATE_SUBSCRIBED)
 			{
-			/*
-				sprintf(pub_topic, "%s", "humidity");
-				srand(time(NULL));
-				// simulate the behavior of the sensor
-				int variation;
-				if (increase_humidity || decrease_humidity)
-				{
-					variation = (rand()%10)+1; 	// a value in [1,10]
-					if (increase_humidity)
-					{
-						humidity_percentage = humidity_percentage + variation;
-					}
-					else
-					{
-						humidity_percentage = humidity_percentage - variation;
-					}
-				}
-				else // humidity regulator OFF
-				{
-					// compute a probability to have a change
-					if ((rand()%10) < 6) // 60% chance that the humidity will change
-					{
-						variation = (rand()%9)-4; // a value in [-4,4];
-						humidity_percentage = humidity_percentage + variation;
-					}
-				}
 
-				if (humidity_percentage > MAX_HUMIDITY) // impossible behavior in a real environment
-				{
-					humidity_percentage = MAX_HUMIDITY;
-				}
-				else if (humidity_percentage < MIN_HUMIDITY) // impossible behavior in a real environment
-				{
-					humidity_percentage = MIN_HUMIDITY;
-				}
-
-				LOG_INFO("New value of humidity: %d%%\n", humidity_percentage);
-
-				sprintf(app_buffer, "{\"node\": %d, \"humidity\": %d}", node_id, humidity_percentage);
-				mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
-				strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-            */
-                PUBLISH_INTERVAL = (10*CLOCK_SECOND);
-                STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
-                printf("STATE=STATE_SUBSCRIBED\n");
 			}
 			else if ( state == STATE_DISCONNECTED )
 			{
