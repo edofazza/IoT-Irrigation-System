@@ -13,7 +13,7 @@
 #include <sys/node-id.h>
 #include "mqtt-client.h"
 #include "reservoir_sensor.c"
-
+#include <errno.h>
 #include <string.h>
 #include <strings.h>
 /*---------------------------------------------------------------------------*/
