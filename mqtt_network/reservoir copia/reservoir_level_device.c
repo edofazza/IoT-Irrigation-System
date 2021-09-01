@@ -90,9 +90,9 @@ static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *ch
         const char* message = (const char*)chunk;
         char command = message[0];
         char argument[20];
-        for (int i = 1, j=0; message[i]!=NULL; i++, j++){
+        for (int i = 1, j=0; true; i++, j++){
             argument[j] = message[i];
-            if (message[i] == "\0")
+            if (message[i] == '\0')
                 break;
         }
         if (command == 'i'){
