@@ -147,7 +147,7 @@ public class MQTTNetworkHandler implements MqttCallback{
 
     private void printSensors(final Map<String, Double> samples) {
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
-            System.out.println("> " + sample.getKey() + "\n");
+            System.out.println("\t" + sample.getKey() + "\n");
         }
     }
 

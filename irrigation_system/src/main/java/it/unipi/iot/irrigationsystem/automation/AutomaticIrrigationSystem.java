@@ -37,7 +37,7 @@ public class AutomaticIrrigationSystem implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("Automatic Irrigation System started");
+        System.out.println("\tAutomatic Irrigation System started");
         WhereWater waterSource;
         double quantity;
         Parameters p = new Parameters();
@@ -58,7 +58,7 @@ public class AutomaticIrrigationSystem implements Runnable{
             Logger.log("[Irrigation System]: Output of  "+quantity+ " cm^3 of water from the tap, source is " +waterSource);
             actuate(quantity, waterSource, p);
         }
-        System.out.println("Exiting Automatic Irrigation System");
+        System.out.println("\tExiting Automatic Irrigation System");
     }
 
     private void populateParameters(Parameters p){

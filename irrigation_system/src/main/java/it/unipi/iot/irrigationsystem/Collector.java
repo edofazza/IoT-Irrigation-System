@@ -51,8 +51,8 @@ public class Collector {
                         break;
                     case "getDevicesList":
                         rs.printDevices();
-                        //mqttnh.printAquiferSensors();
-                        //mqttnh.printReservoirSensors();
+                        mqttnh.printAquiferSensors();
+                        mqttnh.printReservoirSensors();
                         break;
                     case "getTemp":
                         getTemperatureAction(rs.getTemperature());
@@ -254,7 +254,7 @@ public class Collector {
     }
 
     private static void getWaterLevels(AquiferCollector ac, ReservoirCollector rc){
-        System.out.println("The aquifer water level is: "+ac.getLastAverageAquiferLevel());
-        System.out.println("The reservoir water level is: "+rc.getLastAverageReservoirLevel());
+        System.out.println("The aquifer water availability is: "+ac.getLastAverageAquiferLevel());
+        System.out.println("The reservoir water availability is: "+rc.getLastAverageReservoirLevel());
     }
 }
