@@ -14,7 +14,7 @@ import java.net.SocketException;
 import java.util.logging.LogManager;
 
 public class Collector {
-    private static boolean celciusUnit = true;
+    private static boolean celsiusUnit = true;
 
     public static void main(String[] args) throws SocketException, InterruptedException {
         // Remove log messages (Californium)
@@ -79,7 +79,7 @@ public class Collector {
                         getTapIntensityAction(rs);
                         break;
                     case "setTapInterval":
-                        setTapInterval(chunks, rs, ac, air);
+                        setTapInterval(chunks, rs, ac, rc, air);
                         break;
                     case "setTapIntensity":
                         setTapIntensity(chunks, rs);
@@ -127,7 +127,7 @@ public class Collector {
 
     // ACTIONS
     private static void getTemperatureAction(int temp) {
-        if (celciusUnit)
+        if (celsiusUnit)
             System.out.println("Temperature detected: " + temp + "C");
         else
             System.out.println("Temperature detected: " + ((int)(((double)temp)*9/5) + 32) + "F");
@@ -141,7 +141,7 @@ public class Collector {
             System.out.println("Not correct value inserted, insert an integer");
         }
 
-        if (!celciusUnit)
+        if (!celsiusUnit)
             newTemperature = (newTemperature-32)*5/9;
 
         switch (tokens[1]) {
@@ -164,11 +164,11 @@ public class Collector {
 
         switch (tokens[1]) {
             case "F":
-                celciusUnit = false;
+                celsiusUnit = false;
                 System.out.println("Measure unit changed to Fahrenheit");
                 break;
             case "C":
-                celciusUnit = true;
+                celsiusUnit = true;
                 System.out.println("Measure unit changed to Celsius");
                 break;
             default:
@@ -217,27 +217,28 @@ public class Collector {
         System.out.println("The tap interval is: " + rs.getTapInterval());
     }
 
-    private static void setTapInterval(String[] chunks, RegistrationServer rs, AquiferCollector ac, AutomaticIrrigationSystem air) {
-        int newInterval = 5;
+    private static void setTapInterval(String[] chunks, RegistrationServer rs, AquiferCollector ac, ReservoirCollector rc, AutomaticIrrigationSystem air) {
+        long newInterval = 5;
         try {
-            newInterval = Integer.parseInt(chunks[1]);
+            newInterval = Long.parseLong(chunks[1]);
         } catch (Exception e) {
             System.out.println("Not correct value inserted, insert an integer");
         }
 
         if (newInterval!= rs.getTapInterval()) {
             changeCoapTapInterval(rs, newInterval);
-            //changeMqttTapInterval(ac, air, newInterval);
+            changeMqttTapInterval(ac, rc, air, newInterval);
         }
         System.out.println("Tap interval correctly updated");
     }
 
-    private static void changeCoapTapInterval(RegistrationServer rs, int interval){
-        rs.setTapInterval(interval);
+    private static void changeCoapTapInterval(RegistrationServer rs, long interval){
+        rs.setTapInterval((int)interval);
     }
 
-    private static void changeMqttTapInterval(AquiferCollector ac, AutomaticIrrigationSystem air, int interval){
-        ac.changeInterval((long) interval);
+    private static void changeMqttTapInterval(AquiferCollector ac, ReservoirCollector rc, AutomaticIrrigationSystem air, long interval){
+        ac.changeInterval(interval);
+        rc.changeInterval(interval);
         air.setNewInterval(interval);
     }
 
