@@ -1,7 +1,7 @@
 package it.unipi.iot.irrigationsystem.automation.utils;
 
 public enum Levels {
-    NOT_NEEDED(0), LOW(0.4), MEDIUM(0.8), HIGH(1.2), VERY_HIGH(1.4);
+    NOT_NEEDED(0), LOW(4), MEDIUM(8), HIGH(12), VERY_HIGH(14);
     private double action;
 
     public double getAction() {

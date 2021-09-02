@@ -126,8 +126,7 @@ public class MQTTNetworkHandler implements MqttCallback{
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {
-        System.out.println("Delivery Complete\n");
-
+        //System.out.println("Delivery Complete\n");
     }
 
     public int getNumberOfAquiferSensors() {
