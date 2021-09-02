@@ -258,7 +258,7 @@ PROCESS_THREAD(aquifer_level_detector_process, ev, data)
               available = sensed_level*SECTION*WATER_SPEED*(PUBLISH_INTERVAL/CLOCK_SECOND);
               sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %d, \"unit\": \"cm^3\"}", node_id, available);
               mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-              printf("Sensed water level is: %d cm, aquifer water availability is %d cm^3\n", sensed_level, available);
+              //printf("Sensed water level is: %d cm, aquifer water availability is %d cm^3\n", sensed_level, available);
               STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
 
 		} else if ( state == STATE_DISCONNECTED ){
