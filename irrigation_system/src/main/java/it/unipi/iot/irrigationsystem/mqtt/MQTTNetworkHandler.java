@@ -12,7 +12,7 @@ public class MQTTNetworkHandler implements MqttCallback{
 
     private final String brokerIpAddr = "127.0.0.1";
     private final int brokerPort = 1883;
-    private final String broker = "tcp://" + brokerIpAddr + brokerPort;
+    private final String broker = "tcp://" + brokerIpAddr + ":" + brokerPort;
     private final String clientId = "JavaApp";
 
     private final String reservoirSubTopic = "reservoir_level";
