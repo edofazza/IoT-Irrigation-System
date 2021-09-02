@@ -78,7 +78,6 @@ static struct mqtt_connection conn;
 
 PROCESS(reservoir_level_detector_process, "Reservoir Level Detector");
 
-//static int humidity_percentage = 50; // we cannot use float value in the testbed
 static int level = 0;
 static int available = 0;
 
