@@ -88,9 +88,11 @@ public class Collector {
                         getWaterLevels(ac, rc);
                         break;
                     case "start":
+                        System.out.println("Automatic Irrigation System started");;
                         thread.start();
                         break;
                     case "stop":
+                        System.out.println("Exiting Automatic Irrigation System");
                         thread.interrupt();
                         break;
                     default:
