@@ -137,16 +137,18 @@ public class MQTTNetworkHandler implements MqttCallback{
     }
 
     public void printAquiferSensors() {
+        System.out.println("Aquifer Sensors: ");
         printSensors(receivedAquiferSamples);
     }
 
     public void printReservoirSensors() {
+        System.out.println("Reservoir Sensors: ");
         printSensors(receivedReservoirSamples);
     }
 
     private void printSensors(final Map<String, Double> samples) {
         for(Map.Entry<String, Double> sample: samples.entrySet()) {
-            System.out.println("\t" + sample.getKey() + "\n");
+            System.out.println("\t" + sample.getKey());
         }
     }
 
