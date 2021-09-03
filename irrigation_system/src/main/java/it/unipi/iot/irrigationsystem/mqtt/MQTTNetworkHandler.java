@@ -112,13 +112,13 @@ public class MQTTNetworkHandler implements MqttCallback{
                     IrrigationSystemDbManager.insertWaterLevAquifer(nodeId, numericValue);
 
                 } else {
-                    System.out.println("Garbage data from sensor");
+                    Logger.warning("[MQTT Java Client]: Garbage data from sensor");
                 }
             } else {
-                System.out.println(String.format("Unknown topic: [%s] %s", topic, new String(payload)));
+                Logger.warning(String.format("[MQTT Java Client]: Unknown topic: [%s] %s", topic, new String(payload)));
             }
         } catch (ParseException e) {
-            System.out.println(String.format("Received badly formatted message: [%s] %s", topic, new String(payload)));
+            Logger.warning(String.format("[MQTT Java Client]: Received badly formatted message: [%s] %s", topic, new String(payload)));
         } catch (Exception e) {
             e.printStackTrace();
         }
