@@ -22,8 +22,8 @@ public class MQTTNetworkHandler implements MqttCallback{
 
     private MqttClient mqttClient = null;
 
-    private Map<String, Double> receivedAquiferSamples = new HashMap();
-    private Map<String, Double> receivedReservoirSamples = new HashMap();
+    private Map<String, Double> receivedAquiferSamples = new HashMap<>();
+    private Map<String, Double> receivedReservoirSamples = new HashMap<>();
 
     public MQTTNetworkHandler() throws InterruptedException {
 
