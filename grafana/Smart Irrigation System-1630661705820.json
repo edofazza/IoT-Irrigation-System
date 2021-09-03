@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -486,8 +486,10 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 70,
+            "axisSoftMin": 0,
             "barAlignment": 0,
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -495,7 +497,7 @@
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "linear",
+            "lineInterpolation": "stepBefore",
             "lineWidth": 1,
             "pointSize": 6,
             "scaleDistribution": {
@@ -554,8 +556,8 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  waterLevel\nFROM waterLevelAquifer\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\ndate_add(timestamp, interval 4 hour) AS \"time\",\nwaterLevel\nFROM waterLevelAquifer\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -587,8 +589,10 @@
           "custom": {
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMax": 1000000,
+            "axisSoftMin": 0,
             "barAlignment": 0,
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
@@ -596,7 +600,7 @@
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "linear",
+            "lineInterpolation": "stepBefore",
             "lineWidth": 1,
             "pointSize": 6,
             "scaleDistribution": {
@@ -656,8 +660,8 @@
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  timestamp AS \"time\",\n  waterLevel\nFROM waterLevelReservoir\nORDER BY timestamp",
+          "rawQuery": true,
+          "rawSql": "SELECT\ndate_add(timestamp, interval 4 hour) AS \"time\",\nwaterLevel\nFROM waterLevelReservoir\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -693,6 +697,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Smart Irrigation System",
-  "uid": "SmmeuT77z",
-  "version": 9
+  "uid": "lvHd4U47z",
+  "version": 3
 }
