@@ -110,7 +110,7 @@ public class IrrigationSystemDbManager {
     }
 
     public static void insertWaterLevReservoir(String nodeId, double waterLevel) {
-        String insertQueryStatement = "INSERT INTO waterLevelAquifer (nodeId, waterLevel) VALUES (?, ?);";
+        String insertQueryStatement = "INSERT INTO waterLevelReservoir (nodeId, waterLevel) VALUES (?, ?);";
 
         try (Connection IrrigationConnection = makeJDBCConnection();
              PreparedStatement prepareStatement = IrrigationConnection.prepareStatement(insertQueryStatement);
