@@ -1,5 +1,6 @@
 package it.unipi.iot.irrigationsystem.mqtt;
 
+import it.unipi.iot.irrigationsystem.database.IrrigationSystemDbManager;
 import it.unipi.iot.irrigationsystem.logging.Logger;
 import org.eclipse.paho.client.mqttv3.*;
 import org.json.simple.*;
@@ -92,10 +93,8 @@ public class MQTTNetworkHandler implements MqttCallback{
                     Double numericValue = Double.parseDouble(sensorMessage.get("reservoir_availability").toString());
                     String nodeId = sensorMessage.get("node").toString();
 
-                    String unit = sensorMessage.get("unit").toString();
-
                     receivedReservoirSamples.put(nodeId, numericValue);
-                    // TODO add to db
+                    IrrigationSystemDbManager.insertWaterLevReservoir(nodeId, numericValue);
 
 
                 } else {
@@ -110,7 +109,7 @@ public class MQTTNetworkHandler implements MqttCallback{
                     String nodeId = sensorMessage.get("node").toString();
 
                     receivedAquiferSamples.put(nodeId, numericValue);
-                    // TODO add to db
+                    IrrigationSystemDbManager.insertWaterLevAquifer(nodeId, numericValue);
 
                 } else {
                     System.out.println("Garbage data from sensor");
