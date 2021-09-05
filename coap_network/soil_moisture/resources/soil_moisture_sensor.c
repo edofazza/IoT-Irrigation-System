@@ -122,7 +122,7 @@ static void soil_moisture_event_handler(void)
     if (!isActive) {
         return; // DOES NOTHING SINCE IT IS TURNED OFF
     }
-    
+    LOG_INFO("[SOIL] event");
     // extimate new tension
     srand(time(NULL));
     double new_soilTension = soilTension;
