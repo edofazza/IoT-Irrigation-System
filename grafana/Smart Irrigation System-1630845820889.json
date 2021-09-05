@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -448,7 +448,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  date_add(timestamp, interval 4 hour) AS \"time\",\n  isRaining\nFROM rain\nWHERE\n  $__timeFilter(timestamp)\nORDER BY timestamp",
+          "rawSql": "SELECT\n  date_add(timestamp, interval 4 hour) AS \"time\",\n  isRaining\nFROM rain\nORDER BY timestamp",
           "refId": "A",
           "select": [
             [
@@ -683,7 +683,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 30,
   "style": "dark",
   "tags": [],
@@ -697,6 +697,6 @@
   "timepicker": {},
   "timezone": "",
   "title": "Smart Irrigation System",
-  "uid": "lvHd4U47z",
-  "version": 3
+  "uid": "SmmeuT77z",
+  "version": 11
 }
