@@ -106,7 +106,8 @@ public class AutomaticIrrigationSystem implements Runnable{
             Logger.log("\t" + quantity + "cm^3 of them are output of the tap,");
             Logger.log("\t" + (p.aquiferLevel-quantity) + "cm^3 of them are stored in the reservoir");
         }
-        rs.setTapWhereWater(source);
+        if (rs.getTapWhereWater() != source)
+            rs.setTapWhereWater(source);
     }
 
 }
