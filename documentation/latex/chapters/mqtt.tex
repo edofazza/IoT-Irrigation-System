@@ -1,7 +1,7 @@
 \section{MQTT Network}
 
 \subsection{Devices}
-The MQTT Network will be deployed in the water provisioning site and it is formed by 4 nodes (2 Aquifer Level Detectors and 2 Reservoirs Level Detectors and Actuators). The role of those devices is to monitor the water level in the two sources, in order to always have it enough for the irrigation needs but without the spoil of natural resources. Each pair of devices communicates the sensed levels  to the Collector, which will compute the mean of the values to more precisely estimate the actual aquifer and reservoir level.
+The MQTT Network will be deployed in the water provisioning site and it is formed by 2 types of node: the Aquifer Level Detector1 and the Reservoirs Level Detector and Actuator. The role of those devices is to monitor the water level in the two sources, in order to always have it enough for the irrigation needs but without the spoil of natural resources. Each kind of device communicates the sensed levels to the Collector, which will compute the mean of the values to more precisely estimate the actual aquifer and reservoir level.
 
 
 \subsection{Aquifer Level Detector}
@@ -40,11 +40,10 @@ static double simulate_level(){
     
 sensed_level = simulate_level();
 sprintf(pub_topic, "aquifer_level");
-//Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
-available = sensed_level*SECTION*WATER_SPEED*PUBLISH_INTERVAL;
+	//Assuming rectangular aquifer, available water is given by LEVEL * SECTION * WATER_SPEED * INTERVAL
+available = sensed_level*SECTION*WATER_SPEED*(PUBLISH_INTERVAL/CLOCK_SECOND);
 sprintf(app_buffer, "{\"node\": %d, \"aquifer_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
 mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\n", sensed_level, available);
 \end{lstlisting}
 
 
@@ -53,7 +52,7 @@ printf("Sensed water level is: %.2f cm, aquifer water availability is %.2f cm^3\
 The Reservoir Level Detector senses the level of water in the Reservoir, in order to estimate the availability. This device senses the height of the water storage in cm and based on that computes the volume of water that is available at each iteration, known the dimensions of the reservoir. The user can retrieve at any time the last measurement (the system will do it automatically) and the sensing interval is the same of the \textbf{tap\_interval}. The Reservoir Actuator instead puts or fetches water according to the decisions taken by the controller: if there is water abundance the actuator is asked to store the excess, when water lacks it is asked to fetch from the reservoir.
 
 \subsubsection{Topics}
-This device is subscribed to the \textbf{interval} topic used to change the sensing interval (to adapt it to the tap\_interval) and publishes measurements on the \textbf{reservoir\_level} MQTT topic.
+This device is subscribed to the \textbf{reservoir} topic and the controller can exploit it to change the sensing interval (to adapt it to the tap\_interval) or to ask to fetch/store water. Reservoir devices publishes measurements on the \textbf{reservoir\_level} MQTT topic.
 The device acts as a MQTT client and handles its connection with the broker.
 
 \subsubsection{Data Generation and Actuation Mechanism}
@@ -63,61 +62,83 @@ Data is generated every \textit{interval}, every time the system must decide fro
 //assuming rectangular reservoirs of capacity 1000 litres
 #define WIDTH 200             //2m = 200cm
 #define DEPTH 100               //1m = 100cm
-#define MAX_LEVEL 50           //50 cm
+#define RES_MAX_LEVEL 50           //50 cm
 //Total capacity is 200*100*50 = 1e6 cm^3 = 1000 l
 
-static double sensed_level=MAX_LEVEL;
+static int sensed_level = RES_MAX_LEVEL/2;
+static int capacity = RES_MAX_LEVEL*WIDTH*DEPTH;
 
-static double simulate_level(){
+/*   The following code is just a simulation of the output of a level sensor and the corresponding actuator that
+     puts or fetches the water from the reservoir*/
+
+static int simulate_level(){
     return sensed_level;
 }
 
-static void put_get_water(double quantity){
-//assuming rectangular reservoir
-    sensed_level += (quantity/WIDTH)/DEPTH;
-    if (sensed_level>MAX_LEVEL)
-        sensed_level = MAX_LEVEL;
-    else if (sensed_level<0)
-        sensed_level = 0;
+static int get_capacity(){
+    return capacity;
 }
 
-int level = simulate_level();
-sprintf(pub_topic, "reservoir_level");
-//assuming rectangular reservoir, quantity (volume) is given by level*WIDTH*DEPTH
-available = sensed_level*WIDTH*DEPTH;
-sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %.2f, \"unit\": \"cm^3\"}", node_id, available);
-mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-printf("Sensed water level is: %.2f cm, reservoir water availability is %.2f cm^3\n", sensed_level, available);
-
-
-static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk,  uint16_t chunk_len) {
-
-  if(strcmp(topic, "interval") == 0) {
-    printf("Changing detection interval to: ");
-
-	long interval = atol(const char*)chunk;
-    printf("%d\n", interval);
-    PUBLISH_INTERVAL = interval;
-  }
-  else if(strcmp(topic, "set_level") == 0){
-    char value[10];
-    char *eptr;
-    double quantity;
-    strcpy(value, (const char*)chunk);
-    quantity = strtod(value, &eptr);
-    if (result == 0){
-        /* If the value provided was out of range, display a warning message */
-        if (errno == ERANGE)
-            printf("The value provided was out of range\n");
-        return;
+static void put_get_water(int quantity){
+//assuming rectangular reservoir
+    capacity += quantity;
+    sensed_level = capacity/WIDTH/DEPTH;
+    if (sensed_level>RES_MAX_LEVEL){
+        sensed_level = RES_MAX_LEVEL;
     }
-    printf("Changing reservoir water level by: %f\n", quantity);
-    put_get_water(quantity);
-  }
-  else {
-	  printf("Topic not recognized!\n");
-  }
-  return;
+    else if (sensed_level<0){
+        sensed_level = 0;
+    }
+    if (capacity>RES_MAX_LEVEL*WIDTH*DEPTH){
+        capacity = RES_MAX_LEVEL*WIDTH*DEPTH;
+    }
+    else if (capacity<0){
+        capacity = 0;
+    }
+}
+
+
+LOG_INFO("I try to publish a message\n");
+level=simulate_level();
+sprintf(pub_topic, "%s", "reservoir_level");
+available = get_capacity();
+sprintf(app_buffer, "{\"node\": %d, \"reservoir_availability\": %i, \"unit\": \"cm^3\"}", node_id, available);
+mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+STATE_MACHINE_PERIODIC = PUBLISH_INTERVAL;
+
+static void pub_handler(const char *topic, uint16_t topic_len, const uint8_t *chunk, uint16_t chunk_len)
+{
+	LOG_INFO("Message received: topic='%s' (len=%u), chunk_len=%u\n", topic, topic_len, chunk_len);
+    if(strcmp(topic, "reservoir") == 0) {
+        const char* message = (const char*)chunk;
+        char command = message[0];
+        char argument[20];
+        for (int i = 1, j=0; true; i++, j++){
+            argument[j] = message[i];
+            if (message[i] == '\0')
+                break;
+        }
+        if (command == 'i'){
+            printf("Changing detection interval to: ");
+            long interval = atol(argument);
+            if (interval<1)
+                interval=1;
+            printf("%ld\n", interval);
+            PUBLISH_INTERVAL = interval*CLOCK_SECOND;
+        }
+        else if (command == 'l'){
+            printf("Received a set_reservoir_level topic command\n");
+            int quantity = atoi(argument);
+            printf("Changing reservoir water level by: %d\n", quantity);
+            put_get_water(quantity);
+        }
+        else
+            printf("Unrecognised command\n");
+      }
+      else {
+    	  LOG_ERR("Topic not recognized!\n");
+      }
+
 }
 
 
