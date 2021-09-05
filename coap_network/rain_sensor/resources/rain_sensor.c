@@ -56,14 +56,18 @@ static void get_rain_status_handler(coap_message_t *request, coap_message_t *res
 
 static void rain_event_handler(void)
 {
+    LOG_INFO("[RAIN] event\n");
     // check if raining
     srand(time(NULL));
     int random = rand() % 2; // generate 0, 1
     
     bool new_isRaining = isRaining;
-    if (random == 0) // 50% of changing the value
+    if (random == 0) { // 50% of changing the value
         new_isRaining = !isRaining;
-
+        LOG_INFO("[RAIN] switched\n");
+    } else {
+        LOG_INFO("[RAIN] not switched\n");
+    }
     // if not equal, notify
     if (new_isRaining != isRaining) {
         isRaining = new_isRaining;
