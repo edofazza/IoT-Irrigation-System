@@ -1,10 +1,10 @@
 \section{Collector}
-The \textit{Collector} is the main component of our system. The Collector performs different activities: it collects the data form both MQTT and CoAP sensors; it communicates with the devices in order to performe actions; and it stores all the data collected in \textit{MySQL} in the way they can be visualized through \textbf{Grafana} as indicated in the "Database And Data Visualization" paragraph.
+The \textit{Collector} is the main component of our system. The Collector performs different activities: it collects the data form both MQTT and CoAP sensors; it communicates with the devices in order to perform actions; and it stores all the data collected in \textit{MySQL} in the way they can be visualized through \textbf{Grafana} as indicated in the "Database And Data Visualization" paragraph.
 
 In this chapter, all the subcomponents of the Collector will be explained, which are:  MQTT side, CoAP side, DB connection, Data Visualization, and Automation Irrigation System.
 
 \subsection{Command Line Interface}
-The \textit{Collector} exposes a \textbf{Command Line Interface}, through which the user can interact which the system. The commands are printed on the terminal when the application starts and they are the following (otherwise indicated the commands are related to CoAP node):
+The \textit{Collector} exposes a \textbf{Command Line Interface}, through which the user can interact with the system. The commands are printed on the terminal when the application starts and they are the following (otherwise indicated the commands are related to CoAP node):
 
 \begin{itemize}
 	\item \textit{getDevicesList}: show list of all available sensors (both CoAP and MQTT).
@@ -16,11 +16,11 @@ The \textit{Collector} exposes a \textbf{Command Line Interface}, through which 
 	\item \textit{setSoilTension $<l/u> <value>$}: set desired tension for specified bound (l for lower, u for upper).
 	\item \textit{getTapInterval}: get the interval which the tap operates.
 	\item \textit{getTapIntensity}: get the intensity which the tap operates.
-	\item \textit{setTapInterval $<seconds>$}: set the interval which the tap operates in seconds.
+	\item \textit{setTapInterval $<seconds>$}: set the interval which the tap operates in seconds (acts also on MQTT nodes).
 	\item \textit{setTapIntensity $<value>$}: set the intensity which the tap operates (values is a double).
 	\item \textit{getWaterLevels}: print the water levels of aquifer and reservoir (MQTT network related).
-	\item \textit{start}: start the automatic irrigation system. 
-	\item \textit{stop}: stop the automatic irrigation system.
+	\item \textit{start}: start the automatic irrigation system (Java Thread).
+	\item \textit{stop}: stop the automatic irrigation system (Java Thread).
 	\item \textit{help}: print the commands list.
 	\item \textit{quit}: quit the program.
 \end{itemize}
@@ -29,7 +29,10 @@ The \textit{Collector} exposes a \textbf{Command Line Interface}, through which 
 
 
 \subsection{MQTT Side}
+The Collector works as MQTT client: its role consist on receiving periodic measurements about the water levels and make them available to user commands. It is also in charge of sending commands to the reservoir actuator. This mechanism is implemented through the publish/subscribe model: once the Collector is connected with the MQTT broker (Mosquitto process running on user@iot.dii.unipi.it), it starts publishing commands and receiving the updated measurements.
+In order to enhance the modularity, 2 separate classes handle respectively the communication with the aquifer and  with the reservoir, according to topics specified above. Collected measurements are stored into a $<nodeId, value>$ Hashmap, and the actual level is taken as the mean of the 2 levels.
 
+The system can potentially handle any number of MQTT devices.
 
 
 
@@ -107,3 +110,54 @@ Talking about \textbf{Data Visualization} we used \textit{Grafana} for displayin
 \end{figure}
 
 \subsection{Automatic Irrigation System}
+The Automatic Irrigation System is the hearth of the proposed solution: it is in charge of periodically computing the water need based on data reported by the CoAP sensors and selecting the water source based on the measurements of the MQTT devices. The Automatic Irrigation System is a parallel Java Thread that can be started or stopped at any time by the user. At every iteration the system:
+\begin{itemize}
+	\item Collects into a Parameters object all the retrieved data needed to estimate the water need
+	\item Computes the need based on the following formula: 
+
+\begin{lstlisting}
+if(p.isRaining){
+  Logger.log("[Irrigation System]: It's Raining, no irrigation is needed");
+  continue;
+}
+
+switch(p.soilStatus){
+   case TOO_LOW:
+       level = Levels.HIGH;
+       break;
+   case NORMAL:
+       level = Levels.MEDIUM;
+       break;
+   default:
+       level = Levels.LOW;
+}
+if (p.temperatureStatus == BoundStatus.TOO_HIGH)
+     level = level.increaseLevel();
+
+\end{lstlisting}
+
+
+	\item Determines the actual tap output, given by \textit{level*tapIntensity}.
+	\item Determines the water source, based on the water policy reported in the first paragraph and implemented as follows.
+
+\begin{lstlisting}
+if (need>p.aquiferLevel)
+    WhereWater=RESERVOIR;
+WhereWater=AQUIFER;
+\end{lstlisting}	
+	
+	\item Sends a command to the reservoir to fetch/store water
+\begin{lstlisting}
+if (source == RESERVOIR){
+     rc.changeReservoirLevel(0-quantity);
+     Logger.log("\tFetched "+quantity + " from the RESERVOIR");
+}
+else{
+     rc.changeReservoirLevel(p.aquiferLevel-quantity);
+     Logger.log("\tFetched "+p.aquiferLevel+"cm^3 from the aquifer");
+     Logger.log("\t" + quantity + "cm^3 of them are output of the tap,");
+     Logger.log("\t" + (p.aquiferLevel-quantity) + "cm^3 of them are stored in the reservoir");
+}
+\end{lstlisting}
+\end{itemize}
+
