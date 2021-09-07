@@ -4,8 +4,8 @@
 #define RES_MAX_LEVEL 50           //50 cm
 //Total capacity is 200*100*50 = 1e6 cm^3 = 1000 l
 
-static int sensed_level = RES_MAX_LEVEL<<1;
-static int capacity = (RES_MAX_LEVEL<<1)*WIDTH*DEPTH;
+static int sensed_level = RES_MAX_LEVEL>>1;
+static int capacity = (RES_MAX_LEVEL>>1)*WIDTH*DEPTH;
 
 #define DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
 #define DEFAULT_STATE_MACHINE_PERIODIC     (CLOCK_SECOND >> 1)
