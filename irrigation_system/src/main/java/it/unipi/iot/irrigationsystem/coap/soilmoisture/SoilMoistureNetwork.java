@@ -42,11 +42,11 @@ public class SoilMoistureNetwork {
                             String[] tokens = responseString.split(" ");
 
                             switch (tokens[1]) {
-                                case "high":
+                                case "low":
                                     Logger.warning("Tension too low!!!");
                                     boundStatus.set(BoundStatus.TOO_LOW);
                                     break;
-                                case "low":
+                                case "high":
                                     Logger.warning("Tension too high!!!");
                                     boundStatus.set(BoundStatus.TOO_HIGH);
                                     break;
