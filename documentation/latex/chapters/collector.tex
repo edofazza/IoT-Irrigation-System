@@ -30,7 +30,7 @@ The \textit{Collector} exposes a \textbf{Command Line Interface}, through which 
 
 \subsection{MQTT Side}
 The Collector works as MQTT client: its role consist on receiving periodic measurements about the water levels and make them available to user commands. It is also in charge of sending commands to the reservoir actuator. This mechanism is implemented through the publish/subscribe model: once the Collector is connected with the MQTT broker (Mosquitto process running on user@iot.dii.unipi.it), it starts publishing commands and receiving the updated measurements.
-In order to enhance the modularity, 2 separate classes handle respectively the communication with the aquifer and  with the reservoir, according to topics specified above. Collected measurements are stored into a $<nodeId, value>$ Hashmap, and the actual level is taken as the mean of the 2 levels.
+In order to enhance the modularity, 2 separate classes handle respectively the communication with the aquifer and  with the reservoir, according to topics specified above. Collected measurements are stored into a $<nodeId, value>$ Hashmap, and the actual level is taken as the mean of the levels.
 
 The system can potentially handle any number of MQTT devices.
 
