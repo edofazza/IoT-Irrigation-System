@@ -52,14 +52,14 @@ public class TemperatureSensorNetwork {
                                     break;
                             }
                             temperatureDetected = Integer.parseInt(tokens[2]);
+
                         } else {
                             try {
                                 temperatureDetected = Integer.parseInt(responseString);
-                            }catch(Exception e){
-                            }
+                                boundStatus.set(BoundStatus.NORMAL);
+                            }catch(Exception e){ }
                         }
                         IrrigationSystemDbManager.insertTemperature(temperatureDetected);
-                        boundStatus.set(BoundStatus.NORMAL);
                     }
 
                     public void onError() {
