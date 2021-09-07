@@ -10,13 +10,13 @@ public enum Levels {
 
     public void increaseAction(){
         if (action == Levels.NOT_NEEDED.getAction()) {
-            action = LOW.getAction();
+            this.action = Levels.LOW.getAction();
         } else if (action == Levels.LOW.getAction()) {
-            action = MEDIUM.getAction();
+            this.action = Levels.MEDIUM.getAction();
         } else if (action == Levels.MEDIUM.getAction()) {
-            action = HIGH.getAction();
+            this.action = Levels.HIGH.getAction();
         } else
-            action = VERY_HIGH.getAction();
+            this.action = Levels.VERY_HIGH.getAction();
     }
 
     Levels(double action) {
