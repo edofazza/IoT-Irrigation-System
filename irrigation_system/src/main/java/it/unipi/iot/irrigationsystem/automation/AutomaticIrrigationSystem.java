@@ -40,14 +40,15 @@ public class AutomaticIrrigationSystem implements Runnable{
         Logger.log("[Irrigation System]: Automatic Irrigation System started");
         WhereWater waterSource;
         double quantity;
-        Parameters p = new Parameters();
+        Parameters p;
         while(!Thread.currentThread().isInterrupted()){
             try {
                 Thread.sleep(interval.get() * 1000);
             }catch (Exception e){
                 break;
             }
-            populateParameters(p);
+            p = new Parameters(rs, ac, rc);
+            p.populateParameters();
             if(p.isRaining){
                 Logger.log("[Irrigation System]: It's Raining, no irrigation is needed");
                 continue;
@@ -59,17 +60,6 @@ public class AutomaticIrrigationSystem implements Runnable{
             actuate(quantity, waterSource, p);
         }
         Logger.log("[Irrigation System]: Exiting Automatic Irrigation System");
-    }
-
-    private void populateParameters(Parameters p){
-        p.isRaining = rs.getWeather();
-        if(p.isRaining==true)
-            return;
-        p.soilStatus = rs.getSoilTensionBoundStatus();
-        p.temperatureStatus = rs.getTempBoundStatus();
-        p.aquiferLevel = ac.getLastAverageAquiferLevel();
-        p.reservoirLevel = rc.getLastAverageReservoirLevel();
-        p.tapIntensity = rs.getTapIntensity();
     }
 
     private double computeNeed(Parameters p){
@@ -85,7 +75,7 @@ public class AutomaticIrrigationSystem implements Runnable{
                 level = Levels.HIGH;
         }
         if (p.temperatureStatus == BoundStatus.TOO_HIGH)
-            level = level.increaseLevel(level);
+            level = Levels.increaseLevel(level);
         return level.getAction();
     }
 

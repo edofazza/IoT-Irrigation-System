@@ -8,7 +8,7 @@ public enum Levels {
         return this.action;
     }
 
-    public Levels increaseLevel(Levels level){
+    public static Levels increaseLevel(Levels level){
         if (level == Levels.NOT_NEEDED) {
             return LOW;
         } else if (level == LOW) {
