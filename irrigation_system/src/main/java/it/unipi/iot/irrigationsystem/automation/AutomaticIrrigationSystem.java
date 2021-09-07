@@ -76,13 +76,13 @@ public class AutomaticIrrigationSystem implements Runnable{
         Levels level;
         switch(p.soilStatus){
             case TOO_LOW:
-                level = Levels.HIGH;
+                level = Levels.LOW;  //low soil moisture means wet soil, so little water is needed
                 break;
             case NORMAL:
                 level = Levels.MEDIUM;
                 break;
             default:
-                level = Levels.LOW;
+                level = Levels.HIGH;
         }
         if (p.temperatureStatus == BoundStatus.TOO_HIGH)
             level = level.increaseLevel(level);
