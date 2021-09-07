@@ -40,6 +40,7 @@ public class AutomaticIrrigationSystem implements Runnable{
         Logger.log("[Irrigation System]: Automatic Irrigation System started");
         WhereWater waterSource;
         double quantity;
+        double need;
         Parameters p;
         while(!Thread.currentThread().isInterrupted()){
             try {
@@ -53,7 +54,7 @@ public class AutomaticIrrigationSystem implements Runnable{
                 Logger.log("[Irrigation System]: It's Raining, no irrigation is needed");
                 continue;
             }
-            double need = computeNeed(p);
+            need = computeNeed(p);
             quantity = need*p.tapIntensity;
             waterSource = determineWaterSource(quantity, p);
             Logger.log("[Irrigation System]: Output of  "+quantity+ " cm^3 of water from the tap, source is " +waterSource);
