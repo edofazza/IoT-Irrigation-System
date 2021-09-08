@@ -114,7 +114,7 @@ static void temperature_event_handler(void)
     if (!isActive) {
         return; // DOES NOTHING SINCE IT IS TURNED OFF
     }
-    LOG_INFO("[TEMP] event\n");
+
     // extimate new temperature
     srand(time(NULL));
     int new_temp = temperature;
