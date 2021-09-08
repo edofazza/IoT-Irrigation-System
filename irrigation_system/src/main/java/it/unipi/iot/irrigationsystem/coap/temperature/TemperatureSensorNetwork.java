@@ -19,7 +19,7 @@ public class TemperatureSensorNetwork {
     private List<CoapClient> clientTemperatureSensorList = new ArrayList<>();
     private List<CoapObserveRelation> observeTemperatureList = new ArrayList<>();
     private List<CoapClient> clientTemperatureSwitchList = new ArrayList<>();
-    private int temperatureDetected = 0;
+    private int temperatureDetected = 24;
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addTemperatureSensor(String ip) {

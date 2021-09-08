@@ -19,7 +19,7 @@ public class SoilMoistureNetwork {
     private List<CoapClient> clientSoilMoistureSensorList = new ArrayList<>();
     private List<CoapObserveRelation> observeSoilTensionList = new ArrayList<>();
     private List<CoapClient> clientSoilMoistureSwitchList = new ArrayList<>();
-    private double soilTensionDetected = 0;
+    private double soilTensionDetected = -0.5;
     private AtomicReference<BoundStatus> boundStatus = new AtomicReference<>(BoundStatus.NORMAL);
 
     public void addSoilMoisture(String ip) {
