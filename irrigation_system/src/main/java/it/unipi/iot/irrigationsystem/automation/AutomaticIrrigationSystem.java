@@ -76,7 +76,7 @@ public class AutomaticIrrigationSystem implements Runnable{
                 level = Levels.HIGH;
         }
         if (p.temperatureStatus == BoundStatus.TOO_HIGH)
-            level.increaseAction();
+            level = level.increaseAction();
         return level.getAction();
     }
 

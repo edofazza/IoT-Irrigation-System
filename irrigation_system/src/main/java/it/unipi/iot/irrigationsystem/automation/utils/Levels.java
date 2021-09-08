@@ -8,15 +8,15 @@ public enum Levels {
         return this.action;
     }
 
-    public void increaseAction(){
+    public Levels increaseAction(){
         if (action == Levels.NOT_NEEDED.getAction()) {
-            this.action = Levels.LOW.getAction();
+            return Levels.LOW;
         } else if (action == Levels.LOW.getAction()) {
-            this.action = Levels.MEDIUM.getAction();
+            return Levels.MEDIUM;
         } else if (action == Levels.MEDIUM.getAction()) {
-            this.action = Levels.HIGH.getAction();
+            return HIGH;
         } else
-            this.action = Levels.VERY_HIGH.getAction();
+            return VERY_HIGH;
     }
 
     Levels(double action) {
