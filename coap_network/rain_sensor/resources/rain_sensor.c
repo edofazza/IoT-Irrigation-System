@@ -63,10 +63,8 @@ static void rain_event_handler(void)
     bool new_isRaining = isRaining;
     if (random == 0) { // 50% of changing the value
         new_isRaining = !isRaining;
-        LOG_INFO("[RAIN] switched\n");
-    } else {
-        LOG_INFO("[RAIN] not switched\n");
     }
+    
     // if not equal, notify
     if (new_isRaining != isRaining) {
         isRaining = new_isRaining;
